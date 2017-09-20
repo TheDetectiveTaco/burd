@@ -1,0 +1,138 @@
+html,body{
+	padding:0;
+	margin:0;
+	background:#1E1E1E;
+	color:#C1C1C1;
+	background-size: cover;
+	font-family: "Noto Sans", Verdana, Geneva, sans-serif;
+	font-size:14px;
+	width:100%;
+	height:100%;
+	overflow:hidden;	
+}
+h1,h2{
+	padding:0;
+	margin:0;
+	margin-bottom:0.8em;
+	font-weight:100;
+}
+h1{
+	font-size:1.4em;
+}
+h2{
+	font-size:1.2em;
+}
+.caption{
+	background: #505050;
+	padding:0.3em;
+	color:white;
+	text-shadow:1px 1px 1px black;
+	height:1.2em;
+}
+#content{
+	height:270px;
+	padding:0.3em;
+	font-size:13px;
+}
+div.caption div.close{
+	background: url('images/ic_clear_white_24px.svg') no-repeat center center;
+	height:20px;
+	width:20px;
+	float:right;
+	background-size:85%;
+	cursor:pointer;
+}
+div.caption div.close:hover{
+	background-size:130%;
+	
+}
+
+div.infoholder input,div.infoholder select{
+	width:250px;
+}
+
+
+
+div#tabs{
+	width:135px;
+	height:348px;
+	background:#252526;
+	float:left;
+}
+div.tab{
+	color:#C1C1C1;
+	background: url('../../images/mdl/white/ic_chat_white_24px.svg') no-repeat;
+	background-size:15px;
+	padding-left:20px;
+	background-position:2px;
+	border-left:3px solid #1E1E1E;
+	margin-bottom:5px;
+}
+div.tab:hover{
+	background-color:#3F3F46;
+}
+div.selected-tab{
+	border-color:#FF7F24;
+	background-color:#3F3F46;
+}
+
+
+
+
+div.right-panel{
+	width:450px;
+	height:345px;
+	float:right;
+	overflow:auto;
+	display:none;
+}
+div#no-nets{
+	display:none;
+}
+
+div.network{
+	font-size:15px;
+	background:url(images/ic_cast_white_24px.svg) no-repeat left 4px;
+	padding-left:35px;
+	background-size:30px;
+}
+
+div.network:hover{
+	background-color:#1b1b1b;
+}
+div#networks div.selected-network{
+	background-color:#252526;
+}
+div.network div.meta{
+	font-size:13px;
+	opacity:0.5;
+}
+div.network div.options{
+	text-align: right;
+	font-size:13px;
+}
+
+
+div.infoholder{
+	padding:3px;
+	clear:both;
+}
+div.title{
+	float:left;
+	width:120px;
+}
+div.login-method{
+	display:none;
+}
+div.meta{
+	font-size:0.9em;
+	opacity:0.7;
+}
+div.line{
+	border-bottom:1px solid #383838;
+	height: 3px;
+	margin-bottom:3px;
+}
+a{
+	color:#5facff;
+}

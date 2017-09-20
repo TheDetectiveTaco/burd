@@ -1,0 +1,126 @@
+<html>
+	<head>
+		
+		<style>
+
+		</style>
+		
+		<script src="../global_js/jquery.min.js"></script>
+		<script src="js/main.js"></script>
+		<link rel="stylesheet" href="../global_css/fonts.css">
+		<link rel="stylesheet" href="../global_css/menu.css">
+		<link rel="stylesheet" href="../global_css/controls.css">
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div class="caption">Network List <div class="close">&nbsp;</div></div>
+		<div id="content">
+			<div id="tabs">
+				<div class="tab" sid="networks" style="background-image:url('images/ic_folder_white_24px.svg')">Saved Networks</div>
+				<div class="tab" sid="new" style="background-image:url('images/ic_add_circle_white_24px.svg')">New Network</div>
+			</div>
+			<div class="right-panel" sid="networks">
+				<h1>Saved Networks</h1>
+				<div id="no-nets">
+					<h2>You don't have any saved networks :(</h2>
+					<div>Click "new network" on the left to create a new network.</div>
+				</div>
+				<div id="networks">
+
+				</div>
+			</div>
+			
+			<div class="right-panel" sid="new">
+				<h1>New Network</h1>
+				
+				<div class="infoholder">
+					<div class="title">Server:</div>
+					<div><input type="text" class="newinput" id="server" value="chat.freenode.net/6667"></div>
+
+				</div>
+				
+				<div class="line">&nbsp;</div>
+				
+				<div class="infoholder">
+					<div class="title">Nick name:</div>
+					<div><input type="text" class="newinput" id="nick"></div>
+				</div>
+				
+				<div class="infoholder">
+					<div class="title">Real name:</div>
+					<div><input type="text" class="newinput" id="realname"></div>
+				</div>
+				
+				<div style="" class="infoholder">
+					<div class="title">User name:</div>
+					<div><input type="text" class="newinput" id="username" value="Burd"></div>
+				</div>
+				
+				<div class="line">&nbsp;</div>
+				
+				<div style="" class="infoholder">
+					<div class="title">Login Method:</div>
+					<div>
+						<select class="login">
+							<option value="login-none">None</option>
+							<option value="login-nickserv">Nickserv</option>
+							<option value="login-sasl-plain">SASL-Plain</option>
+							<option value="login-server">Server Password</option>
+						</select>
+					</div>
+				</div>
+				
+				<div style="" class="infoholder login-method login-nickserv">
+					<div class="title">Nick Password:</div>
+					<div><input type="password" class="newinput"></div>
+				</div>
+				
+				<div style="" class="infoholder login-method login-server">
+					<div class="title">Server Password:</div>
+					<div><input type="password" class="newinput"></div>
+				</div>
+				
+				<div style="" class="infoholder login-method login-sasl-plain">
+					<div class="title">SASL User:</div>
+					<div><input type="text" class="newinput"></div>
+				</div>
+				
+				<div style="" class="infoholder login-method login-sasl-plain">
+					<div class="title">SASL ID:</div>
+					<div><input type="text" class="newinput"></div>
+				</div>
+				
+				<div style="" class="infoholder login-method login-sasl-plain">
+					<div class="title">SASL Password:</div>
+					<div><input type="password" class="newinput"></div>
+				</div>
+				
+				
+				<div class="line">&nbsp;</div>
+				
+				<div style="" class="infoholder">
+					<div class="title">Autojoin channels:</div>
+					<div><input type="text" class="newinput" value="#burd"> <sup>1</sup></div>
+				</div>
+				
+				<div style="" class="infoholder">
+					<div class="title">Auto commands:</div>
+					<div><input type="text" class="newinput" value="/umode +i"> <sup>1</sup></div>
+				</div>
+				
+				<div class="line">&nbsp;</div>
+				
+				<div style="" class="infoholder">
+					<div>
+						<input type="button" value="Save" style="width:100px;">&nbsp;
+						<input type="button" value="Connect without saving" style="width:200px;">&nbsp;
+						<a href="http://www.haxed.net/burd/help#new-connection" target="_blank">Need help?</a>
+					</div>
+				</div>
+				<div style="" class="infoholder">
+					<sup>1</sup> Values are comma-seperated
+				</div>
+			</div>
+			
+		</div>
+	</bo

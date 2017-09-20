@@ -1,0 +1,14 @@
+html,body{
+	padding:0;
+	margin:0;
+	background:#636363;
+	color:#e0e0e0;
+	background-size: 300px;
+	background-position:200px 60px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:14px;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+	text-shadow:1px 1px black;
+}

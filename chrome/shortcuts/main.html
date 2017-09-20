@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="style.css">
+		<script src="../global_js/jquery.min.js"></script>
+		<script src="main.js"></script>
+		<style>
+			.caption{
+				background: #505050;
+				padding:0.3em;
+				color:white;
+				text-shadow:1px 1px 1px black;
+				height:1.2em;
+			}
+			#content{
+				height:270px;
+				padding:0.3em;
+				font-size:13px;
+			}
+			#content table{
+				font-size:13px;
+				width:100%;
+			}
+			div.upper_content{
+				height:240px;
+			}
+			div.lower_content{
+				text-align:right;
+			}
+			input[type="button"]{
+				padding:3px;
+				margin:0;
+				border:1px solid black;
+				font-family: Verdana, Geneva, sans-serif;
+				font-size:13px;
+				border-radius:3px;
+			}
+			table td,table{
+				border:1px solid #3e3e3e;
+				font-size:12px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="caption">Keyboard Shortcuts</div>
+		<div id="content">
+			<div class="upper_content">
+				<table>
+					<tr>
+						<td><b>Shortcut Key</b></td>
+						<td><b>Action</b></td>
+					</tr>
+					<tr>
+						<td>Ctrl + M</td>
+						<td> Opens the network list dialog. </td>
+					</tr>
+					<tr>
+						<td>Ctrl + TAB</td>
+						<td>Tabs through channels / PMs</td>
+					</tr>
+					<tr>
+						<td>TAB</td>
+						<td>Tabs through names in a channel / PM</td>
+					</tr>
+					<tr>
+						<td>Esc</td>
+						<td>Closes the current channel, PM or dialog</td>
+					</tr>
+				</table>
+			</div>
+			<div class="lower_content">
+				<input type="button" value="Close" id="close">
+			</div>
+		</div>
+	</body>
+</html>

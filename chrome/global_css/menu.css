@@ -1,0 +1,73 @@
+			div.haxui-menu{
+				background:#2B2B2B;
+				color:white;
+				font-family: "Noto Sans", Verdana, Geneva, sans-serif;
+				min-width:200px;
+				font-size:12px;
+				border:1px solid #757575;
+				box-shadow:3px 3px 3px rgba(0, 0, 0, 0.31);
+				position:absolute;
+				left:100px;
+				top:300px;
+				z-index: 100;
+				display:none;
+			}
+			div.haxui-menu ul{
+				padding:0;
+				margin:0;
+				list-style-type: none;
+			}
+			div.haxui-keycode{
+				float:right;
+				font-size:0.9em;
+			}
+			div.haxui-menu li{
+				padding:3px;
+				padding-left:25px;
+				background:url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7') no-repeat 5px center, url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7') no-repeat right center;
+				background-size:16px 16px;
+				color:#b1b1b1;
+				
+			}
+			div.haxui-menu li:hover{
+				background-color:#5F5F5F;
+				cursor:default;
+				color:white;
+			}
+			ul li.haxui-menu-bar{
+				background:none;
+				height:1px;
+				padding:0;
+				margin-top:3px;
+				margin-bottom:3px;
+				margin-left:5px;
+				margin-right:5px;
+				border-bottom:1px solid #757575;
+			}
+			ul li.haxui-menu-sub{
+				background:url('http://iconizer.net/files/UIDesign_Icons/orig/checkbox_yes.png') no-repeat 5px center, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAQElEQVQ4jWN4K6PCQAmmSDNOA/4DAcUGEGsIXgOIMYSgAYQMIcoAfIYQbQAuQ+hnwMAF4sAlJGI04zSAFEyxAQDoxKMGSUhSkQAAAABJRU5ErkJggg==') no-repeat right center;
+			
+			}
+			ul li.haxui-menu-item-disabled{
+				color:#A5A5A5;
+			}
+			
+			
+			/* LIGHT STYLE */
+			
+			
+			div.haxui-menu-light{
+				background:white;
+				color:black;
+			}
+			div.haxui-menu-light li:hover{
+				background-color:#4281F4;
+				color:white;
+			}
+			div.haxui-menu-light ul li.haxui-menu-bar{
+				border-bottom:1px solid #ABABAB;
+			}
+			div.haxui-menu-light ul li.haxui-menu-item-disabled:hover{
+				color:#A5A5A5;
+				background-color:white;
+			}

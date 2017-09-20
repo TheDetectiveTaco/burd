@@ -1,0 +1,236 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		
+		<title>Byrd IRC</title>
+		
+		<script src="../global_js/jquery.min.js"></script>
+		<script src="../global_js/ui.menu.js"></script>
+		<script src="JS/main.js"></script>
+		<script src="JS/forge/forge.js"></script>
+		<script src="JS/input.parser.js"></script>
+		<script src="JS/data.parser.js"></script>
+		<script src="JS/class_objects/ui.class.js"></script>
+		<script src="JS/class_objects/mirc.colors.class.js"></script>
+		<script src="JS/class_objects/socket.class.js"></script>
+		<script src="JS/class_objects/emoji.class.js"></script>
+		<script src="JS/class_objects/menu.objects.js"></script>
+		<script src="JS/class_objects/channel.switcher.class.js"></script>
+		<script src="JS/class_objects/channel.object.class.js"></script>
+		<script src="JS/class_objects/text.cache.class.js"></script>
+		<script src="JS/nick.services.js"></script>
+		<script src="JS/string.tools.js"></script>
+		<script src="JS/tab.complete.js"></script>
+		<script src="JS/class_objects/ignore.class.js"></script>
+		<script src="JS/class_objects/upload.class.js"></script>
+		<script src="JS/class_objects/tooltip.class.js"></script>
+		<script src="JS/key.events.js"></script>
+		<script src="JS/mouse.events.js"></script>
+
+		<link rel="stylesheet" href="../global_css/fonts.css">
+		<link rel="stylesheet" href="../global_css/menu.css">
+		<link rel="stylesheet" href="css/base.style.css">
+		<!--<link id="no-colors" rel="stylesheet" href="css/no.nick.colors.css">-->
+		<!-- <link id="custom" rel="stylesheet" href="css/image.css"> -->
+	</head>
+	<body tabindex="0">
+		
+		<div id="modal">
+			<div id="modal-filler">&nbsp;</div>
+			<div id="modal-content">
+				
+				<div class="error-message modal-content" style="">
+					<img src="images/pixly.png" style="float:left;">
+					<div class="error-title" style="margin-left:90px; font-weight:bold;font-size:1.2em;margin-bottom:0.5em;">
+						Sorry...
+					</div>
+					<div style="margin-left:92px; height:90px" class="error-text">
+						An unknown error has occurred. Please restart the app...
+					</div>
+					<div style="text-align:right;"><input class="error-close" type="button" value="OK"></div>
+				</div>
+				
+				<div class="scripts modal-content">
+					<div>
+						<iframe style="height:300px;width:500px;margin:0 auto;display:block;background:white;border:1px solid black;" src="../scripts/main.html" id="scripts"></iframe>
+					</div>
+					<div style="width:500px;margin:0 auto;margin-top:10px">
+						<input type="button" id="close-scripts" value="Close">
+					</div>
+				</div>
+				
+				<div class="htmlwin modal-content">
+					<div>
+						<iframe style="height:380px;width:600px;margin:0 auto;display:block;background:white;border:1px solid black;" src="about:blank" id="htmlwin"></iframe>
+					</div>
+				</div>
+				
+				<div class="about modal-content" style="">
+					<div class="big">Byrd IRC Client 3.0.0</div>
+					<div>&nbsp;</div>
+					<div class="med">Developed by:</div>
+					<div style="padding-left:1em;">&bull; Matt Ryan</div>
+				</div>
+				
+				<div class="question modal-content" style="">
+					<img src="../images/mdl/white/ic_live_help_white_24px.svg" style="width:42px;float:left;padding-top:10px;">
+					<div style="float:right;width:320px;padding-top:10px;height:50px" class="text">
+						Are you sure?
+					</div>
+					<div style="clear:both;height:1px;">&nbsp;</div>
+					<div style="text-align:right;"><input class="question-yes" type="button" value="OK"> <input class="question-no" type="button" value="Cancel"></div>
+				</div>
+				
+				<div class="userinput modal-content" style="">
+					<img src="images/menu_icons/to_do_list_cheked_1.png" style="width:32px;float:left;">
+					<div style="float:right;width:320px;padding-top:5px;height:50px" class="text">
+						<div class="title" style="padding-bottom:5px;">What is 1+1?</div>
+						<input type="text" style="width:95%;" id="userinput">
+					</div>
+					<div style="clear:both;height:1px;">&nbsp;</div>
+					<div style="text-align:right;color:black;"><input class="input-yes" type="button" value="OK"> <input class="input-no" type="button" value="Cancel"></div>
+				</div>
+				
+
+				
+			</div>
+		</div>
+		
+		<div id="tooltip">
+			this is a tooltip message!
+		</div>
+		
+		<div id="smile">
+			<div class="emoji">&#x1F601;</div>
+			<div class="emoji">&#x1F602;</div>
+			<div class="emoji">&#x1F603;</div>
+			<div class="emoji">&#x1F604;</div>
+			<div class="emoji">&#x1F605;</div>
+			<div class="emoji">&#x1F606;</div>
+			<div class="emoji">&#x1F609;</div>
+			<div class="emoji">&#x1F60A;</div>
+			<div class="emoji">&#x1F60B;</div>
+			<div class="emoji">&#x1F60C;</div>
+			<div class="emoji">&#x1F60D;</div>
+			<div class="emoji">&#x1F60F;</div>
+			<div class="emoji">&#x1F612;</div>
+			<div class="emoji">&#x1F613;</div>
+			<div class="emoji">&#x1F614;</div>
+			<div class="emoji">&#x1F616;</div>
+			<div class="emoji">&#x1F618;</div>
+			<div class="emoji">&#x1F61A;</div>
+			<div class="emoji">&#x1F61C;</div>
+			<div class="emoji">&#x1F61D;</div>
+			<div class="emoji">&#x1F61E;</div>
+			<div class="emoji">&#x1F620;</div>
+			<div class="emoji">&#x1F621;</div>
+			<div class="emoji">&#x1F622;</div>
+			<div class="emoji">&#x1F623;</div>
+			<div class="emoji">&#x1F624;</div>
+			<div class="emoji">&#x1F625;</div>
+			<div class="emoji">&#x1F628;</div>
+			<div class="emoji">&#x1F629;</div>
+			<div class="emoji">&#x1F62A;</div>
+			<div class="emoji">&#x1F631;</div>
+			<div class="emoji">&#x1F62D;</div>
+			
+			<div style="clear:both">&nbsp;</div>
+		</div>
+		
+		<div id="chantip" style="">
+			<div style="background:#ffffe1;margin-left:10px;height:52px;padding:2px;min-width:200px;border-radius:3px;
+			">
+				<div id="lastChannelName" style="font-weight:bold;">#channel</div>
+				<div id="lastChannelMsg">‹n8wachT› oh, i mean</div>
+				<input type="text" id="tooltipReply" value="Type reply and press enter">
+			</div>
+		</div>
+		
+		<input id="copy" type="text" style="display:none;">
+		
+		<div id="html" style="display:none;">
+			<div id="server-list">
+				<div class="server-list open" socket="%socket%">
+					<div class="server-title">%server%</div>
+					<ul class="server-items">
+						<li type="0" channel="bmV0d29yayBjb25zb2xl" class="">Network Console</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div id="network-console">
+				<div class="right-content channel" type="0" socket="%socket%" channel="%channel%" style="">
+						<div class="channel-meta">
+							<div class="channel-topic"><b>%server%</b>: <span class="mynick">%nick%</span></div>
+						</div>
+						<div class="content">
+
+						</div>
+
+						<div>
+							<input type="text" class="user-input">
+						</div>
+				</div>
+			</div>
+			
+			<!-- ////// -->
+			
+			<div id="channel">
+				<div class="right-content channel" type="1" socket="%socket%" channel="%channel%" style="display:none">
+					<div class="channel-meta">
+						<div class="channel-topic" tooltip="%channeltext%"><b>%channeltext%</b>: </div>
+						<div class="list-count">Users here - 0</div>
+					</div>
+					<div class="content">
+						
+					</div>
+					<div class="userlist nomenu">
+					</div>
+					<div>
+						<input type="text" class="user-input"> <div class="smile">&nbsp;</div>
+					</div>
+				</div>
+			</div>
+			<div class="nickdefault"></div>
+			<!-- ////// -->
+			<div id="pm">
+				<div class="right-content channel" type="2" socket="%socket%" channel="%channel%" style="">
+						<div class="channel-meta">
+							<div class="channel-topic"><b>%user%</b></div>
+						</div>
+						<div class="content">		
+
+						</div>
+
+						<div>
+							<input type="text" class="user-input"> <div class="smile">&nbsp;</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="main-app">
+
+			<!--
+			window types:
+			0: network console
+			1: channel window
+			2: pm window
+			-->
+			<div id="nav-tree" class="nomenu">
+					<div id="menu-icon" tooltip="Hello this is a test">&nbsp;</div>
+					
+
+				
+				
+				
+					
+			</div>
+			
+			<div id="right-content">
+
+			</div>
+		</div>
+	</body>
+</html>
