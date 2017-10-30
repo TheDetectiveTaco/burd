@@ -14,8 +14,51 @@
 		<div class="caption">Settings <div class="close">&nbsp;</div></div>
 		<div id="content">
 			<div id="tabs">
-				<div class="tab">UI Settings</div>
-				<div class="tab selected-tab">Blah</div>
+				<div class="tab selected-tab" sid="ui" style="background-image:url(images/ic_format_paint_white_24px.svg)">UI Settings</div>
+				<div class="tab" sid="privacy" style="background-image:url(images/ic_visibility_white_24px.svg)">Privacy</div>
+				<div class="tab" sid="coms" style="background-image:url(images/ic_functions_white_24px.svg)">User Cmds</div>
+				<div class="tab" sid="sounds" style="background-image:url(images/ic_volume_up_white_24px.svg)">Sounds</div>
+				
+				
+				
+				<input type="button" value="Apply" id="apply">
+			</div>
+			<div class="right-panel" sid="ui">
+				<h1>UI Settings</h1>
+				<div class="setting">
+					<div id="colored_nicks" class="checkbox checked">Use colored nicknames</div>
+				</div>
+				<div class="setting">
+					<div id="colored_nicks" class="checkbox checked">Show text colors (mIRC colors)</div>
+				</div>
+				<div class="setting">
+					<div id="colored_nicks" class="checkbox checked">Show timestamps</div>
+				</div>
+				<div class="setting">
+					<div id="colored_nicks" class="checkbox checked">Show join/part/quit messages</div>
+				</div>
+				<div class="setting">
+					<div id="colored_nicks" class="checkbox checked">Show channel mode messages</div>
+				</div>
+				<div class="setting">
+					<div id="colored_nicks" class="checkbox checked">Auto focus new channels/pms</div>
+				</div>
+				<div class="setting breaker">
+					<div class="k2l">Nav Tree Size:</div>
+					<input type="number" name="quantity" min="70" max="200" value="120">
+				</div>
+				<div class="setting">
+					<div class="k2l">Maximum Scrollback:</div>
+					<input type="number" name="quantity" min="100" max="1000" value="200">
+				</div>
+				<div class="setting">
+					<div class="k2l">UI Animation:</div>
+					<input type="number" name="quantity" min="0" max="300" value="200">
+					(0 = none)
+				</div>
+			</div>
+			<div class="right-panel" sid="privacy">
+				<h1>Privacy Settings</h1>
 			</div>
 		</div>
 	</body>

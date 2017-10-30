@@ -9,26 +9,26 @@ var app = {
 	fullScreen: false
 }
 
-var imgRegex = /https?:\/\/i\.imgur\.com\/(.*)\.(jpg|png|gif|bmp)/ig; /* images to extract and display */
-var youtubeRegex = /https?\:\/\/(www\.)?(yo4654654utu\.be\/|youtube.com\/watch\?v=)(.{11})/;
-
 var settings = {
 	ui: {
 		animation: 200, /* speed of animation for the UI. can be set to 0 for no animation */
 		scrollback: 200, /* amount of messages to hold before truncation */
+		navTreeSize: 120
 	},
 	channels: {
 		focusOnJoin: true,
 		textColors: true,
 		userColors: true,
-		showJPQ: true /* show join quit and part messages */
+		showModes: true,
+		showChannelNotices: true,
+		showJPQ: false /* show join quit and part messages */
 	},
 	customCommands: [
 		["^\/m\\s(\\w*)\\s(.*)$", "PRIVMSG $1 :$2"]
 	],
 	ignore: {
 		users: ["test!*@fake.gov"],
-		regex: [ "cake", "hello123" ]
+		regex: [ "cake!", "hello123" ]
 	},
 	notification: {
 		enabled: true,
@@ -127,6 +127,16 @@ $(function(){
 				}, "*" );
 				break;
 				
+			case "network_list_update":
+				settings.networks = e.data.list;
+				e.source.postMessage( {
+					command: "get_network_list",
+					servers: settings.networks
+					
+				}, "*" );
+				break;
+				
+				
 			case "get_params":
 				e.source.postMessage( {
 					command: "get_params",
@@ -146,6 +156,10 @@ $(function(){
 				break;
 		}
 	}
+	
+	$( window ).resize(function() {
+		ui.resize();
+	});
 	
 	window.addEventListener('message', function( e ) { processMessage(e); });
 	
@@ -172,34 +186,52 @@ $(function(){
 		}
 	};
 
-	/*
-	$( window ).resize(function() {
-		ui.resize();
-		clearTimeout(resizeTimeout);
-		resizeTimeout = setTimeout(function(){
-			ui.resize();
-		},100);
-	});
-	ui.resize();
-	
-	*/
-	
+
 	/* hook mouse and keyboard */
 	setMouseEvents();
 	setKeyEvents();
+	setMiscEvents();
 
-	//ui.html.show( "network_list" );
 
 	/* load saved data */
-	chrome.storage.local.get(["settings32"],function(e){
-		if( e.settings3 != undefined ){
-			for( var i in e.settings3 ) {
-				settings[i] = e.settings3[i];
+	chrome.storage.local.get(["settings"],function(e){
+		if( e.settings != undefined ){
+			for( var i in e.settings ) {
+				//settings[i] = e.settings[i];
 			}
 		}
+
+		applySettings();
+		
 	});
-	
 });
+
+function applySettings(){
+		/*
+		settings are loaded, lets look for a network that
+		wants to connect on startup.
+		*/
+		setTimeout(function(){
+			var addedServer = false;
+			for( var i in settings.networks ) {
+				if( settings.networks[i].startup ) {
+					channel.create( "server", settings.networks[i] );
+					addedServer = true;
+				}
+			}
+			if( !addedServer ){
+				ui.html.show( "network_list" );
+			}
+		},100);
+		
+		/* disable colored nicks setting */
+		$( "head link#nocolors" ).remove();
+		if( !settings.channels.userColors ) $( "head" ).append( '<link id="nocolors" rel="stylesheet" href="css/no.nick.colors.css">' );
+		
+
+		
+		
+}
 
 function saveSettings(){
 	chrome.storage.local.set({settings3: settings});
@@ -248,9 +280,21 @@ var pingTimer = setInterval(function(){
 
 
 function copyToClipboard( e ) {
-	$("input#copy").show().val(e).focus().select();
-	document.execCommand("Copy");
-	$("input#copy").hide();
+	clipboard.copy(e);
+}
+
+var clipboard = {
+	copy: function(e) {
+		$("textarea#copy").show().val(e).focus().select();
+		document.execCommand("Copy");
+		$("textarea#copy").hide();
+	},
+	read: function(){
+		$("textarea#copy").show().val("").focus();
+		document.execCommand("Paste");
+		$("textarea#copy").hide();
+		return $( "textarea#copy" ).val();
+	}
 }
 
 function cssGetValue( a, b ){

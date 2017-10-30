@@ -23,10 +23,44 @@ var channel = {
 		return this;
 	},
 	
-	/* replacing old functions with new and improved ones! */
+	remove: {
+		server: function( socket ){
+			$( "div[socket='" + socket.socketID + "']" ).remove();
+			socket.lsend( "QUIT :Burd IRC ( haxed.net )" );
+			socket.remove();
+		}
+	},
 	
 	add: {
-		
+		userNotice: function( user, to, text ){
+			
+			/* blocking notices to channels */
+			if( settings.channels.showChannelNotices == false && to.substr( 0, 1 ) == "#" ) return;
+			
+			user = HTMLParser.stringify( user );
+			text = HTMLParser.linkify(HTMLParser.stringify(text));
+			to = HTMLParser.linkify(HTMLParser.stringify(to));
+			
+			var html = HTMLParser.html.addUserNotice;
+			var time = (new Date).toString().split(" ")[4];
+			text = colors.parse( text );
+			
+			channel.obj.find("div.content").append(
+				HTMLParser.parse( html, { time:  time, message: text, nick: user, to: to } )
+			);
+			
+			switcher.findByChannelObj( channel.obj ).markUnread();
+			channel.scrollBottom( false );
+			
+		},
+		info: function( e, allowHTML ) {
+			var time = (new Date).toString().split(" ")[4];
+			if( allowHTML == undefined || allowHTML == false ) e = HTMLParser.stringify( e );
+			channel.obj.find("div.content").append(
+				HTMLParser.parse( HTMLParser.html.addInfo, { time:  time, message: e } )
+			);
+			channel.scrollBottom( false );
+		},
 		userText: function( e ) {
 			/*
 				channel.add.userText({ user: str, text: str, action: bool, color: str, highlight: bool }); 
@@ -89,7 +123,7 @@ var channel = {
 			var userObj = $(this).find( "div.userlist div.user:iAttrContains('nick','" + oldNick + "')" );
 			if( userObj.length > 0 ){
 				/* found a channel with the user in it! */
-				channel.byObject( $(this) ).addInfo( HTMLParser.stringify(oldNick) + " is now known as " + HTMLParser.stringify(newNick) );
+				channel.byObject( $(this) ).add.info( oldNick + " is now known as " + newNick );
 				nickCache = [];
 				$(this).find( "div.userlist div.user" ).each(function(){
 					if( oldNick.toLowerCase() == $(this).attr( "nick" ).toLowerCase() ) {
@@ -124,7 +158,7 @@ var channel = {
 				u.remove();
 				if( settings.channels.showJPQ ) {
 					channel.byObject( $( this ) ).addHTML(
-						HTMLParser.parse( HTMLParser.html.userQuitText, { time:  time, nick: HTMLParser.stringify( user ), onick: HTMLParser.stringify( nick ), message: HTMLParser.stringify( colors.parse( cMsg ) ) } )
+						HTMLParser.parse( HTMLParser.html.userQuitText, { time:  time, nick: HTMLParser.stringify( user ), onick: HTMLParser.stringify( nick ), message: colors.parse( HTMLParser.stringify( cMsg ) ) } )
 					);
 				}
 				channel.obj.find( "div.list-count" ).text( "Users here - " + channel.obj.find( "div.userlist div.user" ).length );
@@ -184,20 +218,6 @@ var channel = {
 		xhr.send();
 
 	},
-	addUserNotice: function( user, to, text ){
-		user = HTMLParser.stringify( user );
-		text = HTMLParser.linkify(HTMLParser.stringify(text));
-		to = HTMLParser.linkify(HTMLParser.stringify(to));
-
-		var html = HTMLParser.html.addUserNotice;
-		var time = (new Date).toString().split(" ")[4];
-		text = colors.parse( text );
-		this.obj.find("div.content").append(
-			HTMLParser.parse( html, { time:  time, message: text, nick: user, to: to } )
-		);
-		switcher.findByChannelObj( this.obj ).markUnread();
-		this.scrollBottom( false );
-	},
 	addUserText: function( user, text, isAction, defaultColor ){
 		if( isAction == undefined ) isAction = false;
 		if( isAction ) color = cssGetValue( ".action", "color" );
@@ -227,19 +247,19 @@ var channel = {
 		);
 		this.scrollBottom( false );
 	},
-	addInfo: function( e ) {
-		var time = (new Date).toString().split(" ")[4];
-		
-		this.obj.find("div.content").append(
-			HTMLParser.parse( HTMLParser.html.addInfo, { time:  time, message: e } )
-		);
-		this.scrollBottom( false );
-	},
 	truncate: function(){
 		/* this function removes old messages to conserve memory */
 		var cl = this.obj.find("div.message");
+		var quitLoop = false;
 		if( cl.length > settings.ui.scrollback ) {
-			cl[0].remove();
+			cl.each(function(){
+				if( quitLoop ) return;
+				if( !$(this).hasClass( "highlight" ) ){
+					$(this).remove();
+					quitLoop = true;
+					
+				}
+			});
 		}
 	},
 	scrollBottom: function( e ){
@@ -264,7 +284,7 @@ var channel = {
 						HTMLParser.parse($( "div#html div#network-console" ).html(),{ socket: this.socketID, nick: this.userInfo.nick.nick, server: this.address, channel: base64.encode( "network console" ) })
 					);
 					switcher.find( this.socketID, "network console" ).show();
-					channel.find( this.socketID, "network console" ).addInfo("Connecting to server...")
+					channel.find( this.socketID, "network console" ).add.info("Connecting to server...")
 					this.connect();
 				}
 				break;

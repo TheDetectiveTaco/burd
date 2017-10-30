@@ -20,8 +20,8 @@ function socket( server, port ){
 	this.socketID = null;
 	this.buffer = "";
 	this.connected = false;
-	this.autoReconnect = false;
 	this.SSL = false;
+	this.reconnectTries = 0;
 	
 	/* if ssl we need to a forge client */
 	this.sslClient = "";
@@ -47,6 +47,15 @@ function socket( server, port ){
 	this.createSocket();
 }
 
+socket.prototype.remove = function(){
+	this.userInfo.reconnect = false;
+	this.disconnected();
+	chrome.sockets.tcp.close( this.socketID );
+	for( var i in sockets ){
+		if( sockets[i] == this ) sockets.splice( i, 1 );
+	}
+}
+
 socket.prototype.createSocket = function(){
 	var tmp = this;
 	chrome.sockets.tcp.create({}, function( e ) {
@@ -58,11 +67,14 @@ socket.prototype.createSocket = function(){
 }
 
 socket.prototype.reconnect = function(){
+	if(this.reconnectTries > 20) return;
 	this.connect();
 	chrome.sockets.tcp.setPaused( this.socketID, false );
+	this.reconnectTries++;
+	channel.all( this.socketID ).add.info("Reconnecting...");
 }
 
-/* finds and returns information from ISUPPORT as JSON */
+/* finds and returns information from ISUPPORT as object */
 socket.prototype.serverProperties = function( e ){
 	var is = this.iSupport;
 	var returnObj = {};
@@ -96,6 +108,7 @@ socket.prototype.connect = function(){
 
 				/* send CONNECTED to the data parser so it knows it's time to register */
 				parseData( tmp, "CONNECTED TO SERVER" );
+				tmp.reconnectTries = 0;
 			}
 		}else{
 			tmp.disconnected();
@@ -152,7 +165,13 @@ socket.prototype.lsend = function( e ){
 /* called when disconnected. disconnection is determined by polling the socket */
 socket.prototype.disconnected = function() {
 	this.connected = false;
-	channel.all( this.socketID ).addInfo("Disconnected from server");
+	channel.all( this.socketID ).add.info("Disconnected from the server");
+	var t = this;
+	if( this.userInfo.reconnect ){
+		setTimeout(function(){
+			t.reconnect();
+		},5000);
+	}
 	switcher.find( this.socketID, "network console" ).current.addClass( "disconnected" );
 	chrome.sockets.tcp.disconnect( this.socketID );
 }

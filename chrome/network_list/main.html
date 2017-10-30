@@ -31,11 +31,11 @@
 			</div>
 			
 			<div class="right-panel" sid="new">
-				<h1>New Network</h1>
+				<h1 id="nn">New Network</h1>
 				
 				<div class="infoholder">
 					<div class="title">Server:</div>
-					<div><input type="text" class="newinput" id="server" value="chat.freenode.net/6667"></div>
+					<div><input type="text" class="newinput" id="server" value="chat.freenode.net/6667"> <sup>1</sup></div>
 
 				</div>
 				
@@ -43,7 +43,7 @@
 				
 				<div class="infoholder">
 					<div class="title">Nick name:</div>
-					<div><input type="text" class="newinput" id="nick"></div>
+					<div><input type="text" class="newinput" id="nick"> <sup>1</sup></div>
 				</div>
 				
 				<div class="infoholder">
@@ -72,27 +72,27 @@
 				
 				<div style="" class="infoholder login-method login-nickserv">
 					<div class="title">Nick Password:</div>
-					<div><input type="password" class="newinput"></div>
+					<div><input id="nick-password" type="password" class="newinput"> <sup>1</sup></div>
 				</div>
 				
 				<div style="" class="infoholder login-method login-server">
 					<div class="title">Server Password:</div>
-					<div><input type="password" class="newinput"></div>
+					<div><input id="server-password" type="password" class="newinput"> <sup>1</sup></div>
 				</div>
 				
 				<div style="" class="infoholder login-method login-sasl-plain">
-					<div class="title">SASL User:</div>
-					<div><input type="text" class="newinput"></div>
+					<div class="title">SASL Authz:</div>
+					<div><input id="sasl-authz" type="text" class="newinput"> <sup>1</sup></div>
 				</div>
 				
 				<div style="" class="infoholder login-method login-sasl-plain">
-					<div class="title">SASL ID:</div>
-					<div><input type="text" class="newinput"></div>
+					<div class="title">SASL Authc:</div>
+					<div><input id="sasl-authc" type="text" class="newinput"> <sup>1</sup></div>
 				</div>
 				
 				<div style="" class="infoholder login-method login-sasl-plain">
 					<div class="title">SASL Password:</div>
-					<div><input type="password" class="newinput"></div>
+					<div><input id="sasl-password" type="password" class="newinput"> <sup>1</sup></div>
 				</div>
 				
 				
@@ -100,25 +100,37 @@
 				
 				<div style="" class="infoholder">
 					<div class="title">Autojoin channels:</div>
-					<div><input type="text" class="newinput" value="#burd"> <sup>1</sup></div>
+					<div><input id="autojoin" type="text" class="newinput" value="#burd"> <sup>2</sup></div>
 				</div>
 				
 				<div style="" class="infoholder">
 					<div class="title">Auto commands:</div>
-					<div><input type="text" class="newinput" value="/umode +i"> <sup>1</sup></div>
+					<div><input id="commands" type="text" class="newinput" value="/umode +i"> <sup>2</sup></div>
+				</div>
+				
+				<div class="line">&nbsp;</div>
+				
+				<div style="" class="infoholder">
+					<div id="reconnect" class="checkbox checked">Auto Reconnect</div>
+					<div id="startup" class="checkbox">Connect at startup</div>
+					<div id="ssl" class="checkbox">Use SSL</div>
+					<div style="clear:both;height:1px;">&nbsp;</div>
 				</div>
 				
 				<div class="line">&nbsp;</div>
 				
 				<div style="" class="infoholder">
 					<div>
-						<input type="button" value="Save" style="width:100px;">&nbsp;
-						<input type="button" value="Connect without saving" style="width:200px;">&nbsp;
+						<input type="button" id="save" value="Save" style="width:100px;">&nbsp;
+						<input type="button" id="connect-now" value="Connect without saving" style="width:200px;">&nbsp;
 						<a href="http://www.haxed.net/burd/help#new-connection" target="_blank">Need help?</a>
 					</div>
 				</div>
-				<div style="" class="infoholder">
-					<sup>1</sup> Values are comma-seperated
+			
+				
+				<div style="" class="infoholder meta">
+					<sup>1</sup> The field is required<br>
+					<sup>2</sup> Values are comma-seperated, escaped commas accepted
 				</div>
 			</div>
 			

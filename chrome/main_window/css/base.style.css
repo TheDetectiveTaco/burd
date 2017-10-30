@@ -456,6 +456,8 @@ div.message div.time{
 div.message-text{
 	-webkit-column-count: 1;
 	word-wrap: break-word;
+	white-space: pre-wrap;
+	font-family: 'Droid Sans Mono', monospace;
 }
 /***************************/
 
@@ -590,6 +592,16 @@ div#smile div.emoji{
 div#smile div.emoji:hover{
 	border:1px solid #757575;
 	background:#757575;
+}
+
+div.emojimsg div.message-text{
+	font-size:1.7em;
+}
+div.emojimsg div.name{
+	padding-top: 0.6em;
+}
+div.emojimsg div.time{
+	padding-top: 1em;
 }
 
 /* colors for nicks */

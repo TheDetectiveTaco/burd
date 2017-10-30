@@ -1,28 +1,13 @@
 var ui = {
 	resize: function(){
-		/* called when the window is resized */
-		var to = $("div.right-content:visible div.content");
-		if( to.length > 0 ) to[0].scrollTop = to[0].scrollHeight;
-		return;
-
-
-		var nvw = $( "div#nav-tree" ).width();
-		if( $( "div#nav-tree:visible" ).length == 0 ) nvw = 5;
-
-		$( "div#nav-tree, div#right-content" ).css( "height", ( $( window ).height() - 29 ) + "px" );
+		/*
+			due to a css bug we have to do this to fix
+			the elements after resize
+		*/
+		$("div.right-content:visible").css("width","10px");
+		$("div.right-content:visible").css("width","100%");
 		
-		$( "div#right-content" ).css( "width", ( $( window ).width() - nvw - 1 ) + "px" );
-		$("div.userlist:visible").css( "height",($(window).height()-55) + "px" );
-		
-		$( "div#right-content div.content:visible" ).css( "width", ( $( window ).width() - nvw - ($( "div.userlist:visible" ).width()==undefined ? 0 : $( "div.userlist:visible" ).width() ) - 15 ) + "px" );
-		
-		$( "input.user-input" ).css( "width", ( $( window ).width() - nvw - ($( "div.userlist:visible" ).width()==undefined ? 0 : $( "div.userlist:visible" ).width() ) - 15 ) + "px" );
-		
-		$( "div.right-content div.content:visible" ).css( "height", ( $( window ).height() - $( "div.channel-meta:visible" ).height() - 60) + "px" );
-		
-		$( "div.channel-topic:visible" ).css( "width", ( $( window ).width() - nvw - $( "div.userlist:visible" ).width() - 10 ) + "px" );
-		
-		$( "div#modal-content" ).css( "top", Math.max(0, ($( window ).height() - $( "div#modal-content" ).outerHeight()) / 2 ) + "px" );
+		$( "div#right-content" ).css( "width", ($(window).width() - $( "div#nav-tree" ).width() - 5) + "px" );
 		
 		var to = $("div.right-content:visible div.content");
 		if( to.length > 0 ) to[0].scrollTop = to[0].scrollHeight;

@@ -58,5 +58,57 @@ div.selected-tab{
 	border-color:#FF7F24;
 	background-color:#3F3F46;
 }
+div.right-panel{
+	width:450px;
+	height:345px;
+	float:right;
+	overflow:auto;
+	display:none;
+}
+
+div.checkbox{
+	background:url(images/ic_check_box_outline_blank_white_24px.svg) no-repeat;
+	background-size:19px;
+	padding-left: 23px;
+	float:left;
+	margin-right:10px;
+}
+div.checked{
+	background-image:url(images/ic_check_box_white_24px.svg);
+}
+div.setting{
+	clear:both;
+	height:20px;
+	padding-bottom:5px;
+}
+div.breaker{
+	padding-top:5px;
+	margin-top:10px;
+	border-top:1px solid #505050;
+}
+
+input#apply {
+    width: 130px;
+    position: absolute;
+    top: 350px;
+	left: 460px;
+}
+input[type="number"]{
+	width:100px;
+}
 
 
+h1,h2{
+	padding:0;
+	margin:0;
+	margin-bottom:0.5em;
+	font-weight:100;
+}
+h1{
+	font-size:1.2em;
+	padding-bottom: 0.7em;
+	border-bottom:1px solid #505050;
+}
+div.k2l{
+	float:left;width:150px;
+}

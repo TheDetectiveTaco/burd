@@ -1,4 +1,6 @@
 var whoCaptureState = 0; //if the state is >0 then we need to capture the results of /who
+var lastCTCP = 0;
+var pmCache = [];
 function parseData( sock, data ){
 	
 	if( data[0] != ":" ) data = ":host " + data;
@@ -9,7 +11,7 @@ function parseData( sock, data ){
 
 	log( "IN: " + data );
 	
-	var cMsg = "";
+	var cMsg = bits[bits.length-1];
 	if( data.indexOf( " :" ) > 0 ) cMsg = data.substr( data.indexOf( " :" ) + 2 );
 	
 	var netConsole = channel.find( sock.socketID, "network console" );
@@ -78,7 +80,7 @@ function parseData( sock, data ){
 				pcmsg();
 				break;
 			case 221:
-				channel.current( sock.socketID ).addInfo( "Your modes are: " + HTMLParser.stringify( bits[3] ) );
+				channel.current( sock.socketID ).add.info( "Your modes are: " + bits[3] );
 				break;
 			case 249:
 				p3cmsg();
@@ -288,13 +290,13 @@ function parseData( sock, data ){
 				/* we need to request capabilities before anything else! */
 				sock.send( "CAP LS" );
 				
-				if( sock.userInfo.server.password.length > 0 ){
-					sock.send( "PASS " + sock.userInfo.server.password );
+				if( sock.userInfo.auth.method == "server-password" ){
+					sock.send( "PASS " + sock.userInfo.auth.password );
 				}
-				
+				if( sock.userInfo.nick.realname == "" ) sock.userInfo.nick.realname = "Burd IRC";
 				sock.send( "NICK " + sock.userInfo.nick.nick );
-				sock.send( "USER " + sock.userInfo.username + " * * :Burd IRC" );
-				netConsole.addInfo("Connected, registering with network...");
+				sock.send( "USER " + sock.userInfo.username + " * * :" + sock.userInfo.nick.realname );
+				netConsole.add.info("Connected, registering with network...");
 				$( "#scripts" )[0].contentWindow.postMessage( {
 					command: "on_connect",
 					socketID: sock.socketID
@@ -335,7 +337,11 @@ function parseData( sock, data ){
 			case "AUTHENTICATE":
 				sock.send( "AUTHENTICATE " + base64.encode( sock.userInfo.auth.id + String.fromCharCode( 0 ) + sock.userInfo.auth.auth + String.fromCharCode( 0 ) + sock.userInfo.auth.password ) );
 				break;
-	
+			
+			case "ERROR":
+				channel.add.info( cMsg );
+				break;
+			
 			case "JOIN":
 				/* 
 					when we recieve the JOIN command either one of the two has happend:
@@ -345,10 +351,9 @@ function parseData( sock, data ){
 					the way we distinguish between the two is to check the nick against our own
 				*/
 				
-				/* sometimes channels will follow ":", but sometimes now */
+				/* sometimes channels will follow ":", but sometimes not */
 				if( bits[2].substr( 0,1 ) == ":" ) bits[2] = bits[2].substr( 1 );
-				 log(parseNick(bits[0]).nick.toLowerCase() + ":" + sock.userInfo.nick.nick.toLowerCase());
-				if( parseNick(bits[0]).nick.toLowerCase() == sock.userInfo.nick.nick.toLowerCase() ) {
+				if( parseNick( bits[0] ).nick.toLowerCase() == sock.userInfo.nick.nick.toLowerCase() ) {
 					/* it's us! we need to create a DOM element for this new channel */
 					log("CHANNEL CREATION");
 					nickCache = [];
@@ -359,7 +364,7 @@ function parseData( sock, data ){
 					
 					channel.find( sock.socketID, bits[2] );
 					
-					channel.addInfo( "Now talking in " + HTMLParser.stringify( bits[2] ) );
+					channel.add.info( "Now talking in " + bits[2] );
 					
 					$( "#scripts" )[0].contentWindow.postMessage( {
 						command: "on_channel_joined",
@@ -384,6 +389,7 @@ function parseData( sock, data ){
 					channel.addHTML(
 						HTMLParser.parse( HTMLParser.html.userJoinedText, { time:  time, nick: user, onick: HTMLParser.stringify( bits[0].substr( 1 ) ) } )
 					);
+					
 					$( "#scripts" )[0].contentWindow.postMessage( {
 						command: "on_user_joined",
 						socketID: sock.socketID,
@@ -398,7 +404,7 @@ function parseData( sock, data ){
 			case "KICK":
 				var kicker = parseNick( bits[0] ).nick;
 				var kicked = HTMLParser.stringify(bits[3]);
-				channel.find( sock.socketID, bits[2] ).addInfo( "<b>" + kicker + "</b> has kicked <b>" + kicked + "</b> from the channel (" + HTMLParser.stringify(cMsg) + ")" );
+				channel.find( sock.socketID, bits[2] ).add.info( "<b>" + kicker + "</b> has kicked <b>" + kicked + "</b> from the channel (" + HTMLParser.stringify(cMsg) + ")", true );
 				channel.obj.find("div.user:iAttrContains('nick','" + kicked + "')").remove();
 				channel.obj.find( "div.list-count" ).text( "Users here - " + channel.obj.find( "div.userlist div.user" ).length );
 				$( "#scripts" )[0].contentWindow.postMessage( {
@@ -448,12 +454,10 @@ function parseData( sock, data ){
 					switch( bits[2].toUpperCase() ){
 						case "AUTH":
 						case "*":
-							netConsole.addInfo(
-								HTMLParser.stringify( cMsg )
-							);
+							netConsole.add.info( cMsg );
 							break;
 						default:
-							channel.current( sock.socketID ).addUserNotice( parseNick(bits[0]).nick, bits[2], cMsg );
+							channel.current( sock.socketID ).add.userNotice( parseNick(bits[0]).nick, bits[2], cMsg );
 					}
 				}
 				break;
@@ -504,7 +508,7 @@ function parseData( sock, data ){
 			case "INVITE":
 				//IN: :sdifh48h!cc74c3da@gateway/web/freenode/ip.204.116.195.218 INVITE duckgoose :##testxcv
 				var user = parseNick(bits[0]).nick;
-				channel.current( sock.socketID ).addInfo( "INVITED: " + user + " wants you to join " + cMsg );
+				channel.current( sock.socketID ).add.info( "INVITED: " + user + " wants you to join " + cMsg );
 				break;
 				
 			case "PRIVMSG":
@@ -513,18 +517,25 @@ function parseData( sock, data ){
 				if( ignore.matchUser( bits[0].substr( 1 ) ) ) return;
 				if( ignore.matchRegex( data ) ) return;
 				channel.find( sock.socketID, bits[2] );
+				//if( cMsg.indexOf( " quack" ) > 1 ) sock.send("privmsg ##llamas :.bang");
 				if( bits[2].toLowerCase() == sock.userInfo.nick.nick.toLowerCase() ) {
 					/* a PRIVMSG directly to us! */
-					
-
-					
 					if( cMsg.length > 1 && cMsg.substr( 0,1 ) == String.fromCharCode( 1 ) ) {
 						/* message begins with 0x01, so it must be CTCP! */
 						channel.current( sock.socketID );
 						if( cMsg.substr(1,7).toLowerCase() == "action " ) channel.create( "pm", { socketID: sock.socketID, user: bits[0].substr( 1 )} );
 						processCTCP( sock, nick, cMsg, false );
+						
 					}else{
-
+						
+						pmCache.push( { time: Date.now(), from: bits[0].substr( 1 ), message: cMsg } );
+						if( pmCache.length > 10 ) pmCache.splice( 0, 1 );
+						var mCount = 0;
+						for( var i in pmCache ){ 
+							if( pmCache[i].message == cMsg && ( pmCache[i].time+10000 ) > Date.now() ) mCount++;
+						}
+						if( mCount > 3 ) return;
+						
 						channel.create( "pm", { socketID: sock.socketID, user: bits[0].substr( 1 )} );
 						
 						channel.add.userText({
@@ -583,7 +594,7 @@ function parseData( sock, data ){
 				
 				var tHTML = colors.parse( HTMLParser.linkify( HTMLParser.stringify( cMsg ) ) );
 				
-				channel.addInfo( parseNick( bits[0] ).nick + " has changed the topic to: " + tHTML );
+				channel.add.info( parseNick( bits[0] ).nick + " has changed the topic to: " + tHTML, true );
 
 				channel.obj.find( "div.channel-topic" ).html( "<b>" + HTMLParser.stringify( bits[2] ) + ":</b> " + colors.parse( HTMLParser.stringify( cMsg ) ) );
 					
@@ -601,17 +612,19 @@ function parseData( sock, data ){
 	}
 	function p3cmsg(){
 		/* prints bits[3] and the cMsg */
-		channel.current( sock.socketID ).addInfo( HTMLParser.stringify( bits[3] + " " + cMsg ) );
+		channel.current( sock.socketID ).add.info( bits[3] + " " + cMsg );
 	}
 	function pcmsg(){
 		/* prints the cMsg */
-		channel.current( sock.socketID ).addInfo( HTMLParser.stringify( cMsg ) );
+		channel.current( sock.socketID ).add.info( cMsg );
 	}
 }
 
 
 
 function processCTCP( sock, nick, message, reply ){
+	if( Date.now() - lastCTCP < 3000 ) return; /* ignore all CTCP for at least 3 seconds from the last one to prevent flooding */
+	lastCTCP = Date.now();
 	message = message.replace( /\x01/ig, "" );
 	var bits = message.split( " " );
 	message = message.substr( message.indexOf( " " ) + 1 ); /* cut off the CTCP type */
@@ -619,7 +632,7 @@ function processCTCP( sock, nick, message, reply ){
 	nick = parseNick(nick);
 	if( reply ){
 		/* it's a CTCP reply */
-		channel.current( sock.socketID ).addInfo( "<b>CTCP " + HTMLParser.stringify( bits[0].toUpperCase() ) + " Reply from " + nick.nick + ":</b> " + message );
+		channel.current( sock.socketID ).add.info( "<b>CTCP " + HTMLParser.stringify( bits[0].toUpperCase() ) + " Reply from " + nick.nick + ":</b> " + message, true );
 
 	} else {
 
@@ -640,23 +653,23 @@ function processCTCP( sock, nick, message, reply ){
 
 				case "VERSION":
 					sock.send( "NOTICE " + nick.nick + " :\x01VERSION " + app.name + " [" + app.version + "] http://haxed.net\x01");
-					channel.addInfo( nick.nick + " requested CTCP VERSION" );
+					channel.add.info( nick.nick + " requested CTCP VERSION" );
 					break;
 
 				case "PING":
 					if( bits.length == 2 ) {
 						sock.send( "NOTICE " + nicknick + " :\x01PING "+ bits[1] +"\x01");
-						channel.addInfo( nick.nick + " requested CTCP PING" );
+						channel.add.info( nick.nick + " requested CTCP PING" );
 					}
 					break;
 
 				case "TIME":
 					sock.send( "NOTICE " + nick.nick + " :\x01TIME "+ timeConverter(Date.now()/1000) +"\x01");
-					channel.addInfo( nick.nick + " requested CTCP TIME" );
+					channel.add.info( nick.nick + " requested CTCP TIME" );
 					break;
 
 				default:
-					channel.addInfo( nick.nick + " sent an unknown CTCP request: " + HTMLParser.stringify( bits[0].toUpperCase() ) );
+					channel.add.info( nick.nick + " sent an unknown CTCP request: " + bits[0].toUpperCase() );
 					break;
 			}
 		}
@@ -692,7 +705,7 @@ function processMODE( sock, data ){
 	if( bits.length > 2){
 		if( bits[2].toLowerCase() == sockets[0].userInfo.nick.nick.toLowerCase() ) {
 
-			channel.current( sock.socketID ).addInfo( "User mode set: <b>" + data.substr( data.toLowerCase().indexOf("mode") + 5 +  bits[2].length + 1 ).replace(":","") + "</b>" );
+			channel.current( sock.socketID ).add.info( "User mode set: " + data.substr( data.toLowerCase().indexOf("mode") + 5 +  bits[2].length + 1 ).replace(":","") );
 			
 		}else{
 			var chan = channel.find( sock.socketID, bits[2] );
@@ -707,7 +720,7 @@ function processMODE( sock, data ){
 				var values = [];
 				if( modeStr.split( " " ).length > 0 ) values = modeStr.substr( modeStr.indexOf( " " ) + 1 ).split(" ");
 				
-				chan.addInfo( "<b>" + setter.nick + "</b> has set mode: " + "<b>" + HTMLParser.stringify( modeStr ) + "</b>" );
+				if( settings.channels.showModes ) chan.add.info( "<b>" + setter.nick + "</b> has set mode: " + "<b>" + HTMLParser.stringify( modeStr ) + "</b>", true );
 				
 				$( "#scripts" )[0].contentWindow.postMessage( {
 					command: "on_channel_mode",
@@ -768,5 +781,5 @@ function processMODE( sock, data ){
 }
 
 function log(e){
-	if(e.indexOf(" 354 ")<1) console.log(e);
+	//if(e.indexOf(" 354 ")<1) console.log(e);
 }

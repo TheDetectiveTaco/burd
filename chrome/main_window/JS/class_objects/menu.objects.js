@@ -28,7 +28,8 @@ var menu = {
 								/* network console */
 								ui.ask.show( "Closing the network console will remove all items related to the server, are you sure you want to do this?", function( a ){
 									if( a ){
-										sock.send( "QUIT :Byrd IRC ( haxed.net )" );
+										//sock.send( "QUIT :Burd IRC ( haxed.net )" );
+										channel.remove.server( sock );
 									}
 								});
 								break;
@@ -57,28 +58,47 @@ var menu = {
 						enabled:true,
 						icon: '../../images/mdl/white/ic_person_white_24px.svg',
 						subMenu: false,
-						callback: function(){}
+						callback: function(){
+							ui.input.show("Type a nick to start a PM with", "", "../../images/mdl/white/ic_person_white_24px.svg", function(e){
+								if( e == "" ) return;
+								channel.create( "pm", { socketID: sock.socketID, user: e + "!_@_"} );
+							});
+						}
 					},
 					{
 						name: "Join a Channel...",
 						enabled:true,
 						icon: '../../images/mdl/white/ic_people_white_24px.svg',
 						subMenu: false,
-						callback: function(){}
+						callback: function(){
+							ui.input.show("Type a channel name to join", "#", "../../images/mdl/white/ic_people_white_24px.svg", function(e){
+								if( e == "" ) return;
+								sock.send( "JOIN " + e );
+							});
+						}
 					},
 					{
 						name: "Change Nick...",
 						enabled:true,
 						icon: '../../images/mdl/white/ic_mode_edit_white_24px.svg',
 						subMenu: false,
-						callback: function(){}
+						callback: function(){
+							ui.input.show("Type a new nick", "", "../../images/mdl/white/ic_mode_edit_white_24px.svg", function(e){
+								if( e == "" ) return;
+								sock.send( "NICK " + e );
+							});
+						}
 					},
 					{
 						name: "Set Away...",
 						enabled:true,
 						icon: '../../images/mdl/white/ic_notifications_paused_white_24px.svg',
 						subMenu: false,
-						callback: function(){}
+						callback: function(){
+							ui.input.show("Type a new away message (blank to clear)", "", "../../images/mdl/white/ic_notifications_paused_white_24px.svg", function(e){
+								sock.send( "AWAY :" + e );
+							});
+						}
 					}
 				);
 			}else if ( e.attr( "type" ) == "1" ) {
@@ -104,7 +124,10 @@ var menu = {
 						subMenu: false,
 						callback: function(){
 							ui.input.show( "Enter the nick to invite", "", "../../images/mdl/white/ic_person_add_white_24px.svg", function(e){
-								
+								if( e ) {
+									sock.send("INVITE " + e + " " + selectedChannel );
+									channel.current( sock.socketID ).add.info("Invited " + e + " to join " + selectedChannel );
+								}
 							});
 						}
 					},
@@ -113,7 +136,14 @@ var menu = {
 						enabled:true,
 						icon: '../../images/mdl/white/ic_mode_edit_white_24px.svg',
 						subMenu: false,
-						callback: function(){}
+						callback: function(){
+							ui.input.show( "Edit channel topic", channel.find( sock.socketID, selectedChannel ).obj.find( "div.channel-topic" ).text(), "../../images/mdl/white/ic_mode_edit_white_24px.svg", function(e){
+								if( e ) {
+									sock.send( "TOPIC " + selectedChannel + " :" + e );
+									channel.find( sock.socketID, selectedChannel )
+								}
+							});
+						}
 					},
 					{
 						name: "-"
@@ -128,35 +158,30 @@ var menu = {
 								enabled:true,
 								icon: false,
 								subMenu: false,
-								callback: function(){}
+								callback: function(){
+									sock.send("MODE " + selectedChannel + " +i" );
+								}
 							},
 							{
 								name: "Moderated",
 								enabled:true,
 								icon: false,
 								subMenu: false,
-								callback: function(){}
+								callback: function(){ sock.send("MODE " + selectedChannel + " +m" ); }
 							},
 							{
 								name: "Secret",
 								enabled:true,
 								icon: false,
 								subMenu: false,
-								callback: function(){}
+								callback: function(){ sock.send("MODE " + selectedChannel + " +s" ); }
 							},
 							{
 								name: "Lock Topic",
 								enabled:true,
 								icon: false,
 								subMenu: false,
-								callback: function(){}
-							},
-							{
-								name: "Quiet",
-								enabled:true,
-								icon: false,
-								subMenu: false,
-								callback: function(){ console.log( title ) }
+								callback: function(){ sock.send("MODE " + selectedChannel + " +t" ); }
 							}
 						],
 						callback: function(){
@@ -508,9 +533,36 @@ var menu = {
 				}
 			},
 			{
+				name: "Add Bold",
+				enabled:true,
+				icon: "../../images/mdl/white/ic_format_bold_white_24px.svg",
+				subMenu: false,
+				callback: function(){
+					i.val( i.val() + "\u0002" ).focus();
+				}
+			},
+			{
+				name: "Add Italic",
+				enabled:true,
+				icon: "../../images/mdl/white/ic_format_italic_white_24px.svg",
+				subMenu: false,
+				callback: function(){
+					i.val( i.val() + "\x1D" ).focus();
+				}
+			},
+			{
+				name: "Add Underline",
+				enabled:true,
+				icon: "../../images/mdl/white/ic_format_underlined_white_24px.svg",
+				subMenu: false,
+				callback: function(){
+					i.val( i.val() + "\x1F" ).focus();
+				}
+			},
+			{
 				name: "Add color",
 				enabled:true,
-				icon: "../../images/mdl/white/ic_insert_emoticon_white_24px.svg",
+				icon: "../../images/mdl/white/ic_format_color_text_white_24px.svg",
 				subMenu: [
 					{
 						name: "White",

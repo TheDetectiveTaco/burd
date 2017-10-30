@@ -13,11 +13,11 @@ html,body{
 h1,h2{
 	padding:0;
 	margin:0;
-	margin-bottom:0.8em;
+	margin-bottom:0.5em;
 	font-weight:100;
 }
 h1{
-	font-size:1.4em;
+	font-size:1.2em;
 }
 h2{
 	font-size:1.2em;
@@ -91,10 +91,9 @@ div#no-nets{
 }
 
 div.network{
-	font-size:15px;
-	background:url(images/ic_cast_white_24px.svg) no-repeat left 4px;
-	padding-left:35px;
+	padding-left:15px;
 	background-size:30px;
+	margin-bottom:5px;
 }
 
 div.network:hover{
@@ -114,7 +113,7 @@ div.network div.options{
 
 
 div.infoholder{
-	padding:3px;
+	padding:1px;
 	clear:both;
 }
 div.title{
@@ -135,4 +134,20 @@ div.line{
 }
 a{
 	color:#5facff;
+}
+input.error{
+	border-color:#d46b6b;
+}
+input#connect-now{
+	display:none;
+}
+div.checkbox{
+	background:url(images/ic_check_box_outline_blank_white_24px.svg) no-repeat;
+	background-size:19px;
+	padding-left: 23px;
+	float:left;
+	margin-right:10px;
+}
+div.checked{
+	background-image:url(images/ic_check_box_white_24px.svg);
 }

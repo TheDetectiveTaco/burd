@@ -8,6 +8,11 @@ function setMouseEvents(){
 
 	});	
 	
+	$( "div.emoji" ).click(function() {
+		console.log( "emoji click" );
+		$( "input.user-input:visible" ).val( $( "input.user-input:visible" ).val() + $(this).text() ).focus();
+	});	
+	
 	$( "body" ).mouseup(function() {
 		$( "div#smile" ).hide();
 	});	
