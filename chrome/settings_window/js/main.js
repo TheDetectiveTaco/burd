@@ -1,5 +1,5 @@
 $(function(){
-	
+	$.menu.style = "dark";
 	$( "div.close" ).click(function() {
 		window.parent.postMessage( { command: "close_modal" } , "*" );
 	});
@@ -19,6 +19,29 @@ $(function(){
 		}
 	});
 	
+	$("body").on("click", "div.litem", function() {
+		$.menu.show([
+			{
+				name: "Remove Item",  enabled:true,
+				icon: false,
+				subMenu: false,
+				key: false,
+				callback: function(){
+				}
+			},
+			{
+				name: "Clear List",  enabled:true,
+				icon: false,
+				subMenu: false,
+				key: false,
+				callback: function(){
+				}
+			}
+		]);
+	});
 	
-	$( "div.tab:first" ).click();
+
+	
+	
+	$( "div.tab[sid='ignore']" ).click();
 });	

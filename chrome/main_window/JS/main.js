@@ -21,7 +21,7 @@ var settings = {
 		userColors: true,
 		showModes: true,
 		showChannelNotices: true,
-		showJPQ: false /* show join quit and part messages */
+		showJPQ: true /* show join quit and part messages */
 	},
 	customCommands: [
 		["^\/m\\s(\\w*)\\s(.*)$", "PRIVMSG $1 :$2"]
@@ -75,7 +75,7 @@ $(function(){
 			case "add_info":
 				channel.find( e.data.socketID, e.data.windowName );
 				if(  e.data.windowName == "*" ) channel.current( e.data.socketID );
-				channel.addInfo( e.data.message );
+				channel.add.info( e.data.message );
 				break;
 				
 			case "get_channels":

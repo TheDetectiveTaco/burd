@@ -60,8 +60,8 @@ function setMouseEvents(){
 	});	
 	
 	
-	$("div#nav-tree").on("click", "li", function() {
-		switcher.find( $(this).parent().parent().attr("socket") , base64.decode( $(this).attr("channel") ) ).show();
+	$("div#nav-tree").on("mousedown", "li", function( e ) {
+		if( e.button == 0 ) switcher.find( $(this).parent().parent().attr("socket") , base64.decode( $(this).attr("channel") ) ).show();
 	});
 	
 	

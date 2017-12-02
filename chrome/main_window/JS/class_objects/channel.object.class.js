@@ -66,6 +66,8 @@ var channel = {
 				channel.add.userText({ user: str, text: str, action: bool, color: str, highlight: bool }); 
 				color can be either hex or rgb, do not add "color:"
 			*/
+			
+
 			if( e.action == undefined ) e.action = false;
 			if( e.highlight == undefined ) e.highlight = false;
 			if( e.color == undefined ) e.color = channel.obj.find("div.user:iAttrContains( 'nick', '" + e.user + "' )").css("color");
@@ -92,6 +94,10 @@ var channel = {
 			}else{
 				switcher.findByChannelObj( channel.obj ).markUnread();
 			}
+			
+			/* parse emojis */
+			if( emoji.isEmoji( e.text ) ) style += " emojimsg";
+			
 			
 			channel.obj.find("div.content").append(
 				HTMLParser.parse( html, {
@@ -328,6 +334,7 @@ var channel = {
 				break;
 
 		}
+		$( "ul.server-items" ).sortable();
 		return this;
 	}
 }

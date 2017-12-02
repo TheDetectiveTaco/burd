@@ -1,5 +1,6 @@
 var whoCaptureState = 0; //if the state is >0 then we need to capture the results of /who
 var lastCTCP = 0;
+var lastCTCPping = 0;
 var pmCache = [];
 function parseData( sock, data ){
 	
@@ -14,14 +15,13 @@ function parseData( sock, data ){
 	var cMsg = bits[bits.length-1];
 	if( data.indexOf( " :" ) > 0 ) cMsg = data.substr( data.indexOf( " :" ) + 2 );
 	
-	var netConsole = channel.find( sock.socketID, "network console" );
+	channel.find( sock.socketID, "network console" );
 	
 	if ( parseInt( bits[1] ) > 0 ) {
 		/* it's a numeric! */
 		switch( parseInt( bits[1] ) ) {
 			
-			case 1:
-			
+			case E.RPL_WELCOME:
 				/* welcome message. registration must have been a success */
 				sock.send( "PROTOCTL NAMESX" );
 				
@@ -40,15 +40,14 @@ function parseData( sock, data ){
 						sock.send( "JOIN " + sock.userInfo.autojoin.toString() );
 					}, 5000);
 				}
-			case 1:
-			case 2:
-			case 3: 
-				netConsole.addText(
+			case E.RPL_YOURHOST:
+			case E.RPL_CREATED: 
+				channel.addText(
 					HTMLParser.stringify( cMsg )
 				);
 				break;
 			
-			case 4:
+			case E.RPL_MYINFO:
 				/* 004 <my_nick> <server_name> <version> <user_modes> <chan_modes> */
 				sock.serverInfo.serverName = bits[3];
 				sock.serverInfo.serverVersion = bits[4];
@@ -57,7 +56,7 @@ function parseData( sock, data ){
 				
 				break;
 				
-			case 5:
+			case E.RPL_ISUPPORT:
 				if( cMsg.toLowerCase() == "are supported by this server" ) {
 					/* RPL_ISUPPORT */
 					for( var i in bits ) {
@@ -66,78 +65,86 @@ function parseData( sock, data ){
 							sock.iSupport.push( bits[i] );
 							if( bits[i].substr(0,8).toLowerCase() == "network=" ){
 								$("div.server-list[socket=" + sock.socketID + "] div.server-title").text( bits[i].split( "=" )[1] );
-								netConsole.obj.find( "div.channel-topic b" ).text( bits[i].split( "=" )[1] );
+								channel.obj.find( "div.channel-topic b" ).text( bits[i].split( "=" )[1] );
 							}
 						}
 					}
 					cMsg = data.substr( bits[1].length + bits[2].length + 2 );
-					netConsole.addText(
+					channel.addText(
 						HTMLParser.stringify( cMsg )
 					);
 				}
 				break;
-			case 219:
+			case E.RPL_ENDOFSTATS:
 				pcmsg();
 				break;
-			case 221:
+				
+			case E.RPL_UMODEIS:
 				channel.current( sock.socketID ).add.info( "Your modes are: " + bits[3] );
 				break;
-			case 249:
-				p3cmsg();
-				break;
-			case 252:
-			case 254:
-				netConsole.addText(
-					HTMLParser.stringify( bits[3] + " " + cMsg )
-				);
-				break;
-			case 263:
-				p3cmsg();
-				break;
-			case 250:	
-			case 251:
-			case 255:
-			case 265:
-			case 266:
-				netConsole.addText(
-					HTMLParser.stringify( cMsg )
-				);
-				if( sock.serverProperties().PREFIX == undefined ) sock.iSupport.push("PREFIX=(waohv)~!@%+", "CHANTYPES=%#&+");
+				
+			case E.RPL_STATSLLINE:
+			case E.RPL_STATSOLINE:
+			case E.RPL_STATSHLINE:
+			case E.RPL_STATSSLINE:
+			case E.RPL_STATSTLINE:
+			case E.RPL_STATSBLINE:
+			case E.RPL_STATSPLINE:
+			case E.RPL_LUSEROP:
+			case E.RPL_LUSERCHANNELS:
+			case E.RPL_TRYAGAIN:
+				pcmsg(3);
 				break;
 				
-			/* whois junk */
-			case 301:
-				/* whois away */
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> is away (<span class=\"whois_away\">" + HTMLParser.linkify( HTMLParser.stringify(cMsg) ) + "</span>)"  );
+			case E.RPL_STATSCONN:	
+			case E.RPL_LUSERCLIENT:
+			case E.RPL_LUSEROP:
+			case E.RPL_LUSERUNKNOWN:
+			case E.RPL_LUSERCHANNELS:
+			case E.RPL_LUSERME:
+			case E.RPL_ADMINME:
+			case E.RPL_ADMINLOC1:
+			case E.RPL_ADMINLOC2:
+			case E.RPL_ADMINEMAIL:
+			case E.RPL_GLOBALUSERS:
+				pcmsg();
 				break;
 				
-			case 311:
+
+			case E.RPL_AWAY:
+				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> is away (<span class=\"whois_away\">" + colors.parse( HTMLParser.linkify( HTMLParser.stringify(cMsg) ) ) + "</span>)"  );
+				break;
+				
+			case E.RPL_WHOISUSER:
+			case E.RPL_WHOWASUSER:
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> (" + HTMLParser.stringify(bits[4]) + "@" + bits[5] + "): <span class=\"whois_extra\">" + HTMLParser.stringify(cMsg) + "</span>" );
 				break;
-			case 312:
-				/* whois server */
+			case E.RPL_WHOISSERVER:
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> <span class=\"whois_server\">" + bits[4] + " (" + HTMLParser.linkify( HTMLParser.stringify(cMsg) ) + ")</span>"  );
 				break;
 				
-			case 317:
+			case E.RPL_WHOISOPERATOR:
+				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.stringify(cMsg)  );
+				break;				
+			case E.RPL_WHOISIDLE:
 				/* whois idle sign on time */
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> signed on " + timeConverter( bits[5] )  );
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> seconds idle " +  bits[4]  );
 				break;
 				
-			case 319:
+			case E.RPL_WHOISCHANNELS:
 				/* whois channels */
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.linkify( HTMLParser.stringify(cMsg) )  );
 				break;
 				
-			case 330:
+			case E.RPL_WHOISACCOUNT:
 				/* whois login */
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> is logged in as <b>" + HTMLParser.linkify( HTMLParser.stringify(bits[4]) ) + "</b>"  );
 				break;
 				
 				
 				
-			case 332:
+			case E.RPL_TOPIC:
 				/* Channel topic */
 				var channelName = bits[3];
 				channel.find( sock.socketID, channelName );
@@ -149,7 +156,7 @@ function parseData( sock, data ){
 				}
 				break;
 				
-			case 333:
+			case E.RPL_TOPICWHOTIME:
 				/* Channel topic info*/
 				var channelName = bits[3];
 				channel.find( sock.socketID, channelName );
@@ -159,7 +166,7 @@ function parseData( sock, data ){
 				}
 				break;
 				
-			case 353:
+			case E.RPL_NAMREPLY:
 				/* channel nicks */
 				var nicks = cMsg.split( " " );
 				for( var i in nicks ) {
@@ -168,7 +175,7 @@ function parseData( sock, data ){
 				}
 				break;
 				
-			case 352:
+			case E.RPL_WHOREPLY:
 				/* /who results */
 				var sLen = bits[0].length + bits[2].length + 5;
 				if( whoCaptureState == 0 ){
@@ -203,16 +210,16 @@ function parseData( sock, data ){
 				whoCaptureState = 0; //reset the state
 				break;
 				
-			case 366:
+			case E.RPL_ENDOFNAMES:
 				/* End of /NAMES list. */
 				var channelName = bits[3];
 				processNickList( sock, channelName );
 				nickCache = [];
 				break;
 				
-			case 367:
-			case 346:
-			case 348:
+			case E.RPL_BANLIST:
+			case E.RPL_INVITELIST:
+			case E.RPL_EXCEPTLIST:
 			
 				/* +b list */
 				var HTML = '<span class="list-name">' + bits[3] + ': </span>';
@@ -222,50 +229,44 @@ function parseData( sock, data ){
 				channel.current( sock.socketID ).addText( HTML );
 				break;
 				
-			case 347:
-			case 349:
-			case 368:
+			case E.RPL_ENDOFINVITELIST:
+			case E.RPL_ENDOFEXCEPTLIST:
+			case E.RPL_ENDOFBANLIST:
 				pcmsg();
 				break;
 				
-			case 378:
+			case E.RPL_WHOISHOST:
 				/* whois is connecting from */
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.stringify( cMsg ) );
 				break;
-			case 372:
-			case 375:
-			case 376:
-				netConsole.addText(
+			case E.RPL_MOTD:
+			case E.RPL_MOTDSTART:
+			case E.RPL_ENDOFMOTD:
+				channel.addText(
 					"<span style=\"font-family: monaco, Consolas, 'Lucida Console', monospace\">" + HTMLParser.stringify( cMsg ).replace(/\s\s/g, "&nbsp;&nbsp;") + "</span>"
 				);
 				break;
-			
-			case 401:
-			case 404:	
-			case 412:
-			case 421:
-			case 461:
-			case 482:
-			case 473:
-				p3cmsg();
-				break;
-			case 474:
+
+			case E.ERR_BANNEDFROMCHAN:
 				//banned message
 				ui.errorMessage.show("Banned", HTMLParser.stringify( bits[3] ) + ": " + HTMLParser.stringify( cMsg ), 10);
 				break;
-			case 481:
-				pcmsg();
+			case E.ERR_BADCHANNELKEY:
+				//channel key
+				ui.input.show( "You need to enter a key to join " + HTMLParser.stringify( bits[3] ), "", "../images/mdl/white/ic_vpn_key_white_24px.svg", function( e ){
+					if( e.length > 0 ) {
+						sock.send( "JOIN " + bits[3] + " " + e );
+					}
+				} );
 				break;
 				
-			case 501:
-				pcmsg();
-				break;
+
 				
-			case 671:
+			case E.RPL_WHOISSECURE:
 				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify( bits[3] ) + "</b>]</span> is using a secure connection"  );
 				break;
 				
-			case 728:
+			case E.QLIST:
 				/* +q list */
 				var HTML = '<span class="list-name">' + bits[3] + ': </span>';
 				HTML +=  '<span class="list-content">' + bits[5] + '</span> on ';
@@ -273,9 +274,56 @@ function parseData( sock, data ){
 				HTML +=  '<span class="list-user">' + bits[6] + '</span>';
 				channel.current( sock.socketID ).addText( HTML );
 				break;
-			case 729:
-				channel.current( sock.socketID ).addText( cMsg );
+				
+				
+			case E.ERR_NOSUCHNICK:
+			case E.ERR_UMODEUNKNOWNFLAG:
+			case E.RPL_LOCALUSERS:
+			case E.RPL_NOUSERS:
+			case E.RPL_UNAWAY:
+			case E.RPL_NOWAWAY:
+			case E.RPL_INFO:
+			case E.RPL_CHANNEL_URL:
+			case E.ERR_USERSDONTMATCH:
+			case E.ERR_KNOCKDISABLED:
+			case E.RPL_OMOTDSTART:
+			case E.RPL_OMOTD:
+			case E.RPL_ENDOFOMOTD:
+				pcmsg();
 				break;
+
+			case E.ERR_NOSUCHNICK:
+			case E.ERR_CANNOTSENDTOCHAN:	
+			case E.ERR_NOTEXTTOSEND:
+			case E.ERR_UNKNOWNCOMMAND:
+			case E.ERR_NEEDMOREPARAMS:
+			case E.ERR_CHANOPRIVSNEEDED:
+			case E.ERR_INVITEONLYCHAN:
+			case E.ERR_WASNOSUCHNICK:
+			case E.RPL_TARGUMODEG:
+			case E.RPL_TARGNOTIFY:
+			case E.RPL_KNOCKDLVR:
+			case E.ERR_TOOMANYKNOCK:
+			case E.ERR_CHANOPEN:
+			case E.ERR_KNOCKONCHAN:
+			case E.ERR_NOPRIVS:
+			case E.ERR_CANNOTCHANGEUMODE:
+			case E.ERR_CANNOTCHANGECHANMODE:
+			case E.ERR_CANNOTCHANGESERVERMODE:
+			case E.ERR_CANNOTSENDTONICK:
+			case E.ERR_UNKNOWNSERVERMODE:
+			case E.ERR_SERVERMODELOCK:
+			case E.ERR_TOOMANYLANGUAGES:
+			case E.ERR_NOLANGUAGE:
+			case E.ERR_TEXTTOOSHORT:
+				pcmsg(3);
+				break;
+				
+				
+			default:
+				console.log( data );
+				
+				
 				
 		}
 	}else{
@@ -296,7 +344,7 @@ function parseData( sock, data ){
 				if( sock.userInfo.nick.realname == "" ) sock.userInfo.nick.realname = "Burd IRC";
 				sock.send( "NICK " + sock.userInfo.nick.nick );
 				sock.send( "USER " + sock.userInfo.username + " * * :" + sock.userInfo.nick.realname );
-				netConsole.add.info("Connected, registering with network...");
+				channel.add.info("Connected, registering with network...");
 				$( "#scripts" )[0].contentWindow.postMessage( {
 					command: "on_connect",
 					socketID: sock.socketID
@@ -350,6 +398,9 @@ function parseData( sock, data ){
 					
 					the way we distinguish between the two is to check the nick against our own
 				*/
+				
+				/* if the server didn't send us a PREFIX in iSupport then lets make our own */
+				if( sock.serverProperties().PREFIX == undefined ) sock.iSupport.push("PREFIX=(waohv)~!@%+", "CHANTYPES=%#&+" );
 				
 				/* sometimes channels will follow ":", but sometimes not */
 				if( bits[2].substr( 0,1 ) == ":" ) bits[2] = bits[2].substr( 1 );
@@ -432,7 +483,7 @@ function parseData( sock, data ){
 				if( oldN.toLowerCase() == sock.userInfo.nick.nick.toLowerCase() ) {
 					/* It's our nick! let's update our records */
 					sock.userInfo.nick.nick = newN;
-					netConsole.obj.find( "span.mynick" ).html( HTMLParser.stringify( newN ) );
+					channel.obj.find( "span.mynick" ).html( HTMLParser.stringify( newN ) );
 					channel.changeUserNick( oldN, newN );
 				}else{
 					/*
@@ -454,7 +505,7 @@ function parseData( sock, data ){
 					switch( bits[2].toUpperCase() ){
 						case "AUTH":
 						case "*":
-							netConsole.add.info( cMsg );
+							channel.add.info( cMsg );
 							break;
 						default:
 							channel.current( sock.socketID ).add.userNotice( parseNick(bits[0]).nick, bits[2], cMsg );
@@ -603,6 +654,9 @@ function parseData( sock, data ){
 				break;
 		}
 	}
+	
+	
+	
 	function checkHighlight( e ){
 		for( var i in settings.highlights ){
 			if( settings.highlights[i] != "%n" && e.toLowerCase().indexOf( settings.highlights[i].toLowerCase() ) > -1 ) return true;
@@ -610,13 +664,14 @@ function parseData( sock, data ){
 		if( settings.highlights.indexOf("%n") > -1 && e.toLowerCase().indexOf( sock.userInfo.nick.nick.toLowerCase() ) > -1 ) return true;
 		return false;
 	}
-	function p3cmsg(){
-		/* prints bits[3] and the cMsg */
-		channel.current( sock.socketID ).add.info( bits[3] + " " + cMsg );
-	}
-	function pcmsg(){
+	function pcmsg(e){
 		/* prints the cMsg */
-		channel.current( sock.socketID ).add.info( cMsg );
+		if( e == undefined ) {
+			channel.current( sock.socketID ).add.info( cMsg );
+		}else{
+		/* prints bits[e] and the cMsg */
+			channel.current( sock.socketID ).add.info( bits[e] + " " + cMsg );
+		}
 	}
 }
 
@@ -632,8 +687,16 @@ function processCTCP( sock, nick, message, reply ){
 	nick = parseNick(nick);
 	if( reply ){
 		/* it's a CTCP reply */
-		channel.current( sock.socketID ).add.info( "<b>CTCP " + HTMLParser.stringify( bits[0].toUpperCase() ) + " Reply from " + nick.nick + ":</b> " + message, true );
-
+		
+		if( bits[0].toUpperCase() == "PING" ) {
+			if( lastCTCPping == message ) {
+				channel.current( sock.socketID ).add.info( "<b>CTCP " + HTMLParser.stringify( bits[0].toUpperCase() ) + " Reply from " + nick.nick + ":</b> " + ((Date.now() - lastCTCPping) / 1000) + " seconds", true );
+			}
+		}else{
+			channel.current( sock.socketID ).add.info( "<b>CTCP " + HTMLParser.stringify( bits[0].toUpperCase() ) + " Reply from " + nick.nick + ":</b> " + message, true );
+		}
+		
+		
 	} else {
 
 		/* it's a CTCP request */
@@ -658,9 +721,11 @@ function processCTCP( sock, nick, message, reply ){
 
 				case "PING":
 					if( bits.length == 2 ) {
-						sock.send( "NOTICE " + nicknick + " :\x01PING "+ bits[1] +"\x01");
-						channel.add.info( nick.nick + " requested CTCP PING" );
+						sock.send( "NOTICE " + nick.nick + " :\x01PING "+ bits[1] +"\x01");
+					}else if( bits.length == 1 ) {
+						sock.send( "NOTICE " + nick.nick + " :\x01PING "+ parseInt(Date.now()/1000) +"\x01");
 					}
+					channel.add.info( nick.nick + " requested CTCP PING" );
 					break;
 
 				case "TIME":

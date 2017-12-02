@@ -6,6 +6,7 @@
 		</style>
 		
 		<script src="../global_js/jquery.min.js"></script>
+		<script src="../global_js/ui.menu.js"></script>
 		<script src="js/main.js"></script>
 		<link rel="stylesheet" href="../global_css/menu.css">
 		<link rel="stylesheet" href="../global_css/controls.css">
@@ -15,8 +16,8 @@
 		<div id="content">
 			<div id="tabs">
 				<div class="tab selected-tab" sid="ui" style="background-image:url(images/ic_format_paint_white_24px.svg)">UI Settings</div>
-				<div class="tab" sid="privacy" style="background-image:url(images/ic_visibility_white_24px.svg)">Privacy</div>
-				<div class="tab" sid="coms" style="background-image:url(images/ic_functions_white_24px.svg)">User Cmds</div>
+				<div class="tab" sid="ignore" style="background-image:url(images/ic_visibility_white_24px.svg)">Ignore</div>
+				<div class="tab" sid="aliases" style="background-image:url(images/ic_functions_white_24px.svg)">Aliases</div>
 				<div class="tab" sid="sounds" style="background-image:url(images/ic_volume_up_white_24px.svg)">Sounds</div>
 				
 				
@@ -57,8 +58,25 @@
 					(0 = none)
 				</div>
 			</div>
-			<div class="right-panel" sid="privacy">
-				<h1>Privacy Settings</h1>
+			<div class="right-panel" sid="ignore">
+				<h1>Ignore Settings</h1>
+				<div>
+					<div class="lhead" style="width:80px;">Type</div>
+					<div class="lhead" style="width:357px;">Value</div>
+					<div class="lc">&nbsp;</div>
+				</div>
+				<div class="lview">
+					<div class="litem">
+						<div class="ltyp">string</div>
+						<div class="lval">testing!*@127.0.0.9</div>
+						<div class="lc">&nbsp;</div>
+					</div>
+					<div class="litem">
+						<div class="ltyp">regex</div>
+						<div class="lval">/cake\sis\sbad/</div>
+						<div class="lc">&nbsp;</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

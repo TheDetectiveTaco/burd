@@ -364,6 +364,7 @@ var menu = {
 						icon: false,
 						subMenu: false,
 						callback: function(){
+							lastCTCPping = Date.now();
 							getSocketByID( sockID ).send( "PRIVMSG " + user + " :\x01PING " + Date.now() + "\x01" );
 						}
 					},

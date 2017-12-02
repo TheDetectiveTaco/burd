@@ -112,3 +112,79 @@ h1{
 div.k2l{
 	float:left;width:150px;
 }
+
+
+div.lview{
+	border:1px solid #4c4c4c;
+	height:200px;
+	font-size:1.1em;
+	padding:3px;
+	overflow:auto;
+}
+div.lhead{
+	float:left;
+	height:20px;
+	background:#383838;
+	border: 1px solid #616161;
+	padding-left: 4px;
+}
+div.lval,div.ltyp{
+	float:left;
+	height:20px;
+	font-size:0.9em;
+	padding-left: 4px;
+}
+div.ltyp{
+	width:80px;
+}
+div.lval{
+	width:300px;
+}
+div.litem{
+	height:20px;
+	width:calc(100% - 12px);
+}
+div.litem:hover{
+	background:#383838;
+}
+div.lc{
+	clear:both;
+	height:1px;
+}
+
+
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #545454;
+  border: 0px none #ffffff;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #545454;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #545454;
+}
+::-webkit-scrollbar-track {
+  background: #333333;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #333333;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

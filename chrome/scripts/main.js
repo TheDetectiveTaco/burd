@@ -1,5 +1,7 @@
 var cache = {};
-var IRC = {
+var src = null;
+
+var $ = {
 	workingSocket: 0,
 	callback: function(e){},
 	sendPacket: function( e, s ){
@@ -56,8 +58,6 @@ var IRC = {
 	}
 }
 
-var src = null;
-
 
 var scripts = [
 	{
@@ -113,18 +113,21 @@ var scripts = [
 				e = { socketID, message }
 				manipulate and return e, or return false to prevent default
 			*/
+			
 			if( e.message == "/boo" ){
-				IRC.getServers(function(e){
-					console.log( e );
-				});
+				
 				return false;
 			}
 			return e;
 		}
 		
 	},
+	
+	
+	
+	
 	{
-		name: "Example Script",
+		name: "IPInfo",
 		GUID: "94056d42-7829-4uac-oc8e-635365ea3d43",
 
 		onUserInput: function( e ){
@@ -138,40 +141,10 @@ var scripts = [
 					url: "http://ipinfo.io/" + ip + "/?callback",
 					onComplete: function(e){
 						console.log(e);
-						IRC.addWindowInfo( "*", "IP Information for " + ip + " <pre>" + e + "</pre>" );
+						$.addWindowInfo( "*", "IP Information for " + ip + " = " + e );
 					}
 				});
 				return false;
-			}
-		}
-	},
-	{
-		name: "Translator",
-		GUID: "94056d40-7829-4uac-oc8e-635365ea3d43",
-
-		onUserInput: function( e ){
-			/* 
-				e = { socketID, message }
-				manipulate and return e, or return false to prevent default
-			*/
-			if( e.message.substr( 0, 7 ) == "/trans " ){
-				var un = e.message.split( " " )[1];
-				cache.tuser = un;
-				IRC.addWindowInfo( "*", "added user to cache" );
-				return false;
-			}
-		},
-		
-		onChannelMessage: function( e ){
-			/*+ e = { serverName, socketID, channelName, userName, message } */
-			if(  cache.tuser != undefined && e.userName.toLowerCase() == cache.tuser.toLowerCase() ){
-				http.get({
-					url: "http://media.haxed.net/gt.php?q=" + escape(e.message),
-					onComplete: function(e){
-						console.log(e);
-						IRC.addWindowInfo( "*", "Translated: " + e );
-					}
-				});
 			}
 		}
 	}
@@ -182,7 +155,7 @@ var scripts = [
 window.addEventListener('message', function( e ) {
 	var command = e.data.command;
 	src = e.source;
-	if( e.data.socketID != undefined ) IRC.workingSocket = e.data.socketID;
+	if( e.data.socketID != undefined ) $.workingSocket = e.data.socketID;
 	switch ( command ) {
 		
 		case "test":
@@ -265,7 +238,7 @@ window.addEventListener('message', function( e ) {
 		case "on_user_input":
 			var te = e.data;
 			for( var i in scripts ){
-				if( scripts[i].onUserInput != undefined ) te = scripts[i].onUserInput( te );
+				if( scripts[i].onUserInput != false ) te = scripts[i].onUserInput( te );
 				if( te == undefined ) te = e.data;
 			}
 			if( te == false ) return;
@@ -273,13 +246,13 @@ window.addEventListener('message', function( e ) {
 			break;
 			
 		case "get_channels":
-			IRC.callback( e.data.channels );
+			$.callback( e.data.channels );
 			break;
 		case "get_pms":
-			IRC.callback( e.data.pms );
+			$.callback( e.data.pms );
 			break;
 		case "get_servers":
-			IRC.callback( e.data.servers );
+			$.callback( e.data.servers );
 			break;
 			
 	}
