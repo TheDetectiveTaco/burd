@@ -1,3 +1,5 @@
+var P = window.parent;
+
 $(function(){
 	$.menu.style = "dark";
 	$( "div.close" ).click(function() {
@@ -40,8 +42,17 @@ $(function(){
 		]);
 	});
 	
-
+	
+	/* set the state of checkboxes */
+	if( P.settings.channels.userColors ) $( "div#colored_nicks" ).addClass( "checked" );
+	if( P.settings.channels.textColors ) $( "div#colored_text" ).addClass( "checked" );
+	if( P.settings.channels.showTime ) $( "div#timestamps" ).addClass( "checked" );
+	if( P.settings.channels.showJPQ ) $( "div#jpq" ).addClass( "checked" );
+	if( P.settings.channels.showModes ) $( "div#modes" ).addClass( "checked" );
+	if( P.settings.channels.focusOnJoin ) $( "div#autofocus" ).addClass( "checked" );
+	if( P.settings.channels.showEmoji ) $( "div#emojis" ).addClass( "checked" );
 	
 	
-	$( "div.tab[sid='ignore']" ).click();
+	
+	$( "div.tab[sid='ui']" ).click();
 });	

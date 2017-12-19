@@ -67,6 +67,17 @@ var channel = {
 				color can be either hex or rgb, do not add "color:"
 			*/
 			
+			if( settings.channels.showEmoji == false ) {
+				e.text = e.text.replace(HTMLParser.emojiPattern,"\u263A")
+			}
+			
+			if( e.nosound == undefined ) {
+				if( channel.obj.attr("type") == "1" ){
+					if( settings.sounds.channel ) audio.play( audio.channel_message );
+				}else if( channel.obj.attr("type") == "2" ){
+					if( settings.sounds.pm ) audio.play( audio.pm );
+				}
+			}
 
 			if( e.action == undefined ) e.action = false;
 			if( e.highlight == undefined ) e.highlight = false;
@@ -260,11 +271,8 @@ var channel = {
 		if( cl.length > settings.ui.scrollback ) {
 			cl.each(function(){
 				if( quitLoop ) return;
-				if( !$(this).hasClass( "highlight" ) ){
-					$(this).remove();
-					quitLoop = true;
-					
-				}
+				$(this).remove();
+				quitLoop = true;
 			});
 		}
 	},

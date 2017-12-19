@@ -93,18 +93,18 @@ var ui = {
 		show: function( title, text, socket, callback ){
 			this.callback = function(){};
 			this.hide();
-			$("div#main-app").addClass("blur");
 			if( typeof( callback ) == "function" ){
 				showUIerror();
 			}else{
 				if( ( Date.now() - lastMouseClick ) < 2000 ){
 					showUIerror();
 				}else{
-					channel.current( socket ).addInfo("<b>Error:</b> " + text );
+					channel.current( socket ).add.info("Error: " + text );
 				}
 			}
 			function showUIerror(){
 				$( "div.error-message" ).show();
+				$("div#main-app").addClass("blur");
 				$( "div.error-message div.error-text" ).text(text);
 				$( "div.error-message div.error-title" ).text(title);
 				$( "div#modal" ).fadeIn( settings.ui.animation, function(){ $( "input.error-close" ).focus(); } );

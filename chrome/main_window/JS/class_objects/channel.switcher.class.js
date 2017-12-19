@@ -20,13 +20,19 @@ var switcher = {
 		this.channel.remove();
 	},
 	show: function(){
-		$("div.server-list ul li").removeClass( "selected" );
+		$("div.server-list ul li.selected").removeClass( "selected" );
 		this.current.addClass( "selected" );
 		this.current.removeClass( "unread" ).removeClass( "highlight" );
-		$("div.right-content:visible").hide();
+		$("div.right-content").hide();
 		this.channel.show();
-		$("input.user-input:visible:first").focus();
-		ui.resize();
+		
+		setTimeout(function(){
+			//these slow down channel switching, so we run them on a timer
+			ui.resize();
+			switcher.current.removeClass( "unread" ).removeClass( "highlight" );
+		},100);
+		//$("input.user-input:visible:first").focus();
+		//ui.resize();
 	},
 	highlight: function(){
 		if( !this.current.hasClass( "selected" ) ) this.current.addClass( "highlight" );

@@ -200,7 +200,8 @@ function parseInput( e ){
 		channel.add.userText({
 			user: e.socket.userInfo.nick.nick,
 			text: e.input,
-			color: cssGetValue( "nickdefault", "color" )
+			color: cssGetValue( "nickdefault", "color" ),
+			nosound: true
 		});
 		
 		e.socket.send("PRIVMSG " + channelName + " :" + e.input);
