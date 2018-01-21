@@ -26,20 +26,12 @@ var switcher = {
 		this.current.removeClass( "unread" ).removeClass( "highlight" );
 		$("div.right-content").hide();
 		this.channel.show();
-<<<<<<< HEAD
 		clearTimeout(this.timer);
 		this.timer = setTimeout(function(){
 			//these slow down channel switching, so we run them on a timer
 			ui.resize();
 			switcher.current.removeClass( "unread" ).removeClass( "highlight" );
 			$("input.user-input:visible").focus();
-=======
-		
-		setTimeout(function(){
-			//these slow down channel switching, so we run them on a timer
-			ui.resize();
-			switcher.current.removeClass( "unread" ).removeClass( "highlight" );
->>>>>>> 66c0dbe913d8081bf8a122a4f8c0c42b5b43e022
 		},100);
 		//$("input.user-input:visible:first").focus();
 		//ui.resize();

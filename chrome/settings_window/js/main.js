@@ -44,10 +44,6 @@ $(function(){
 	if( P.settings.channels.focusOnJoin ) $( "div#autofocus" ).addClass( "checked" );
 	if( P.settings.channels.showEmoji ) $( "div#emojis" ).addClass( "checked" );
 	
-<<<<<<< HEAD
-
-=======
->>>>>>> 66c0dbe913d8081bf8a122a4f8c0c42b5b43e022
 	
 	var lvo = $( "div[sid='ignore'] div.lview" );
 	lvo.html( "" );
@@ -57,9 +53,7 @@ $(function(){
 	for( var i in P.settings.ignore.regex ) {
 		lvo.append('<div class="litem"><div class="ltyp">regex</div><div class="lval">' + P.settings.ignore.regex[i] + '</div><div class="lc">&nbsp;</div></div>');
 	}
-	
-	
-<<<<<<< HEAD
+
 	lvo = $( "div[sid='usercoms'] div.lview" );
 	lvo.html( "" );
 	for( var i in P.settings.userCommands ) {
@@ -71,7 +65,4 @@ $(function(){
 
 
 	$( "div.tab[sid='usercoms']" ).click();
-=======
-	$( "div.tab[sid='ui']" ).click();
->>>>>>> 66c0dbe913d8081bf8a122a4f8c0c42b5b43e022
 });	
