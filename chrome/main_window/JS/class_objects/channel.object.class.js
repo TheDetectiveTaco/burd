@@ -61,12 +61,31 @@ var channel = {
 			);
 			channel.scrollBottom( false );
 		},
+		text: function( e ) {
+			var time = (new Date).toString().split(" ")[4];
+			
+			channel.obj.find("div.content").append(
+				HTMLParser.parse( HTMLParser.html.addText, { time:  time, message: e } )
+			);
+			channel.scrollBottom( false );
+		},
 		userText: function( e ) {
 			/*
 				channel.add.userText({ user: str, text: str, action: bool, color: str, highlight: bool }); 
 				color can be either hex or rgb, do not add "color:"
 			*/
 			
+			if( settings.channels.showEmoji == false ) {
+				e.text = e.text.replace(HTMLParser.emojiPattern,"\u263A")
+			}
+			
+			if( e.nosound == undefined ) {
+				if( channel.obj.attr("type") == "1" ){
+					if( settings.sounds.channel ) audio.play( audio.channel_message );
+				}else if( channel.obj.attr("type") == "2" ){
+					if( settings.sounds.pm ) audio.play( audio.pm );
+				}
+			}
 
 			if( e.action == undefined ) e.action = false;
 			if( e.highlight == undefined ) e.highlight = false;
@@ -91,6 +110,15 @@ var channel = {
 			if( e.highlight ) {
 				switcher.findByChannelObj( channel.obj ).highlight();
 				style = "highlight";
+				notifications.create( {
+					title: "IRC Highlight",
+					message: e.user + ": " + e.text,
+					cob: channel.obj,
+					callback: function( e ){
+						switcher.findByChannelObj( e.data.cob ).show();
+						chrome.app.window.current().focus();
+					}
+				});
 			}else{
 				switcher.findByChannelObj( channel.obj ).markUnread();
 			}
@@ -246,12 +274,8 @@ var channel = {
 		this.scrollBottom( false );
 	},
 	addText: function( e ) {
-		var time = (new Date).toString().split(" ")[4];
-		
-		this.obj.find("div.content").append(
-			HTMLParser.parse( HTMLParser.html.addText, { time:  time, message: e } )
-		);
-		this.scrollBottom( false );
+		console.log( "using old addText function!" );
+		this.add.text( e );
 	},
 	truncate: function(){
 		/* this function removes old messages to conserve memory */
@@ -260,11 +284,8 @@ var channel = {
 		if( cl.length > settings.ui.scrollback ) {
 			cl.each(function(){
 				if( quitLoop ) return;
-				if( !$(this).hasClass( "highlight" ) ){
-					$(this).remove();
-					quitLoop = true;
-					
-				}
+				$(this).remove();
+				quitLoop = true;
 			});
 		}
 	},

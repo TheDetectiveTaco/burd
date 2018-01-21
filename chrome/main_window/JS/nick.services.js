@@ -7,6 +7,16 @@ function parseNick( e ){
 	return { nick: d[0], username: d[1], host: d[2] };
 }
 
+function formatRegex( e ){
+	var returnStr = "";
+	for( var i in e ) {
+		returnStr += e[i].replace( /[^a-zA-Z\d\s\*:]/, "\\" + e[i] );
+	}
+	returnStr = returnStr.replace( /\s/g, "\\s" );
+	returnStr = returnStr.replace( /\*/g, "(.*)" );
+	return returnStr;
+}
+
 /* processes HTML for channel users list using nickCache */
 function processNickList( socket, channelName, preserveColors ){
 	nickCache = sortNames( nickCache );

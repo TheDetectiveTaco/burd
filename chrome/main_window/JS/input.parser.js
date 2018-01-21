@@ -72,15 +72,14 @@ function parseInput( e ){
 				e.socket.send( "PRIVMSG " + inputBits[1] + (" :{1}" + cMsg.substr(inputBits[1].length + 1) + "{1}").replace(/\{1\}/g, String.fromCharCode(1)) );
 				break;
 			
+			case "echo":
+				channel.add.info( e.input.substr( 6 ) );
+				break;
+
 			case "test":
-				chrome.notifications.onClicked.addListener(function(e){console.log(e)});
-				chrome.notifications.create("hd663d76h", {
-					type: "basic",
-					message: "sdfsdf",
-					iconUrl: "../images/mdl/black/ic_question_answer_48px.svg",
-					title: "asdasd",
-					isClickable: true
-				});
+				notifications.create( { title: "a message", message: "hi\r\nthere", callback: function(){
+					console.log("yay");
+				} } );
 				break;
 			
 			case "action":
@@ -95,12 +94,12 @@ function parseInput( e ){
 					/* /ignore with no values */
 					channel.add.info( "There are " + settings.ignore.users.length + " user string(s) and " + settings.ignore.regex.length + " regex value(s) on ignore." );
 					channel.add.info( "<b>User string(s):</b> " + HTMLParser.stringify(settings.ignore.users.toString().replace(/\,/g, ", ")), true );
-					channel.add.info( "<b>Regex value(s):</b> /" + HTMLParser.stringify(settings.ignore.regex.toString().replace(/\,/g, "/, /")) + "/", true );
-				}else if( cMsg.substr( 0, 1 ) == "/" && cMsg.lastIndexOf( "/" ) == cMsg.length-1 ) {
+					channel.add.info( "<b>Regex value(s):</b> " + HTMLParser.stringify(settings.ignore.regex.toString().replace(/\,/g, ", ")), true );
+				}else if( cMsg.substr( 0, 1 ) == "/" && cMsg.lastIndexOf( "/"  > 2 ) ) {
 					/* it's regex */
-					var re = cMsg.substr( 1, cMsg.length-2 );
+					var re = cMsg;
 					settings.ignore.regex.push( re );
-					channel.add.info( "Added regex value to ignore: /<b>" + HTMLParser.stringify(re) + "</b>/", true );
+					channel.add.info( "Added regex value to ignore: <b>" + HTMLParser.stringify(re) + "</b>", true );
 				}else{
 					cMsg = cMsg.toLowerCase();
 					if ( cMsg.indexOf( "!" ) < 0 ) cMsg = cMsg + "!*@*"
@@ -157,13 +156,13 @@ function parseInput( e ){
 			case "unignore":
 				if( cMsg == inputBits[0] ){
 					return argError( "/%c value" );
-				}else if( cMsg.substr( 0, 1 ) == "/" && cMsg.lastIndexOf( "/" ) == cMsg.length-1 ) {
+				}else if( cMsg.substr( 0, 1 ) == "/" && cMsg.lastIndexOf( "/"  > 2 ) ) {
 					/* it's regex */
-					var re = cMsg.substr( 1, cMsg.length-2 );
+					var re = cMsg;
 					//settings.ignore.regex.push( re );
 					for( var i in settings.ignore.regex ) {
 						if( settings.ignore.regex[i].toLowerCase() == re.toLowerCase() ) {
-							channel.add.info( "Removed regex value from ignore: <b>/" + HTMLParser.stringify(settings.ignore.regex[i]) + "/</b>", true );
+							channel.add.info( "Removed regex value from ignore: <b>" + HTMLParser.stringify(settings.ignore.regex[i]) + "</b>", true );
 							settings.ignore.regex.splice( i, 1 );
 							return;
 						}
@@ -182,7 +181,10 @@ function parseInput( e ){
 					channel.add.info( "User string was not found" );
 				}
 				break;
-				
+			case "raw":
+			case "quote":
+				e.socket.send( cMsg );
+				break;	
 			case "umode":
 				if( inputBits.length == 1 ){
 					e.socket.send( "MODE " + e.socket.userInfo.nick.nick );
@@ -192,18 +194,25 @@ function parseInput( e ){
 				break;
 				
 			default:
-				e.socket.send( e.input.substr( 1 ) );
+				if( processUserCommands() ) {
+					return;
+				}else{
+					e.socket.send( e.input.substr( 1 ) );
+				}
 				break;
 				
 		}
 	}else{
+
 		channel.add.userText({
 			user: e.socket.userInfo.nick.nick,
 			text: e.input,
-			color: cssGetValue( "nickdefault", "color" )
+			color: cssGetValue( "nickdefault", "color" ),
+			nosound: true
 		});
 		
 		e.socket.send("PRIVMSG " + channelName + " :" + e.input);
+		
 	}
 	
 	function argError( e ) {
@@ -220,5 +229,48 @@ function parseInput( e ){
 		}
 		return false;
 	}
-	
+
+
+	function processUserCommands(){
+		if( e.isUserCommand != undefined ) return false;
+		
+		var uc = settings.userCommands;
+		var input = inputBits[0].toLowerCase().substr(1);
+		var d = new Date();
+		for( var i in uc ) {
+			if( uc[i].command == input ){
+				var action = uc[i].action;
+				action = action.replace( /\%c/g, channelName );
+				action = action.replace( /\%e/g, e.socket.serverInfo.serverName );
+				action = action.replace( /\%n/g, e.socket.userInfo.nick.nick );
+				action = action.replace( /\%v/g, app.version );
+				action = action.replace( /\%t/g, d.toTimeString() );
+				action = action.replace( /\%d/g, d.toLocaleDateString() );
+				action = wordToEnd( action, e.input );
+				e.input = "/" + action;
+				e.isUserCommand = true;
+				parseInput( e );
+				return true;
+			}
+		}
+		return false; /* if false is returned then no user command was processed */
+
+		function wordToEnd( i, z ){
+			var words = ( "undefined " + z ).split( " " ); /* add undefined to pad the indexes out, making 1 the first word */
+			for (a = 1; a < 9; a++) { 
+				if( i.indexOf( "&" + a ) > -1 ) {
+					var start = 0;
+					for (b = 1; b < a; b++) { 
+						start += words[b].length + 1;
+					}
+					for (k = 0; k < 9; k++) { 
+						i = i.replace( "&" + a, z.substr( start ) );
+						i = i.replace( "%" + a, words[a] );
+					}
+				}
+			}
+			return i;
+		}
+
+	}
 }

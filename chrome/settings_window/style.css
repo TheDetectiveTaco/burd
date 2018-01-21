@@ -40,7 +40,7 @@ div.caption div.close:hover{
 
 
 div#tabs{
-	width:130px;
+	width:140px;
 	height:348px;
 	background:#252526;
 	float:left;
@@ -59,7 +59,7 @@ div.selected-tab{
 	background-color:#3F3F46;
 }
 div.right-panel{
-	width:450px;
+	width:440px;
 	height:345px;
 	float:right;
 	overflow:auto;
@@ -68,7 +68,7 @@ div.right-panel{
 
 div.checkbox{
 	background:url(images/ic_check_box_outline_blank_white_24px.svg) no-repeat;
-	background-size:19px;
+	background-size:17px;
 	padding-left: 23px;
 	float:left;
 	margin-right:10px;
@@ -134,12 +134,22 @@ div.lval,div.ltyp{
 	font-size:0.9em;
 	padding-left: 4px;
 }
+
+
 div.ltyp{
 	width:80px;
 }
 div.lval{
 	width:300px;
 }
+
+div.comview div.ltyp{
+	width:95px;
+}
+div.comview div.lval{
+	width:300px;
+}
+
 div.litem{
 	height:20px;
 	width:calc(100% - 12px);

@@ -42,7 +42,7 @@ function parseData( sock, data ){
 				}
 			case E.RPL_YOURHOST:
 			case E.RPL_CREATED: 
-				channel.addText(
+				channel.add.text(
 					HTMLParser.stringify( cMsg )
 				);
 				break;
@@ -70,7 +70,7 @@ function parseData( sock, data ){
 						}
 					}
 					cMsg = data.substr( bits[1].length + bits[2].length + 2 );
-					channel.addText(
+					channel.add.text(
 						HTMLParser.stringify( cMsg )
 					);
 				}
@@ -93,6 +93,7 @@ function parseData( sock, data ){
 			case E.RPL_LUSEROP:
 			case E.RPL_LUSERCHANNELS:
 			case E.RPL_TRYAGAIN:
+			case E.ERR_NICKNAMEINUSE:
 				pcmsg(3);
 				break;
 				
@@ -107,42 +108,49 @@ function parseData( sock, data ){
 			case E.RPL_ADMINLOC2:
 			case E.RPL_ADMINEMAIL:
 			case E.RPL_GLOBALUSERS:
+			case E.RPL_STATSUPTIME:
 				pcmsg();
 				break;
 				
 
 			case E.RPL_AWAY:
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> is away (<span class=\"whois_away\">" + colors.parse( HTMLParser.linkify( HTMLParser.stringify(cMsg) ) ) + "</span>)"  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> is away (<span class=\"whois_away\">" + colors.parse( HTMLParser.linkify( HTMLParser.stringify(cMsg) ) ) + "</span>)"  );
 				break;
-				
+			
+			
+			
 			case E.RPL_WHOISUSER:
 			case E.RPL_WHOWASUSER:
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> (" + HTMLParser.stringify(bits[4]) + "@" + bits[5] + "): <span class=\"whois_extra\">" + HTMLParser.stringify(cMsg) + "</span>" );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> (" + HTMLParser.stringify(bits[4]) + "@" + bits[5] + "): <span class=\"whois_extra\">" + HTMLParser.stringify(cMsg) + "</span>" );
 				break;
 			case E.RPL_WHOISSERVER:
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> <span class=\"whois_server\">" + bits[4] + " (" + HTMLParser.linkify( HTMLParser.stringify(cMsg) ) + ")</span>"  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> <span class=\"whois_server\">" + bits[4] + " (" + HTMLParser.linkify( HTMLParser.stringify(cMsg) ) + ")</span>"  );
 				break;
 				
 			case E.RPL_WHOISOPERATOR:
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.stringify(cMsg)  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.stringify(cMsg)  );
 				break;				
 			case E.RPL_WHOISIDLE:
 				/* whois idle sign on time */
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> signed on " + timeConverter( bits[5] )  );
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> seconds idle " +  bits[4]  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> signed on " + timeConverter( bits[5] )  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> seconds idle " +  bits[4]  );
 				break;
 				
 			case E.RPL_WHOISCHANNELS:
 				/* whois channels */
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.linkify( HTMLParser.stringify(cMsg) )  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.linkify( HTMLParser.stringify(cMsg) )  );
 				break;
 				
 			case E.RPL_WHOISACCOUNT:
 				/* whois login */
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> is logged in as <b>" + HTMLParser.linkify( HTMLParser.stringify(bits[4]) ) + "</b>"  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> is logged in as <b>" + HTMLParser.linkify( HTMLParser.stringify(bits[4]) ) + "</b>"  );
 				break;
 				
-				
+			
+			case E.RPL_WHOSPCRPL:
+				/* special who reply */
+				channel.current( sock.socketID ).add.info( data.substr( bits[0].length + bits[1].length + bits[2].length + 3  ) );
+				break;
 				
 			case E.RPL_TOPIC:
 				/* Channel topic */
@@ -151,7 +159,7 @@ function parseData( sock, data ){
 				if ( channel.obj.length > 0 ) {
 					/* channel was found */
 					channel.obj.find( "div.channel-topic" ).html( "<b>" + HTMLParser.stringify( channelName ) + ":</b> " + colors.parse( HTMLParser.stringify( cMsg ) ) );
-					channel.addText( "<b>Topic for " + HTMLParser.stringify( channelName ) + " is:</b> " + colors.parse( HTMLParser.linkify( HTMLParser.stringify( cMsg ) ) ) );
+					channel.add.text( "<b>Topic for " + HTMLParser.stringify( channelName ) + " is:</b> " + colors.parse( HTMLParser.linkify( HTMLParser.stringify( cMsg ) ) ) );
 					channel.obj.find( "div.channel-topic" ).attr("tooltip", cMsg );
 				}
 				break;
@@ -162,7 +170,7 @@ function parseData( sock, data ){
 				channel.find( sock.socketID, channelName );
 				if ( channel.obj.length > 0 ) {
 					/* channel was found */
-					channel.addText( "<div style=\"opacity:0.5;\" tooltip=\"" + bits[4] + "\"><b>Topic set by </b>" + HTMLParser.stringify( bits[4].split("!")[0] ) + "<b> on </b>" + timeConverter( bits[5] ) + "</div>" );
+					channel.add.text( "<div style=\"opacity:0.5;\" tooltip=\"" + bits[4] + "\"><b>Topic set by </b>" + HTMLParser.stringify( bits[4].split("!")[0] ) + "<b> on </b>" + timeConverter( bits[5] ) + "</div>" );
 				}
 				break;
 				
@@ -179,7 +187,7 @@ function parseData( sock, data ){
 				/* /who results */
 				var sLen = bits[0].length + bits[2].length + 5;
 				if( whoCaptureState == 0 ){
-					channel.current( sock.socketID ).addText( HTMLParser.stringify( data.substr( sLen ) ) );
+					channel.current( sock.socketID ).add.text( HTMLParser.stringify( data.substr( sLen ) ) );
 				}else{
 					/* 
 					we need to do something with these results
@@ -226,7 +234,7 @@ function parseData( sock, data ){
 				HTML +=  '<span class="list-content">' + bits[4] + '</span> on ';
 				HTML +=  '<span class="list-date">' + timeConverter(bits[6]) + '</span> by ';
 				HTML +=  '<span class="list-user">' + bits[5] + '</span>';
-				channel.current( sock.socketID ).addText( HTML );
+				channel.current( sock.socketID ).add.text( HTML );
 				break;
 				
 			case E.RPL_ENDOFINVITELIST:
@@ -237,12 +245,12 @@ function parseData( sock, data ){
 				
 			case E.RPL_WHOISHOST:
 				/* whois is connecting from */
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.stringify( cMsg ) );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify(bits[3]) + "</b>]</span> " + HTMLParser.stringify( cMsg ) );
 				break;
 			case E.RPL_MOTD:
 			case E.RPL_MOTDSTART:
 			case E.RPL_ENDOFMOTD:
-				channel.addText(
+				channel.add.text(
 					"<span style=\"font-family: monaco, Consolas, 'Lucida Console', monospace\">" + HTMLParser.stringify( cMsg ).replace(/\s\s/g, "&nbsp;&nbsp;") + "</span>"
 				);
 				break;
@@ -263,7 +271,7 @@ function parseData( sock, data ){
 
 				
 			case E.RPL_WHOISSECURE:
-				channel.current( sock.socketID ).addText( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify( bits[3] ) + "</b>]</span> is using a secure connection"  );
+				channel.current( sock.socketID ).add.text( "<span class=\"whois_name\">[<b>" + HTMLParser.stringify( bits[3] ) + "</b>]</span> is using a secure connection"  );
 				break;
 				
 			case E.QLIST:
@@ -272,7 +280,7 @@ function parseData( sock, data ){
 				HTML +=  '<span class="list-content">' + bits[5] + '</span> on ';
 				HTML +=  '<span class="list-date">' + timeConverter( bits[7] ) + '</span> by ';
 				HTML +=  '<span class="list-user">' + bits[6] + '</span>';
-				channel.current( sock.socketID ).addText( HTML );
+				channel.current( sock.socketID ).add.text( HTML );
 				break;
 				
 				
@@ -661,7 +669,10 @@ function parseData( sock, data ){
 		for( var i in settings.highlights ){
 			if( settings.highlights[i] != "%n" && e.toLowerCase().indexOf( settings.highlights[i].toLowerCase() ) > -1 ) return true;
 		}
-		if( settings.highlights.indexOf("%n") > -1 && e.toLowerCase().indexOf( sock.userInfo.nick.nick.toLowerCase() ) > -1 ) return true;
+
+		var re = new RegExp("\\b" + formatRegex( sock.userInfo.nick.nick.toLowerCase() ) + "\\b", "ig");
+		
+		if( settings.highlights.indexOf("%n") > -1 && e.toLowerCase().match( re ) != null ) return true;
 		return false;
 	}
 	function pcmsg(e){

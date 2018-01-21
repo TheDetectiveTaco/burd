@@ -9,7 +9,12 @@ var ignore = {
 	},
 	matchRegex: function( e ){
 		for( var i in settings.ignore.regex ) {
-			var re = new RegExp( settings.ignore.regex[i], "ig" );
+
+			var a = settings.ignore.regex[i];
+			var rstr = a.substr(1,a.lastIndexOf("/")-1);
+			var rm = a.substr(a.lastIndexOf("/")+1);
+
+			var re = new RegExp( rstr, rm );
 			if( e.match( re ) ){
 				return true;
 			}

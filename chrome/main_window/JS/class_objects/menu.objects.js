@@ -137,7 +137,7 @@ var menu = {
 						icon: '../../images/mdl/white/ic_mode_edit_white_24px.svg',
 						subMenu: false,
 						callback: function(){
-							ui.input.show( "Edit channel topic", channel.find( sock.socketID, selectedChannel ).obj.find( "div.channel-topic" ).text(), "../../images/mdl/white/ic_mode_edit_white_24px.svg", function(e){
+							ui.input.show( "Edit channel topic", channel.find( sock.socketID, selectedChannel ).obj.find( "div.channel-topic" ).attr("tooltip"), "../../images/mdl/white/ic_mode_edit_white_24px.svg", function(e){
 								if( e ) {
 									sock.send( "TOPIC " + selectedChannel + " :" + e );
 									channel.find( sock.socketID, selectedChannel )

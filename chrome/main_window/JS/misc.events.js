@@ -6,11 +6,14 @@ function setMiscEvents(){
 		var cd = clipboard.read();
 		$(this).focus();
 		if( cd.indexOf( "\n" ) > -1 ) {
-			cd = cd.replace( /\r/g, "" );
-			cd = cd.replace( /\n/g, String.fromCharCode( 11 ) );
-			$(this).val( cd );
-			console.log( "default prevented" );
-			e.preventDefault();
+			
 		}
+	});
+
+	$(window).focus(function() {
+		ui.focused = true;
+		notifications.clear();
+	}).blur(function() {
+		ui.focused = false;
 	});
 }

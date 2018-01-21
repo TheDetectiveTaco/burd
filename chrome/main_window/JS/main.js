@@ -12,29 +12,42 @@ var app = {
 var settings = {
 	ui: {
 		animation: 200, /* speed of animation for the UI. can be set to 0 for no animation */
-		scrollback: 200, /* amount of messages to hold before truncation */
+		scrollback: 100, /* amount of messages to hold before truncation */
 		navTreeSize: 120
 	},
 	channels: {
 		focusOnJoin: true,
 		textColors: true,
 		userColors: true,
+		showChannelNotices: false,
+		showJPQ: true, /* show join quit and part messages */
+		showTime: true,
 		showModes: true,
-		showChannelNotices: true,
-		showJPQ: true /* show join quit and part messages */
+		showEmoji: true
 	},
-	customCommands: [
-		["^\/m\\s(\\w*)\\s(.*)$", "PRIVMSG $1 :$2"]
+	userCommands: [
+		{ command: "action", action: "me &2" },
+		{ command: "m", action: "msg &2" },
+		{ command: "banlist", action: "quote MODE %c +b" },
+		{ command: "sv", action: "echo You're using Burd %v" },
+		{ command: "wii", action: "whois &2 &2" }
 	],
 	ignore: {
 		users: ["test!*@fake.gov"],
-		regex: [ "cake!", "hello123" ]
+		regex: [ "/cake!/ig", "/hello123/ig" ]
 	},
 	notification: {
 		enabled: true,
 		showOnChannelMessage: false,
 		showOnPM: true,
 		showOnNotice: true
+	},
+	sounds: {
+		pm: true,
+		channel: false,
+		notice: true,
+		kick: true,
+		disconnect: true
 	},
 	tooltips: true,
 	highlights: [ "test123", "%n" ],
@@ -235,6 +248,20 @@ function applySettings(){
 
 function saveSettings(){
 	chrome.storage.local.set({settings3: settings});
+}
+
+
+var audio = {
+	play: function(e){
+		$("div#audio").html(
+			'<audio autoplay=1>' +
+			'<source src="' + e + '" type="audio/mpeg">'+
+			'</audio>'
+		);
+	},
+	channel_message: 'sound/328117_3624044-hq.mp3',
+	pm: 'sound/351545_3450800-hq.mp3'
+	
 }
 
 

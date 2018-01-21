@@ -1,3 +1,5 @@
+var P = window.parent;
+
 $(function(){
 	$.menu.style = "dark";
 	$( "div.close" ).click(function() {
@@ -28,20 +30,41 @@ $(function(){
 				key: false,
 				callback: function(){
 				}
-			},
-			{
-				name: "Clear List",  enabled:true,
-				icon: false,
-				subMenu: false,
-				key: false,
-				callback: function(){
-				}
 			}
 		]);
 	});
 	
+	
+	/* set the state of checkboxes */
+	if( P.settings.channels.userColors ) $( "div#colored_nicks" ).addClass( "checked" );
+	if( P.settings.channels.textColors ) $( "div#colored_text" ).addClass( "checked" );
+	if( P.settings.channels.showTime ) $( "div#timestamps" ).addClass( "checked" );
+	if( P.settings.channels.showJPQ ) $( "div#jpq" ).addClass( "checked" );
+	if( P.settings.channels.showModes ) $( "div#modes" ).addClass( "checked" );
+	if( P.settings.channels.focusOnJoin ) $( "div#autofocus" ).addClass( "checked" );
+	if( P.settings.channels.showEmoji ) $( "div#emojis" ).addClass( "checked" );
+	
 
 	
+	var lvo = $( "div[sid='ignore'] div.lview" );
+	lvo.html( "" );
+	for( var i in P.settings.ignore.users ) {
+		lvo.append('<div class="litem"><div class="ltyp">string</div><div class="lval">' + P.settings.ignore.users[i] + '</div><div class="lc">&nbsp;</div></div>');
+	}
+	for( var i in P.settings.ignore.regex ) {
+		lvo.append('<div class="litem"><div class="ltyp">regex</div><div class="lval">' + P.settings.ignore.regex[i] + '</div><div class="lc">&nbsp;</div></div>');
+	}
 	
-	$( "div.tab[sid='ignore']" ).click();
+	
+	lvo = $( "div[sid='usercoms'] div.lview" );
+	lvo.html( "" );
+	for( var i in P.settings.userCommands ) {
+		lvo.append('<div class="litem"><div class="ltyp">' + P.settings.userCommands[i].command + '</div><div class="lval">' + P.settings.userCommands[i].action + '</div><div class="lc">&nbsp;</div></div>');
+	}
+
+
+
+
+
+	$( "div.tab[sid='usercoms']" ).click();
 });	

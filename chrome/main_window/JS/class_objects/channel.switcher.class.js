@@ -1,6 +1,7 @@
 var switcher = {
 	current: 0,
 	channel: 0,
+	timer:-1,
 	find: function( socket, channel ) {
 		channel = channel.toLowerCase();
 		this.current = $("div.server-list[socket='" + socket + "'] ul li[channel='" + base64.encode( channel.toLowerCase() ) + "']:first");
@@ -20,13 +21,20 @@ var switcher = {
 		this.channel.remove();
 	},
 	show: function(){
-		$("div.server-list ul li").removeClass( "selected" );
+		$("div.server-list ul li.selected").removeClass( "selected" );
 		this.current.addClass( "selected" );
 		this.current.removeClass( "unread" ).removeClass( "highlight" );
-		$("div.right-content:visible").hide();
+		$("div.right-content").hide();
 		this.channel.show();
-		$("input.user-input:visible:first").focus();
-		ui.resize();
+		clearTimeout(this.timer);
+		this.timer = setTimeout(function(){
+			//these slow down channel switching, so we run them on a timer
+			ui.resize();
+			switcher.current.removeClass( "unread" ).removeClass( "highlight" );
+			$("input.user-input:visible").focus();
+		},100);
+		//$("input.user-input:visible:first").focus();
+		//ui.resize();
 	},
 	highlight: function(){
 		if( !this.current.hasClass( "selected" ) ) this.current.addClass( "highlight" );
