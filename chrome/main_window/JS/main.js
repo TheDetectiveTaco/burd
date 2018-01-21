@@ -25,12 +25,16 @@ var settings = {
 		showModes: true,
 		showEmoji: true
 	},
+<<<<<<< HEAD
 	userCommands: [
 		{ command: "action", action: "me &2" },
 		{ command: "m", action: "msg &2" },
 		{ command: "banlist", action: "quote MODE %c +b" },
 		{ command: "sv", action: "echo You're using Burd %v" },
 		{ command: "wii", action: "whois &2 &2" }
+=======
+	customCommands: [
+>>>>>>> 66c0dbe913d8081bf8a122a4f8c0c42b5b43e022
 	],
 	ignore: {
 		users: ["test!*@fake.gov"],
