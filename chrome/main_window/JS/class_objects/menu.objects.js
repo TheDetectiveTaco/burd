@@ -751,34 +751,6 @@ var menu = {
 			},
 
 			{
-				name: "Scripts",
-				enabled:true,
-				icon: "../../images/mdl/white/ic_extension_white_24px.svg",
-				subMenu: [
-					{
-						name: "Load script",
-						enabled:true,
-						icon: false,
-						subMenu: false,
-						callback: function(){}
-					},
-					{
-						name: "Remove script...",
-						enabled:true,
-						icon: false,
-						subMenu: false,
-						callback: function(){}
-					},
-					{
-						name: "-"
-					}
-				],
-				callback: function(){}
-			},
-			{
-				name: "-"
-			},
-			{
 				name: "Help",
 				enabled:true,
 				icon: "../../images/mdl/white/ic_local_hospital_white_24px.svg",

@@ -241,7 +241,7 @@ function parseInput( e ){
 			if( uc[i].command == input ){
 				var action = uc[i].action;
 				action = action.replace( /\%c/g, channelName );
-				action = action.replace( /\%e/g, e.socket.serverInfo.serverName );
+				action = action.replace( /\%e/g, e.socket.serverProperties().NETWORK );
 				action = action.replace( /\%n/g, e.socket.userInfo.nick.nick );
 				action = action.replace( /\%v/g, app.version );
 				action = action.replace( /\%t/g, d.toTimeString() );

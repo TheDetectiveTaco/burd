@@ -151,10 +151,12 @@ socket.prototype.lsend = function( e ){
 				chrome.sockets.tcp.send( sid, data, function( e ){
 					if( e < 0 ){
 						tmp.disconnected();
+						if( settings.sounds.disconnect ) audio.play( audio.disconnect );
 					}
 				} );
 			}else{
 				tmp.disconnected();
+				if( settings.sounds.disconnect ) audio.play( audio.disconnect );
 			}
 		});
 	}
@@ -170,7 +172,7 @@ socket.prototype.disconnected = function() {
 	if( this.userInfo.reconnect ){
 		setTimeout(function(){
 			t.reconnect();
-		},5000);
+		},10000);
 	}
 	switcher.find( this.socketID, "network console" ).current.addClass( "disconnected" );
 	chrome.sockets.tcp.disconnect( this.socketID );

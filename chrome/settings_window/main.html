@@ -22,7 +22,7 @@
 				
 				
 				
-				<input type="button" value="Apply" id="apply">
+				<input type="button" value="Close" id="apply">
 			</div>
 			<div class="right-panel" sid="ui">
 				<h1>UI Settings</h1>
@@ -48,6 +48,8 @@
 				<div class="setting">
 					<div id="emojis" class="checkbox">Show emojis</div>
 				</div>
+				
+				<!--
 				<div class="setting breaker">
 					<div class="k2l">Nav Tree Size:</div>
 					<input type="number" name="quantity" min="70" max="200" value="120">
@@ -56,6 +58,7 @@
 					<div class="k2l">Maximum Scrollback:</div>
 					<input type="number" name="quantity" min="100" max="1000" value="200">
 				</div>
+				-->
 			</div>
 			<div class="right-panel" sid="ignore">
 				<h1>Ignore Settings</h1>
@@ -79,13 +82,13 @@
 				<table style="font-size:12px;">
 					<tr>
 						<td>
-							<select>
-								<option>String</option>
-								<option>Regex</option>
+							<select id="ignore_type">
+								<option>string</option>
+								<option>regex</option>
 							</select>
 						</td>
-						<td><input type="text" style="width:340px"></td>
-						<td><input type="button" value="+"></td>
+						<td><input type="text" id="ignore_text" style="width:340px"></td>
+						<td><input type="button" id="add_ignore" value="+"></td>
 					</tr>
 				</table>
 			</div>
@@ -108,10 +111,10 @@
 				<table style="font-size:12px;">
 					<tr>
 						<td>Command:</td>
-						<td><input type="text" style="width:92px"></td>
+						<td><input type="text" id="command" style="width:92px"></td>
 						<td>Action:</td>
-						<td><input type="text" style="width:192px"></td>
-						<td><input type="button" value="+"></td>
+						<td><input type="text" id="action" style="width:192px"></td>
+						<td><input type="button" id="add_command" value="+"></td>
 					</tr>
 				</table>
 
@@ -123,19 +126,19 @@
 				<div style="margin-bottom:10px;font-size:1.3em;">Play sound on...</div>
 				
 				<div class="setting">
-					<div id="pm_sound" class="checkbox checked">private messages</div>
+					<div id="pm_sound" class="checkbox">private messages</div>
 				</div>
 				<div class="setting">
-					<div id="pm_sound" class="checkbox">channel messages</div>
+					<div id="channel_sound" class="checkbox">channel messages</div>
 				</div>
 				<div class="setting">
-					<div id="pm_sound" class="checkbox checked">notice messages</div>
+					<div id="notice_sound" class="checkbox">notice messages</div>
 				</div>
 				<div class="setting">
-					<div id="pm_sound" class="checkbox">channel kicks</div>
+					<div id="kick_sound" class="checkbox">channel kicks</div>
 				</div>
 				<div class="setting">
-					<div id="pm_sound" class="checkbox checked">disconnection</div>
+					<div id="disconnect_sound" class="checkbox">disconnection</div>
 				</div>
 			</div>
 			

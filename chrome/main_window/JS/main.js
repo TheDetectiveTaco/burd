@@ -260,7 +260,10 @@ var audio = {
 		);
 	},
 	channel_message: 'sound/328117_3624044-hq.mp3',
-	pm: 'sound/351545_3450800-hq.mp3'
+	pm: 'sound/351545_3450800-hq.mp3',
+	kick: 'sound/351546_3450800-hq.mp3',
+	notice: "sound/351539_3450800-hq.mp3",
+	disconnect: "sound/351560_3450800-lq.mp3"
 	
 }
 

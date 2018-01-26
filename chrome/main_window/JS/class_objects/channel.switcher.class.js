@@ -13,12 +13,22 @@ var switcher = {
 		this.channel = obj;
 		return this;
 	},
+	findBySwitcherObj: function( obj ){
+		var sock = obj.parent().parent().attr("socket");
+		console.log(sock);
+		this.current = $("div.server-list[socket='" + sock + "'] ul li[channel='" + obj.attr("channel") + "']");
+		this.channel = $("div.right-content[socket='" + sock + "'][channel='" + obj.attr("channel") + "']:first");
+		return this;
+	},
 	markUnread: function(){
 		if( !this.current.hasClass( "selected" ) ) this.current.addClass( "unread" );
 	},
 	close: function(){
+		var after = this.closest();
 		this.current.remove();
 		this.channel.remove();
+		if( $( "ul.server-items li.selected" ).length == 0 ) this.findBySwitcherObj( after ).show();
+		
 	},
 	show: function(){
 		$("div.server-list ul li.selected").removeClass( "selected" );
@@ -48,6 +58,10 @@ var switcher = {
 				switcher.findByChannelObj( $( "div#right-content div.channel:first" ) ).show();
 			}
 		}
+	},
+	closest: function(){
+		if( this.current.next()[0] == undefined ) return this.current.prev();
+		return this.current.next();
 	},
 	prevChannel: function(){
 		var e = $( "div#right-content div.channel:visible" );

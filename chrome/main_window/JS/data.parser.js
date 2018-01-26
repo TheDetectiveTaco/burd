@@ -240,6 +240,7 @@ function parseData( sock, data ){
 			case E.RPL_ENDOFINVITELIST:
 			case E.RPL_ENDOFEXCEPTLIST:
 			case E.RPL_ENDOFBANLIST:
+			case E.ERR_NOPRIVILEGES:
 				pcmsg();
 				break;
 				
@@ -291,13 +292,16 @@ function parseData( sock, data ){
 			case E.RPL_UNAWAY:
 			case E.RPL_NOWAWAY:
 			case E.RPL_INFO:
-			case E.RPL_CHANNEL_URL:
 			case E.ERR_USERSDONTMATCH:
 			case E.ERR_KNOCKDISABLED:
 			case E.RPL_OMOTDSTART:
 			case E.RPL_OMOTD:
 			case E.RPL_ENDOFOMOTD:
 				pcmsg();
+				break;
+				
+			case E.RPL_CHANNEL_URL:
+				channel.current( sock.socketID ).add.text( HTMLParser.linkify( HTMLParser.stringify( "Channel URL: " + cMsg ) ) );
 				break;
 
 			case E.ERR_NOSUCHNICK:
@@ -327,7 +331,10 @@ function parseData( sock, data ){
 				pcmsg(3);
 				break;
 				
-				
+			case E.RPL_HELPTXT:
+				channel.current( sock.socketID ).add.text( HTMLParser.stringify( cMsg ) );
+				break;
+			
 			default:
 				console.log( data );
 				
@@ -475,6 +482,7 @@ function parseData( sock, data ){
 					kicker: kicker
 					
 				}, "*" );
+				if( settings.sounds.kick ) audio.play( audio.kick );
 				break;
 				
 			case "MODE":
@@ -517,6 +525,7 @@ function parseData( sock, data ){
 							break;
 						default:
 							channel.current( sock.socketID ).add.userNotice( parseNick(bits[0]).nick, bits[2], cMsg );
+							if( settings.sounds.notice ) audio.play( audio.notice );
 					}
 				}
 				break;
@@ -856,6 +865,8 @@ function processMODE( sock, data ){
 	}
 }
 
+
+var logData = false;
 function log(e){
-	//if(e.indexOf(" 354 ")<1) console.log(e);
+	if(e.indexOf(" 354 ")<1 && logData) console.log(e);
 }

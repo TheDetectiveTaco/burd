@@ -265,14 +265,15 @@ div.userlist div.op{
 }
 
 
-div.channel[type='0'] div.content,
 div.channel[type='2'] div.content,
-div.channel[type='0'] input.user-input,
 div.channel[type='2'] input.user-input{
 	width: calc(100% - 30px);
 	
 }
-
+div.channel[type='0'] div.content,
+div.channel[type='0'] input.user-input{
+	width: calc(100% - 6px);
+}
 
 div.channel-meta{
 	background:#333333;

@@ -88,10 +88,10 @@ div.breaker{
 }
 
 input#apply {
-    width: 130px;
+    width: 100px;
     position: absolute;
     top: 350px;
-	left: 460px;
+	left: 490px;
 }
 input[type="number"]{
 	width:100px;
