@@ -1,0 +1,455 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>title</title>
+		<meta charset="utf-8">
+		<link href="global/css/scrollbar.css" rel="stylesheet">
+		<link href="default.css" rel="stylesheet">
+		<style>
+
+			div.server-info{
+				background: url('images/icons/ic_priority_high_white_24px.svg') no-repeat center left;
+				background-size:1.2em;
+				padding:3px;
+				padding-left:18px;
+			}
+
+			
+			div.user{
+				font-size: 1em;
+				padding-left: 1em;
+				background-repeat: no-repeat;
+				background-position: center left;
+				background-size: 0.8em;
+			}
+			div.user:hover{
+				background-color:#47484F;
+				cursor:pointer;
+			}
+			div.voice{
+				background-image: url(images/squares/blue.png);
+			}
+			div.op{
+				background-image: url(images/squares/green.png);
+			}
+			
+			div.channel_closer{
+				background:url('images/icons/baseline_more_vert_white_18dp.png') no-repeat center top;
+				background-size:17px;
+				float:right;
+				color:white;
+				font-size:0.7em;
+				padding:0.1em;
+				width:20px;
+				height:20px;
+				text-align:center;
+				display:none;
+			}
+			div.server_list div.channel_item:hover div.channel_closer{
+				display:block;
+			}
+			div.server_list div.channel_item:hover div.unread{
+				display:none;
+			}
+			
+			/* the menus */
+			div.simple_menu{
+				position:absolute;
+				background:white;
+				min-width:100px;
+				color:black;
+				top:7px;
+				left:7px;
+				border:1px solid black;
+				z-index:99;
+				box-shadow: 2px 3px black;
+			}
+			div.simple_menu ul{
+				list-style-type: none;
+				padding:0;
+				margin:0;
+			}
+			div.simple_menu ul li{
+				padding:0.7em;
+				padding-left:1em;
+				padding-right:1em;
+				white-space: nowrap;
+			}
+			div.simple_menu ul li.menu_title{
+				font-weight:bold;
+				border-bottom: 1px solid #b9b9b9;
+			}
+			div.simple_menu ul li.menu_title:hover{
+				background:white;
+				cursor:default;
+			}
+			div.simple_menu ul li:hover{
+				background:#eaeaea;
+				cursor:pointer;
+			}
+			.blur{
+				filter: grayscale(0.5) blur(8px);
+			}
+			div#overlay{
+				position:absolute;
+				top:0;
+				left:0;
+				height:100%;
+				width:100%;
+				background:rgba(0, 0, 0, 0.22);
+				z-index:1;
+				display:none;
+			}
+			div#sidebar_iframe{
+				position:absolute;
+				top:0;
+				left:0;
+				height:calc(100% - 1px);
+				width:300px;
+				background:#44474E;
+				z-index:3;
+				display:none;
+			}
+			div#sidebar_iframe iframe{
+				margin:0;
+				padding:0;
+				border:0;
+				height:100%;
+				width:100%;
+			}
+			.highlight{
+				background:#4e5156;
+			}
+		</style>
+		<script src="global/js/jquery.min.js"></script>
+		<script>
+			window.eval = global.eval = function () {
+				throw new Error(`Sorry, this app does not support window.eval().`)
+			}
+			if(typeof(require)!="undefined") window.$ = window.jQuery = require('./global/js/jquery.min.js');
+		</script>
+		<script src="js/color.js"></script>
+		<script src="js/config.js"></script>
+		<script src="js/enums.js"></script>
+		<script src="js/socket.js"></script>
+		<script src="js/main.js"></script>
+		<script src="js/menu.js"></script>
+		<script src="js/iframe.js"></script>
+		<script src="js/postmessage.js"></script>
+		<script src="js/parseinput.js"></script>
+		<script src="js/linkhandler.js"></script>
+		<script src="js/onclick.js"></script>
+		<script src="js/highlights.js"></script>
+		<script src="js/tabcomplete.js"></script>
+	</head>
+	<body>
+		<div id="overlay" class="covering">
+			&nbsp;
+		</div>
+		<div id="sidebar_iframe" class="covering">
+			<iframe src="about:blank"></iframe>
+		</div>
+		<div id="main_container">
+			<div style="float:left;height:calc(100% - 1px);">
+				<div id="main_list_container">
+					<div class="server_list" style="display:none;">
+						<div class="server_title">
+							Test
+						</div>
+						<div class="channel_item">
+							<span class="title">Network Console</span>
+						</div>
+						<div class="channel_item notice">
+							<span class="title">#ThisIsAChannel</span>
+						</div>
+						<div network=2 channel="#test2" class="channel_item selected">
+							<span class="title">#test2</span>
+							<div class="unread">2</div>
+							<div class="channel_closer">&nbsp;</div>
+						</div>
+						<div network=2 channel="lol" class="channel_item">
+							<span class="title">LOL</span>
+							<div class="unread">20</div>
+							<div class="channel_closer">&nbsp;</div>
+						</div>
+					</div>
+
+					
+				</div>
+				<div id="bottom_menu">
+					<div id="settings_button" class="i_button" style="float:left;margin-right:10px;">&nbsp;</div>
+					<div id="new_button" class="i_button" style="float:left;background-image:url(images/icons/baseline_fiber_new_white_18dp.png);">&nbsp;</div>
+					<div id="hamburger_button" class="i_button" style="float:right;background-image:url(images/icons/baseline_menu_white_18dp.png);">&nbsp;</div>
+				</div>
+			</div>
+			<div id="channel_container">
+		
+		
+				<div class="channel" network=2 channel="lol" type="pm" style="display:none">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">LOL</span>
+
+						</div>
+
+						<div class="clear">&nbsp;</div>
+					</div>
+					<div class="channel_content">
+					
+						<div class="user_message">
+							<div class="message_date">[11:11:11]</div>
+							<div class="user_name">
+								‹<span class="name" style="color:#1395BA">JimJohn</span>›
+							</div>
+							<div class="message">
+								Hello this is my message.
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+						
+					</div>
+					<div class="bottom">
+						<input type="text" class="channel_input">
+					</div>
+				</div>
+				
+			
+			
+				<div class="channel" network=2 type="channel" channel="#test2">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">#test2</span>
+
+							<span class="topic">
+								This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic
+							</span>
+						</div>
+						<div class="usercount">Users Here - 11</div>
+						<div class="clear">&nbsp;</div>
+					</div>
+					<div class="channel_users">
+						<div class="user" style="color:#1395BA">JimBob</div>
+						<div class="user">Lol</div>
+					</div>
+					<div class="channel_content">
+					
+						<div class="user_message">
+							<div class="message_date">[11:11:11]</div>
+							<div class="user_name">
+								‹<span class="name" style="color:#1395BA">JimJohn</span>›
+							</div>
+							<div class="message">
+								Hello this is my message.
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+						
+						<div class="user_message">
+							<div class="message_date">[11:11:11]</div>
+							<div class="user_name">
+								‹<span class="name" style="color:#1395BA">JimJohn</span>›
+							</div>
+							<div class="message">
+								Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. 
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+						
+						<div class="server-info text-in">password2 (password2!~password@unaffiliated/password2) has joined the channel.</div>
+						
+						<div class="user_message">
+							<div class="message_date">[11:11:11]</div>
+							<div class="user_name">
+								<span class="name">JimJohnJimJohnJim</span>
+							</div>
+							<div class="message">
+								has joined the channel
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+						
+						
+						<div class="channel_info">
+							<div class="message_date">[11:11:11]</div>
+							<div class="icon text-out">
+								&nbsp;
+							</div>
+							<div class="message">
+								JimJohnJimJohnJim has joined the channel
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+						
+						<div class="user_message">
+							<div class="message_date">[11:11:11]</div>
+							<div class="user_name">
+								‹<span class="name" style="color:#1395BA">JimJohnJimJohnJim</span>›
+							</div>
+							<div class="message">
+								Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. 
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+						
+					</div>
+					<div class="bottom">
+						<input type="text" class="channel_input">
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<div id="sound" style="display:none;">
+		</div>
+		
+		
+		
+		
+		
+		
+		<template id="new_user_message">
+			<div class="user_message truncate %classes%">
+				<div class="message_date">[%date%]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:%color%">%nick%</span>›
+				</div>
+				<div class="message">
+					%message%
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_channel_info">
+			<div class="channel_info truncate">
+				<div class="message_date">[%date%]</div>
+				<div class="icon %class%">
+					&nbsp;
+				</div>
+				<div class="message">
+					%message%
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_user_action_message">
+			<div class="user_message action_message truncate %classes%">
+				<div class="message_date">[%date%]</div>
+				<div class="user_name">
+					* <span class="name">%nick%</span>
+				</div>
+				<div class="message">
+					%message% *
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_server_item">
+			<div class="server_list" network="%network%">
+				<div class="server_title">
+					%name%
+				</div>
+				<div network="%network%" channel="network console" class="channel_item">
+					<span class="title">Network Console</span>
+					<div class="unread">0</div>
+				</div>
+			</div>
+		</template>
+		
+		<template id="new_channel_item">
+			<div network="%network%" channel="%lchannel%" class="channel_item">
+				<span class="title">%channel%</span>
+				<div class="unread">0</div>
+				<div class="channel_closer">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_pm_window">
+				<div class="channel" network="%network%" type="pm" channel="%lcasechannel%">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">%channelname%</span>
+						</div>
+						<div class="clear">&nbsp;</div>
+					</div>
+					<div class="channel_content">
+
+					</div>
+					<div class="bottom">
+						<input type="text" class="channel_input">
+					</div>
+				</div>
+		</template>
+		
+		<template id="new_channel_window">
+				<div class="channel" network="%network%" type="channel" channel="%lcasechannel%">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">%channelname%</span>
+
+							<span class="topic">&nbsp;</span>
+						</div>
+						<div class="usercount">Users Here - 0</div>
+						<div class="clear">&nbsp;</div>
+					</div>
+
+					<div class="channel_users">
+
+					</div>
+					<div class="channel_content">
+
+					</div>
+					<div class="bottom">
+						<input type="text" class="channel_input"> <div class="chan_smile">&nbsp;</div>
+					</div>
+				</div>
+		</template>
+		
+		<template id="new_console_window">
+
+			<div class="channel" network="%network%" channel="%lcasechannel%" style="display:none">
+				<div class="meta">
+					<div class="title">
+						<span class="chan_name">%channel%</span>
+						/
+						<span class="topic">%netname%</span>
+						
+					</div>
+					<div class="clear">&nbsp;</div>
+				</div>
+				<div class="channel_content">
+					<!--
+					<div class="server-info">
+						generic
+					</div>
+					<div class="server-info error-info">
+						Error oh no!
+					</div>
+					<div class="server-info user-info">
+						user info
+					</div>
+					<div class="server-info text-in">
+						test123
+					</div>
+					<div class="server-info text-out">
+						test123
+					</div>
+					-->
+				</div>
+				<div class="bottom">
+					<input type="text" class="channel_input">
+				</div>
+			</div>
+		</template>
+	</body>
+</html>

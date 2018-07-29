@@ -1,0 +1,8 @@
+{
+  "name": "burd",
+  "version": "0.0.1",
+  "main": "index.js",
+  "devDependencies": {
+    "electron": "^1.8.2"
+  }
+}
