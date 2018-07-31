@@ -1,11 +1,6 @@
 /* main file for IRC socket related stuff */
 var net = require('net');
 
-/*for testing only*/
-setTimeout(function(){
-	network.create(config.networks[0]);
-}, 1000);
-
 var cache = [];
 
 var socket = {
@@ -292,10 +287,10 @@ var socket = {
 									channel(cData, id).create("new_channel_window").show();
 									cache = [];
 								}else{
-									channel(cData, id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has joined the channel.", "text-in" );
+									if(!ignore.check(data)) channel(cData, id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has joined the channel.", "text-in" );
 									cache = [];
 									channel(cData, id).object.find("div.channel_users div.user").each(function(){
-										cache.push($(this).attr("onick"));
+										cache.push(HTML.decodeParm($(this).attr("onick")));
 									});
 									cache.push(usr.nick);
 									addNicksToChannel(cData, cache);
@@ -332,9 +327,8 @@ var socket = {
 								break;
 								
 							case "NOTICE":
-								//:zoo84754!~lol@2001:470:5:c75:f187:7a19:c549:299a NOTICE duckgoose :butt
+								if(ignore.check(data)) return;
 								channel("*",id).addInfo("-<b>" + HTML.encodeString(parseUser(bits[0]).nick) + "</b>-: " + HTML.encodeString(cData), "", true);
-								//channel("*",id).addInfo("Notice sent from " + parseUser(bits[0]).nick + " to " + bits[2]);
 								break;
 								
 							case "PART":
@@ -344,7 +338,7 @@ var socket = {
 									channel(bits[2], id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has left the channel (" + cData + ").", "text-out" );
 									channel(bits[2], id).addInfo( "You're no longer in this channel.", "error-info" );
 								}else{
-									channel(bits[2], id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has left the channel (" + cData + ").", "text-out" );
+									if(!ignore.check(data)) channel(bits[2], id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has left the channel (" + cData + ").", "text-out" );
 									channel(bits[2], id).object.find("div.channel_users div.user:iAttrContains('nick','" + usr.nick.toLowerCase() + "')").remove();
 									channel(bits[2], id).recount();
 								}
@@ -377,6 +371,7 @@ var socket = {
 								var chan = bits[2].toLowerCase();
 								var nick = parseUser(bits[0]).nick;
 								var highlight = highlights.process(networkInfo.nick, cData);
+								if(ignore.check(data)) return;
 								if(chan == networkInfo.nick.toLowerCase()){
 									//it's a message directly to me!
 									//:buttbot!897776e2@gateway/web/freenode/ip.137.119.118.226 PRIVMSG duckgoose :dfgdfg
@@ -493,9 +488,9 @@ var socket = {
 				function setChanUserSym(user, sym, add){
 					var no = channel(chan, id).object.find("div.channel_users div.user:iAttrContains('nick','" + user.toLowerCase() + "')");
 					if(add){
-						no.attr("onick", sym + no.attr("onick"));
+						no.attr("onick", sym + HTML.encodeParm(no.attr("onick")));
 					}else{
-						no.attr("onick", no.attr("onick").replace(sym, ""));
+						no.attr("onick", HTML.encodeParm(no.attr("onick").replace(sym, "")));
 					}
 					resortNicks(chan);
 				}
@@ -510,8 +505,8 @@ var socket = {
 				if( no.length > 0 ){
 					var chanName = $(this).attr("channel");
 					no.text(n);
-					no.attr("nick", n);
-					no.attr("onick", nickModes(no.attr("onick")) + n);
+					no.attr("nick", HTML.encodeParm(n));
+					no.attr("onick", nickModes(HTML.decodeParm(no.attr("onick"))) + HTML.encodeParm(n));
 					channel(chanName, id).addInfo( "<b>" + HTML.encodeString(o) + "</b> has changed their nick to <b>" + HTML.encodeString(n) + "</b>", "", true );
 					resortNicks(chanName);
 				}
@@ -555,7 +550,7 @@ var socket = {
 		function resortNicks(chan){
 			cache = [];
 			channel(chan, id).object.find("div.channel_users div.user").each(function(){
-				cache.push($(this).attr("onick"));
+				cache.push(HTML.decodeParm($(this).attr("onick")));
 			});
 			addNicksToChannel(chan, cache);
 		}
@@ -591,7 +586,7 @@ var socket = {
 					fNick = fNick.replace( prefix[j], "" );
 				}
 				nickCount++;
-				nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + '" onick="' + HTML.encodeString(cache[i]) + '" nick="' + HTML.encodeString(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
+				nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + '" onick="' + HTML.encodeParm(cache[i]) + '" nick="' + HTML.encodeParm(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
 				
 			}
 			
@@ -599,6 +594,12 @@ var socket = {
 			channel(chan, id).object.find("div.usercount").html("Users Here - " + nickCount);
 			cache = [];
 			
+		}
+		
+		function getKeyFromNumber(e){
+			for(var i in E){
+				if(E[i] == e) return i;
+			}
 		}
 		
 		function sortNames(names) {
@@ -622,8 +623,3 @@ var socket = {
 		
 	}
 }
-		function getKeyFromNumber(e){
-			for(var i in E){
-				if(E[i] == e) return i;
-			}
-		}

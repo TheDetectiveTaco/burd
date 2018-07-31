@@ -6,30 +6,33 @@
 		<link href="../global/css/iframe.css" rel="stylesheet">
 		<script src="../global/js/jquery.min.js"></script>
 		<script src="../global/js/iframe.js"></script>
+		
+		<link href="new.css" rel="stylesheet">
+		<script src="new.js"></script>
 	</head>
 	<body>
-		<h2>New Connection</h2>
+		<h2>New Network</h2>
 
 		<div class="section">
 			<h4>User Information</h4>
 			<div class="text_input">
-				<div class="title">Nick name:</div>
-				<div class="input"><input type="text" id="nick"></div>
+				<div class="title">* Nick name:</div>
+				<div class="input"><input type="text" id="nick" value=""></div>
 			</div>
 			
 			<div class="text_input">
-				<div class="title">Second choice:</div>
+				<div class="title">* Alt. nick:</div>
 				<div class="input"><input type="text" id="second_nick"></div>
 			</div>
 			
 			<div class="text_input">
-				<div class="title">User name:</div>
-				<div class="input"><input type="text" id="username"></div>
+				<div class="title">* User name:</div>
+				<div class="input"><input type="text" id="username" value="Burd"></div>
 			</div>
 			
 			<div class="text_input">
-				<div class="title">Real name:</div>
-				<div class="input"><input type="text" id="realname"></div>
+				<div class="title">* Real name:</div>
+				<div class="input"><input type="text" id="realname" value="Burd User"></div>
 			</div>
 		</div>
 		
@@ -37,22 +40,22 @@
 		<div class="section">
 			<h4>Network Information</h4>
 			<div class="text_input">
-				<div class="title">Server:</div>
-				<div class="input"><input type="text" id="nick"></div>
+				<div class="title">* Server:</div>
+				<div class="input"><input type="text" value="chat.freenode.net" id="server_address"></div>
 			</div>
 			
 			<div class="text_input">
-				<div class="title">Port:</div>
-				<div class="input"><input type="text" id="second_nick"></div>
+				<div class="title">* Port:</div>
+				<div class="input"><input type="text" value="6667" id="server_port"></div>
 			</div>
 			
-			<div class="slider slider_on">
+			<div class="slider slider_on" id="reconnect">
 				Reconnect automatically
 			</div>
-			<div class="slider">
+			<div class="slider" id="startup">
 				Connect on app startup
 			</div>
-			<div class="slider">
+			<div class="slider" id="ssl">
 				Use SSL with this server
 			</div>
 		</div>
@@ -60,13 +63,52 @@
 		
 		<div class="section">
 			<h4>Login Method</h4>
-			<div class="radio" id="radio_group_x">
-				<div id="radio_test" class="checked">None</div>
-				<div id="radio_test2">Nickserv</div>
-				<div id="radio_test3">Server password</div>
-				<div id="radio_test3">SASL plain</div>
+			<div class="radio" id="radio_login">
+				<div id="radio_none" class="checked">None</div>
+				<div id="radio_nickserv">Nickserv</div>
+				<div id="radio_serverpassword">Server password</div>
+				<div id="radio_saslplain">SASL plain</div>
+			</div>
+			<div class="login_info_div">
+				<h4>Login Information</h4>
+				<div class="login_method" rid="radio_nickserv">
+					<div class="text_input">
+						<div class="title">Password:</div>
+						<div class="input"><input type="password" id="nickserv_password" value=""></div>
+					</div>
+				</div>
+				<div class="login_method" rid="radio_serverpassword">
+					<div class="text_input">
+						<div class="title">Password:</div>
+						<div class="input"><input type="password" id="server_password" value=""></div>
+					</div>
+				</div>
+				<div class="login_method" rid="radio_saslplain">
+					<div class="text_input">
+						<div class="title">User:</div>
+						<div class="input"><input type="text" id="sasl_user" value=""></div>
+					</div>
+					<div class="text_input">
+						<div class="title">Password:</div>
+						<div class="input"><input type="password" id="sasl_password" value=""></div>
+					</div>
+				</div>
 			</div>
 		</div>
 		
+		<div class="section">
+			<h4>On-connect Commands</h4>
+			<div class="text_input">
+				<div class="title">Commands:</div>
+				<div class="input"><input type="text" id="commands" value="JOIN #burd"></div>
+			</div>
+			<div style="font-size:0.7em">Commands are comma separated. Escaped commas accepted.</div>
+		</div>
+		
+		
+		<div class="section">
+			<div class="error">Please enter the required (*) fields</div>
+			<input type="button" value="Save" id="save_button">
+		</div>
 	</body>
 </html>

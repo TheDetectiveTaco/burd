@@ -1,7 +1,34 @@
-$(function(){
-	//$(".channel_content").jScrollPane();
-	
+var remote = require('electron').remote;
+var dataPath = remote.app.getPath("userData");
+var fs = require('fs');
 
+var firstRun = false;
+
+//check for log folder, create it
+if (fs.existsSync(dataPath + "/logs")){
+	fs.readFile(dataPath + "/config.json", function(err, f){
+		config = JSON.parse(f.toString());
+	});
+}else{
+	fs.mkdirSync(dataPath + "/logs", 0777);
+	firstRun = true;
+	saveSettings();
+}
+
+function saveSettings(){
+	fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
+}
+
+$(function(){
+	
+	//$(".channel_content").jScrollPane();
+	window.onbeforeunload = function(){
+		saveSettings();
+	}
+	
+	$( window ).resize(function() {
+		iframe.hide();
+	});
 	
 	$('body').on('keydown', 'input.channel_input', function(e) {
 		if(e.key=="Tab"){
@@ -23,10 +50,10 @@ function channel(name,network){
 	var channelObj = null;
 	var switchObj = null;
 	if(name!=undefined && network!=undefined){
-		if(name == "*") name = $("div.channel[network='" + network + "']:visible").attr("channel");
+		if(name == "*") name = HTML.decodeParm($("div.channel[network='" + network + "']:visible").attr("channel"));
 		if(name == undefined) name = "network console";
-		channelObj = $("div.channel[network='" + network + "'][channel='" + name.toLowerCase() + "']");
-		switchObj = $("div.channel_item[network='" + network + "'][channel='" + name.toLowerCase() + "']");
+		channelObj = $("div.channel[network='" + network + "'][channel='" + HTML.encodeParm(name.toLowerCase()) + "']");
+		switchObj = $("div.channel_item[network='" + network + "'][channel='" + HTML.encodeParm(name.toLowerCase()) + "']");
 	}
 	var r = {
 		show: function(){
@@ -48,11 +75,11 @@ function channel(name,network){
 				}else{
 					switchObj.next().click();
 				}
-				socket.sendData("PART " + name, network);
+				if(!switchObj.hasClass("pm_item")) socket.sendData("PART " + name, network);
 				switchObj.remove();
 				channelObj.remove();
 			}else{
-				socket.sendData("PART " + name, network);
+				if(!switchObj.hasClass("pm_item")) socket.sendData("PART " + name, network);
 				switchObj.remove();
 				channelObj.remove();
 				
@@ -63,11 +90,15 @@ function channel(name,network){
 		},
 		create: function(type){
 			if(channelObj.length == 0){
-				$("div#main_list_container div.server_list[network='" + network + "']").append(HTML.getTemplate("new_channel_item", { channel: name, network: network, lchannel: name.toLowerCase()  }));
-				$("div#channel_container").append(HTML.getTemplate(type, { channelname: name, network: network, lcasechannel: name.toLowerCase() }));
+				if(type == "new_pm_window"){
+					$("div#main_list_container div.server_list[network='" + network + "']").append(HTML.getTemplate("new_pm_item", { attrname: HTML.encodeParm(name.toLowerCase()), channel: name, network: network, lchannel: name.toLowerCase()  }));
+				}else{
+					$("div#main_list_container div.server_list[network='" + network + "']").append(HTML.getTemplate("new_channel_item", { attrname: HTML.encodeParm(name.toLowerCase()), channel: name, network: network, lchannel: name.toLowerCase()  }));
+				}
+				$("div#channel_container").append(HTML.getTemplate(type, { attrname: HTML.encodeParm(name.toLowerCase()), channelname: name, network: network, lcasechannel: name.toLowerCase() }));
 			}
-			channelObj = $("div.channel[network='" + network + "'][channel='" + name.toLowerCase() + "']");
-			switchObj = $("div.channel_item[network='" + network + "'][channel='" + name.toLowerCase() + "']");
+			channelObj = $("div.channel[network='" + network + "'][channel='" + HTML.encodeParm(name.toLowerCase()) + "']");
+			switchObj = $("div.channel_item[network='" + network + "'][channel='" + HTML.encodeParm(name.toLowerCase()) + "']");
 			
 			return this;
 		},
@@ -151,7 +182,7 @@ var network = {
 		sock.networkInfo["cache"] = [];
 		
 		$("div#main_list_container").append(HTML.getTemplate("new_server_item", { name: e.server.host, network: sock.id }));
-		$("div#channel_container").append(HTML.getTemplate("new_console_window", { channel: "Network Console", lcasechannel: "network console", network: sock.id, netname: e.server.host }));
+		$("div#channel_container").append(HTML.getTemplate("new_console_window", { attrname: HTML.encodeParm("network console"), channel: "Network Console", lcasechannel: "network console", network: sock.id, netname: e.server.host }));
 		channel("network console",sock.id).show().addInfo("Connecting to IRC...");
 		
 	}
@@ -164,8 +195,12 @@ var HTML = {
 		for(var i in e){
 			var re = new RegExp("\%" + i + "\%", "g");
 			if( flags["allowHTML"] == undefined ){
-				html = html.replace(re, pColors(this.encodeString(e[i])));
-				if(i == "channelname") html = html.replace(/\#/g, "<span class=hash>#</span>");
+				if(i == "channelname"){
+					var fc = pColors(this.encodeString(e[i]));
+					html = html.replace(re, fc);
+				}else{
+					html = html.replace(re, pColors(this.encodeString(e[i])));
+				}
 			}else{
 				html = html.replace(re, pColors(e[i]));
 			}
@@ -176,6 +211,14 @@ var HTML = {
 		}
 		
 		return html;
+	},
+	encodeParm: function(str){
+		str = str.replace(/\\/g, ",spchr92,");
+		return str;
+	},
+	decodeParm: function(str){
+		str = str.replace(/\,spchr92\,/g, "\\");
+		return str;
 	},
 	encodeString: function(str){
 		if(typeof(str) == "string"){
@@ -482,7 +525,7 @@ $.expr[':'].iAttrContains = function(node, stackIndex, properties){
 	});
 	if ($(node).attr(args[0])) {
 		//exact match:
-		return $(node).attr(args[0]).toLowerCase() == args[1].toLowerCase();
+		return $(node).attr(args[0]).toLowerCase() == HTML.encodeParm(args[1].toLowerCase());
 		//if you actually prefer a "contains" behavior:
 		//return -1 !== $(node).attr(args[0]).toLowerCase().indexOf(args[1].toLowerCase());
 	}

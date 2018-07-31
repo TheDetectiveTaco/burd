@@ -6,13 +6,13 @@ $(function(){
 		}else{
 			$(this).addClass("slider_on");
 		}
-		sliderChanged({id: $(this).attr("id"), state: $(this).hasClass("slider_on")});
+		slider.callback({id: $(this).attr("id"), state: $(this).hasClass("slider_on")});
 	});
 	
 	$('body').on('click', 'div.radio div', function(e) {
 		$(this).parent().find("div").removeClass("checked");
 		$(this).addClass("checked");
-		radioChanged({id: $(this).attr("id"), group: $(this).parent().attr("id")});
+		radio.callback({id: $(this).attr("id"), group: $(this).parent().attr("id")});
 	});
 	
 	$('body').on('click', 'div.list div.item', function(e) {
@@ -25,10 +25,26 @@ $(function(){
 	
 });
 
-var radioChanged = function(e){
-	
+var slider = {
+	callback: function(e){},
+	addEventListener: function(callback){
+		this.callback = callback;
+	},
+	getState: function(id){
+		return $("div.slider[id='" + id + "']").hasClass("slider_on");
+	}
 }
 
-var sliderChanged = function(e){
-	
+var radio = {
+	callback: function(e){},
+	addEventListener: function(callback){
+		this.callback = callback;
+	},
+	getSelected: function(group){
+		return $("div.radio[id='" + group + "'] div.checked").attr("id");
+	}
+}
+
+function postMsg(e){
+	window.parent.postMessage(e, "*");
 }

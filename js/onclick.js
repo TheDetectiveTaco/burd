@@ -2,21 +2,30 @@ $(function(){
 	$('body').on('click', 'div.channel_item', function(e) {
 		//code
 		if($(e.target).hasClass("channel_closer")){
-			if( $(this).attr("nick") != undefined ){
-				menu.create({
-					"Close": { callback: function(e){ alert("menu click"); } },
-					"Whois": { callback: function(e){ alert("menu click"); } },
-					"Ignore": { callback: function(e){ alert("menu click"); } }
-				});
-			}else{
-				var chanWin = channel($(this).attr("channel"),$(this).attr("network"));
+			var chanWin = channel($(this).attr("channel"),$(this).attr("network"));
+			var id = $(this).attr("network");
+			var chan = $(this).attr("channel");
+			
+			if( $(this).hasClass("pm_item") ){
 				menu.create({
 					"Close": {callback: function(e){ 
 						chanWin.close();
 					}},
-					"Rejoin": { callback: function(e){ alert("menu click"); } },
-					"Invite": { callback: function(e){ alert("menu click"); } },
-					"Set Mode": { callback: function(e){ alert("menu click"); } }
+					"Whois": { callback: function(e){ 
+						socket.sendData("WHOIS " + chan, id);
+					}},
+					"Ignore": { callback: function(e){ }}
+				});
+			}else{
+				menu.create({
+					"Close": {callback: function(e){ 
+						chanWin.close();
+					}},
+					"Rejoin": { callback: function(e){ 
+						socket.sendData("PART " + chan + " brb", id);
+						socket.sendData("JOIN " + chan, id);
+					}},
+					"Invite": { callback: function(e){ }}
 				});
 			}
 		}else{

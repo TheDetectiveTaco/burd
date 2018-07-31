@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>title</title>
+		<title>Burd IRC</title>
 		<meta charset="utf-8">
 		<link href="global/css/scrollbar.css" rel="stylesheet">
 		<link href="default.css" rel="stylesheet">
@@ -128,8 +128,8 @@
 			}
 			if(typeof(require)!="undefined") window.$ = window.jQuery = require('./global/js/jquery.min.js');
 		</script>
-		<script src="js/color.js"></script>
 		<script src="js/config.js"></script>
+		<script src="js/color.js"></script>
 		<script src="js/enums.js"></script>
 		<script src="js/socket.js"></script>
 		<script src="js/main.js"></script>
@@ -141,6 +141,7 @@
 		<script src="js/onclick.js"></script>
 		<script src="js/highlights.js"></script>
 		<script src="js/tabcomplete.js"></script>
+		<script src="js/ignore.js"></script>
 	</head>
 	<body>
 		<div id="overlay" class="covering">
@@ -367,15 +368,23 @@
 		</template>
 		
 		<template id="new_channel_item">
-			<div network="%network%" channel="%lchannel%" class="channel_item">
+			<div network="%network%" channel="%attrname%" class="channel_item">
 				<span class="title">%channel%</span>
 				<div class="unread">0</div>
 				<div class="channel_closer">&nbsp;</div>
 			</div>
 		</template>
 		
+		<template id="new_pm_item">
+			<div network="%network%" channel="%attrname%" class="channel_item pm_item">
+				<span class="title">%channel%</span>
+				<div class="unread">0</div>
+				<div class="channel_closer">&nbsp;</div>
+			</div>
+		</template>		
+		
 		<template id="new_pm_window">
-				<div class="channel" network="%network%" type="pm" channel="%lcasechannel%">
+				<div class="channel" network="%network%" type="pm" channel="%attrname%">
 					<div class="meta">
 						<div class="title">
 							<span class="chan_name">%channelname%</span>
@@ -392,7 +401,7 @@
 		</template>
 		
 		<template id="new_channel_window">
-				<div class="channel" network="%network%" type="channel" channel="%lcasechannel%">
+				<div class="channel" network="%network%" type="channel" channel="%attrname%">
 					<div class="meta">
 						<div class="title">
 							<span class="chan_name">%channelname%</span>
@@ -417,7 +426,7 @@
 		
 		<template id="new_console_window">
 
-			<div class="channel" network="%network%" channel="%lcasechannel%" style="display:none">
+			<div class="channel" network="%network%" channel="%attrname%" style="display:none">
 				<div class="meta">
 					<div class="title">
 						<span class="chan_name">%channel%</span>

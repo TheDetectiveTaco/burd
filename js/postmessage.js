@@ -9,6 +9,19 @@ window.addEventListener("message", function(e){
 		case "close_iframe":
 			iframe.hide();
 			break;
+		case "save_network":
+			config.networks.push(e.data.network);
+			saveSettings();
+			break;
+		case "delete_network":
+			config.networks.splice(e.data.network,1);
+			saveSettings();
+			break;
+		case "connect":
+			network.create(e.data.network);
+			break;
+		default:
+			console.log(e.data);
 	}
 }, false);
 
