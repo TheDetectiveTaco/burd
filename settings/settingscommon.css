@@ -1,0 +1,7 @@
+img#back{
+	opacity:0.5;
+}
+img#back:hover{
+	opacity:1;
+	cursor:default;
+}

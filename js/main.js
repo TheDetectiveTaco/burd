@@ -1,19 +1,26 @@
 var remote = require('electron').remote;
 var dataPath = remote.app.getPath("userData");
 var fs = require('fs');
+var tar = require('tar-fs');
+var appPath = ".";
 
 var firstRun = false;
 
 //check for log folder, create it
 if (fs.existsSync(dataPath + "/logs")){
 	fs.readFile(dataPath + "/config.json", function(err, f){
-		config = JSON.parse(f.toString());
+		var nconfig = JSON.parse(f.toString());
+		for(var i in nconfig){
+			config[i] = nconfig[i];
+		}
 	});
 }else{
 	fs.mkdirSync(dataPath + "/logs", 0777);
 	firstRun = true;
 	saveSettings();
 }
+
+if(fs.existsSync("./resources/app")) appPath = "./resources/app";
 
 function saveSettings(){
 	fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
@@ -54,6 +61,10 @@ function channel(name,network){
 		if(name == undefined) name = "network console";
 		channelObj = $("div.channel[network='" + network + "'][channel='" + HTML.encodeParm(name.toLowerCase()) + "']");
 		switchObj = $("div.channel_item[network='" + network + "'][channel='" + HTML.encodeParm(name.toLowerCase()) + "']");
+		if(name == "!"){
+			channelObj = $("div.channel[network='" + network + "']");
+			switchObj = $("div.channel_item[network='" + network + "']");
+		}
 	}
 	var r = {
 		show: function(){
@@ -173,17 +184,22 @@ var network = {
 		channel("network console",id).show().addInfo("Connecting to IRC...");
 		*/
 		
-		var sock = socket.create(e.server.host, e.server.port, false);
+		var sock = socket.create(e.server.host, e.server.port, e.SSL);
 		
 		sock.networkInfo["nick"] = e.nick;
 		sock.networkInfo["auth"] = e.auth;
 		sock.networkInfo["ISUPPORT"] = [];
 		sock.networkInfo["server"] = e.server.host;
+		sock.networkInfo["port"] = e.server.port;
+		sock.networkInfo["SSL"] = e.SSL;
 		sock.networkInfo["cache"] = [];
+		sock.networkInfo["reconnect"] = e.reconnect;
+		sock.networkInfo["loggedin"] = false;
 		
 		$("div#main_list_container").append(HTML.getTemplate("new_server_item", { name: e.server.host, network: sock.id }));
 		$("div#channel_container").append(HTML.getTemplate("new_console_window", { attrname: HTML.encodeParm("network console"), channel: "Network Console", lcasechannel: "network console", network: sock.id, netname: e.server.host }));
-		channel("network console",sock.id).show().addInfo("Connecting to IRC...");
+		
+		channel("network console",sock.id).show();
 		
 	}
 };
@@ -458,6 +474,8 @@ var overlay = {
 		$("div#main_container").addClass("blur");
 	},
 	hide: function(){
+		$("div#sidebar_iframe iframe").attr("src", "about:blank");
+		$(".covering").hide();
 		$("div#overlay").hide();
 		$("div#main_container").removeClass("blur");
 	}
@@ -465,14 +483,13 @@ var overlay = {
 
 
 var crypt = {
-	key: "Pizza",
 	encrypt: function(e){
 		var keyIndex = 0;
 		var res = "";
 		for(var i in e){
-			res += String.fromCharCode(e[i].charCodeAt(0) + this.key.charCodeAt(keyIndex));
+			res += String.fromCharCode(e[i].charCodeAt(0) + config.cryptoKey.charCodeAt(keyIndex));
 			keyIndex++;
-			if(keyIndex==this.key.length) keyIndex = 0;
+			if(keyIndex==config.cryptoKey.length) keyIndex = 0;
 		}
 		return btoa(res);
 	},
@@ -481,9 +498,9 @@ var crypt = {
 		var res = "";
 		e = atob(e);
 		for(var i in e){
-			res += String.fromCharCode(e[i].charCodeAt(0) - this.key.charCodeAt(keyIndex));
+			res += String.fromCharCode(e[i].charCodeAt(0) - config.cryptoKey.charCodeAt(keyIndex));
 			keyIndex++;
-			if(keyIndex==this.key.length) keyIndex = 0;
+			if(keyIndex==config.cryptoKey.length) keyIndex = 0;
 		}
 		return res;
 	}

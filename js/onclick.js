@@ -48,7 +48,6 @@ $(function(){
 	});
 	
 	$('body').on('click', 'div#overlay', function() {
-		$("div.covering").hide();
-		$("div.blur").removeClass("blur");
+		overlay.hide();
 	});
 });

@@ -1,0 +1,35 @@
+			/* the menus */
+			div.simple_menu{
+				position:absolute;
+				background:white;
+				min-width:100px;
+				color:black;
+				top:7px;
+				left:7px;
+				border:1px solid black;
+				z-index:99;
+				box-shadow: 2px 3px black;
+			}
+			div.simple_menu ul{
+				list-style-type: none;
+				padding:0;
+				margin:0;
+			}
+			div.simple_menu ul li{
+				padding:0.7em;
+				padding-left:1em;
+				padding-right:1em;
+				white-space: nowrap;
+			}
+			div.simple_menu ul li.menu_title{
+				font-weight:bold;
+				border-bottom: 1px solid #b9b9b9;
+			}
+			div.simple_menu ul li.menu_title:hover{
+				background:white;
+				cursor:default;
+			}
+			div.simple_menu ul li:hover{
+				background:#eaeaea;
+				cursor:pointer;
+			}

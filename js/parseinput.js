@@ -47,7 +47,11 @@ function parseInput(input,chan,network){
 				socket.sendData("PART " + chan, network);
 				socket.sendData("JOIN " + chan, network);
 				break;
-				
+			
+			case "DEV":
+				remote.getCurrentWindow().toggleDevTools();
+				break;
+			
 			case "DEOP":
 				socket.sendData("PART " + chan, network);
 				socket.sendData("JOIN " + chan, network);
@@ -266,7 +270,7 @@ function parseInput(input,chan,network){
 					}
 				}
 				break;	
-
+			
 			case "UNIGNORE":
 				if(pCount(1)){
 					var is = getAfter(1);
@@ -286,7 +290,13 @@ function parseInput(input,chan,network){
 					}
 				}
 				break;
-				
+			
+			case "VERSION":
+				if(pCount(1)){
+					socket.sendData("PRIVMSG " + bits[1] + " :" + String.fromCharCode(1) + "VERSION" + String.fromCharCode(1), network);
+				}
+				break;
+			
 			default:
 				socket.sendData(input.substr(1), network);
 		}

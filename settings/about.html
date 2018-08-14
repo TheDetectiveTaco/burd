@@ -6,9 +6,64 @@
 		<link href="../global/css/iframe.css" rel="stylesheet">
 		<script src="../global/js/jquery.min.js"></script>
 		<script src="../global/js/iframe.js"></script>
+		<style>
+			body{
+				background:url(images/ducklogo.png) no-repeat center bottom;
+
+				background-size:170px;
+			}
+			img#back{
+				opacity:0.5;
+			}
+			img#back:hover{
+				opacity:1;
+				cursor:default;
+			}
+			td{
+				vertical-align: top;
+			}
+			tr{
+				margin-bottom:10px;
+			}
+		</style>
+		<script>
+			$(function(){
+				window.addEventListener("message", function(e){
+					if( e.data.c == "version" ) $("span.version").text(e.data.version);
+				}, false);
+				postMsg({c: "get_version"});
+			});
+		</script>
 	</head>
 	<body>
-		<h2>About Burd IRC</h2>
-		wefwef
+		<h2>
+			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
+			About
+		</h2>
+		
+		<div class="section">
+			<h4>Burd IRC <span class="version">0.00</span></h4>
+			<table>
+				<tr>
+					<td>Programming:</td>
+					<td><a href="http://haxed.net">Matt Ryan</a></td>
+				</tr>
+				<tr>
+					<td>Sounds:</td>
+					<td><a href="https://freesound.org/people/fins/">Leszek Szary</a></td>
+				</tr>
+				<tr>
+					<td>Beta testers:</td>
+					<td>
+						<div>Shan</div>
+						<div>Taco</div>
+						<div>Time-Warp</div>
+					</td>
+				</tr>
+			</table>
+			
+
+		</div>
+		
 	</body>
 </html>

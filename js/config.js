@@ -1,5 +1,5 @@
+var appVersion = "0.03";
 var config = {
-	app: { name: "BurdIRC", version: "0.02" },
 	animation:200,
 	scrollback: 150,
 	showJoinMessages: true,
@@ -7,7 +7,11 @@ var config = {
 	showPartMessages: true,
 	showKickMessages: true,
 	showModeMessages: true,
+	nickColors: true,
+	textColors: true,
 	logging: true,
+	checkForUpdates: true,
+	cryptoKey: "Pizza",
 	userCommands: [
 		{ command: "action", action: "me &2" },
 		{ command: "m", action: "msg &2" },
@@ -24,7 +28,7 @@ var config = {
 		{type: "regex", value: "^quack123$"},
 		{type: "user", value: "test!*@*"}
 	],
-	sounds: { highlight: true, pm: true },
+	sounds: { highlight: true, pm: true, notice: true },
 	networks: [
 
 	]

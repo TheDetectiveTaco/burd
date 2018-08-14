@@ -15,8 +15,9 @@ var iframe = {
 		$("div#sidebar_iframe iframe").attr("src", e.url);
 	},
 	hide: function(e){
-		
+		$("div.covering").hide();
 		$("div#sidebar_iframe").hide();
 		overlay.hide();
+		$("div#sidebar_iframe iframe").attr("src", "about:blank");
 	}
 }

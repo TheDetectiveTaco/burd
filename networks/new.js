@@ -48,7 +48,7 @@ $(function(){
 		if( radio.getSelected("radio_login") == "radio_nickserv"){
 			authType = "nickserv";
 			authPassword = $("input#nickserv_password").val();
-		}else if( radio.getSelected("radio_login") == "radio_serverassword"){
+		}else if( radio.getSelected("radio_login") == "radio_serverpassword"){
 			authType = "server_password";
 			authPassword = $("input#server_password").val();
 		}else if( radio.getSelected("radio_login") == "radio_saslplain"){

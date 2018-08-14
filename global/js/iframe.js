@@ -23,6 +23,28 @@ $(function(){
 		
 	});
 	
+	$("body").on("click", "a", function() {
+		var bits = $(this).attr("href").toLowerCase().split(":");
+		switch( bits[0].toLowerCase() ){
+			
+			case "http":
+			case "https":
+				postMsg({c: "open_url", url: $(this).attr("href")});
+				break;
+			
+			default:
+				window.location.href = $(this).attr("href");
+				break;
+
+		}
+		event.preventDefault();
+	});
+	
+	$('body').on('click', 'img#back', function() {
+		window.location.href = "index.html";
+	});	
+	
+	
 });
 
 var slider = {
