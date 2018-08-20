@@ -67,6 +67,7 @@ a{
 
 div.list div.item{
 	padding:5px;
+	border-bottom: 1px solid #636363;
 }
 div.list div.item:hover,div.list div.selected{
 	background:#3A3B40;
@@ -123,6 +124,14 @@ input[type='button']:hover{
 	border-color:#FEFEFE;
 }
 
+div.simple_list div.simple_item{
+	padding:6px;
+}
+div.simple_list div.simple_item:hover{
+	background:#585A5E;
+	color:white;
+	cursor:default;
+}
 
 
 

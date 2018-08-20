@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<link href="../global/css/iframe.css" rel="stylesheet">
+		<script src="../global/js/jquery.min.js"></script>
+		<script src="../global/js/iframe.js"></script>
+		<script src="../global/js/menu.js"></script>
+		
+		<link href="../global/css/menu.css" rel="stylesheet">
+		<link href="settingscommon.css" rel="stylesheet">
+		<script src="settingscommon.js"></script>
+		
+		<script>
+
+		$(function(){
+			$('body').on('click', '.iobj', function() {
+				menu.create({
+					"Remove": {callback: function(e){ 
+						
+					}}
+				});
+			});
+			applyConfig = function(){
+				buildList();
+			}
+		});
+		
+		function buildList(){
+			$("table tr.iobj").remove();
+			for(var i in config.ignores){
+				console.log(config.ignores[i]);
+				var html = "<tr class=\"iobj\" sid=\"" + i + "\">";
+				html += "<td>" + config.ignores[i].type + "</td>";
+				html += "<td>" + config.ignores[i].value + "</td>";
+				html += "</tr>";
+				$("table").append(html);
+			}
+		}
+		
+		</script>
+		
+		<style>
+			table{
+				width:100%;
+			}
+			table th,table td{
+				text-align:left;
+				padding:3px;
+			}
+			table tr:hover{
+				background:#50545a;
+			}
+			table .thead{
+				background:#5e6269;
+			}
+		</style>
+	</head>
+	<body>
+		<h2>
+			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
+			Ignore list
+		</h2>
+		<table>
+			<tr class="thead">
+				<th style="width:70px">Type</th>
+				<th>Value</th>
+			</tr>
+			<tr class="iobj">
+				<td>regex</td>
+				<td>/test/</td>
+			</tr>
+		</table>
+	</body>
+</html>

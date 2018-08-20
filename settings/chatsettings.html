@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<link href="../global/css/iframe.css" rel="stylesheet">
+		<script src="../global/js/jquery.min.js"></script>
+		<script src="../global/js/iframe.js"></script>
+		
+		<link href="settingscommon.css" rel="stylesheet">
+		<script src="settingscommon.js"></script>
+		<script src="chatsettings.js"></script>
+		<script>
+		</script>
+		
+	</head>
+	<body>
+		<h2>
+			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
+			Chat settings
+		</h2>
+		<div class="section">
+			<h4>Channel Events</h4>
+
+			<div class="slider" id="joinpart">
+				Show join/part messages
+			</div>
+			<div class="slider" id="quit">
+				Show quit messages
+			</div>
+			<div class="slider" id="kick">
+				Show kick messages
+			</div>
+			<div class="slider" id="mode">
+				Show mode messages
+			</div>
+
+		</div>
+		<div class="section">
+			<h4>Channel Content</h4>
+
+			<div class="text_input">
+				<div class="title">Scrollback:</div>
+				<div class="input"><input type="text" value="150" id="scrollback"></div>
+			</div>
+			<div class="slider" id="colornicks">
+				Show colored nicks
+			</div>
+			<div class="slider" id="colortext">
+				Show text colors
+			</div>
+		</div>
+		<div class="section">
+			<h4>Sounds</h4>
+
+			<div class="slider" id="highlight">
+				Highlight sound
+			</div>
+			<div class="slider" id="pmsound">
+				PM sound
+			</div>
+			<div class="slider" id="noticesound">
+				Notice sound
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,10 +1,6 @@
 /* main file for IRC socket related stuff */
 var net = require('net');
-
-/*for testing only*/
-setTimeout(function(){
-	network.create(config.networks[0]);
-}, 1000);
+var tls = require('tls');
 
 var cache = [];
 
@@ -18,35 +14,71 @@ var socket = {
 		/* sends data to a socket matching id */
 		var sock = this.getSocketByID(id);
 		sock.socket.write(data + "\r\n");
+		if(this.logData) console.log("< " + data);
+		sock.socket.pause();
+		sock.socket.resume();
+
 	},
 	
 	close: function(id){
 		/* close a socket matching id */
+		var sock = this.getSocketByID(id);
+		sock.networkInfo["loggedin"] = false;
+		if(sock.networkInfo.reconnect){
+			channel("!", id).addInfo( "Disconnected from IRC. Reconnecting in 10 seconds..." );
+			sock.reconnectTimer = setTimeout(function(){
+				socket.create(sock.networkInfo.server, sock.networkInfo.port, sock.networkInfo.SSL, sock.id);
+
+				
+			},10000);
+		}else{
+			channel("!", id).addInfo( "Disconnected from IRC" );
+		}
+		
+		
+
 		
 	},
 	
-	create: function(server, port, ssl){
-		/* called when a socket is to be created */
-		var sock = new net.Socket();
-		var sid = socket.newID();
-		var sObject = { id: sid, socket: sock, networkInfo: {}, cache: "", tmpPacketHold: [] };
-		sObject.networkInfo.getISUPPORT = function(e){
-			 for(var i in this.ISUPPORT){
-				 var sb = this.ISUPPORT[i].split("=");
-				 if(sb[0].toLowerCase() == e.toLowerCase()){
-					 if(sb.length == 1){
-						 return true;
-					 }else{
-						return sb[1];
+	create: function(server, port, ssl, id){
+		/*
+			called when a socket is to be created.
+			if we have a sid, then we need to reconnect, otherwise make a new sid
+		*/
+		var sock = null;
+		sid = id||socket.newID();
+		if(ssl){
+			sock = tls.connect({port: port, host: server, rejectUnauthorized: false}, function() {
+				socket.parseData( "CONNECTED", sid );
+			});
+		}else{
+			sock = new net.Socket();
+			sock.connect(port, server, function() {
+				socket.parseData( "CONNECTED", sid );
+			});
+		}
+		
+		if(id!=undefined){
+			var sObject = this.getSocketByID(id);
+			sObject.socket = sock;
+		}else{
+			
+			var sObject = { id: sid, socket: sock, networkInfo: {}, cache: "", tmpPacketHold: [], reconnectTimer: 0 };
+			sObject.networkInfo.getISUPPORT = function(e){
+				 for(var i in this.ISUPPORT){
+					 var sb = this.ISUPPORT[i].split("=");
+					 if(sb[0].toLowerCase() == e.toLowerCase()){
+						 if(sb.length == 1){
+							 return true;
+						 }else{
+							return sb[1];
+						 }
 					 }
 				 }
-			 }
-			 return false;
+				 return false;
+			}
+			socket.sockets.push(sObject);
 		}
-		socket.sockets.push(sObject);
-		sock.connect(port, server, function() {
-			socket.parseData( "CONNECTED", sid );
-		});
 		
 		sock.on("data", function(data) {
 			data = data.toString().replace(/\r/g, "\n");
@@ -63,6 +95,23 @@ var socket = {
 
 		});
 		
+		sock.on("end", function() {
+			socket.close(sObject.id);
+		});
+		sock.on("close", function() {
+			socket.close(sObject.id);
+		});
+		sock.on("error", function() {
+			
+		});
+		setTimeout(function(){
+			if(ssl){
+				channel("!", sid).addInfo( "Connecting to IRC via SSL..." );
+			}else{
+				channel("!", sid).addInfo( "Connecting to IRC..." );
+			}
+		},10);
+
 		return sObject;
 	},
 	
@@ -81,7 +130,9 @@ var socket = {
 		/* IRC packets are sent to this function for processing */
 		if(data.length < 3) return;
 		
-		if(this.logData) console.log(data);
+		data = secure(data);
+		
+		if(this.logData) console.log("> " + data);
 		
 		if(data.substr(0, 1) != ":") data = ":server.address " + data;
 		
@@ -102,8 +153,8 @@ var socket = {
 			socket.sendData("CAP LS",id);
 			capTimer = setTimeout(function(){
 							socket.sendData("NICK " + networkInfo.nick,id);
-							socket.sendData("USER duckgoose * * :lol",id);
-						},1000);
+							socket.sendData("USER " + networkInfo.nick + " * * :" + networkInfo.realName,id);
+						},2000);
 		}else{
 			if(data.substr(0,1) == ":"){
 				if(bits.length > 1){
@@ -113,6 +164,12 @@ var socket = {
 						switch(num){
 							
 							case E.RPL_WELCOME:
+								setTimeout(function(){
+									networkInfo["loggedin"] = true;
+								},3000);
+								printMsg(getKeyFromNumber(num), [cData]);
+								
+								break;
 							case E.RPL_YOURHOST:
 							case E.RPL_CREATED:
 							case E.RPL_LUSERCLIENT:
@@ -197,7 +254,6 @@ var socket = {
 							
 
 							case E.RPL_WHOISUSER:
-								//:kornbluth.freenode.net 311 duckgoose audioburn ~theology unaffiliated/not-mike/x-4399907 * :realname
 								channel("*", id).addInfo( "<span class=whois_name>[" + HTML.encodeString(bits[3]) + "]</span> (" + HTML.encodeString(bits[4]) + "@" + HTML.encodeString(bits[5]) + "): <span class=whois_realname>" + HTML.encodeString(cData) + "</span>", "text-in", true );
 								break;
 								
@@ -256,18 +312,32 @@ var socket = {
 							case E.ERR_PASSWDMISMATCH:
 								channel("network console",id).addInfo("ERROR 464: INVALID PASSWORD", "text-in");
 								break;
-								
+							case E.SASL_AUTH_FAILURE:
+							case E.SASL_AUTH_SUCCESS:
+								socket.sendData("CAP END",id);
+								break;
 							default:
 								console.log("UNHANDLED: " + data);
 						}
 					}else{
 						//packet was not irc numeric
 						switch(bits[1].toUpperCase()){
+							case "AUTHENTICATE":
+								if(bits[2] == "+"){
+									var login = networkInfo.auth.user;
+									login += String.fromCharCode(0) + networkInfo.auth.user;
+									login += String.fromCharCode(0) + crypt.decrypt(networkInfo.auth.password);
+									socket.sendData("AUTHENTICATE " + btoa(login),id);
+								}else{
+									socket.sendData("CAP END",id);
+								}
+								break;
 							case "CAP":
 								switch(bits[3].toUpperCase()){
 									case "LS":
 										var caps = cData.toLowerCase().split(" ");
 										var supported = ["multi-prefix"];
+										if(networkInfo.auth.type == "sasl_plain") supported.push("sasl");
 										var capRequest = "";
 										for(var i in caps){
 											if(supported.includes(caps[i])){
@@ -277,11 +347,14 @@ var socket = {
 										socket.sendData("CAP REQ :" + capRequest.slice(0,-1),id);
 										break;
 									case "ACK":
+										if(cData.indexOf("sasl")>-1){
+											socket.sendData("AUTHENTICATE PLAIN",id);
+										}else{
+											socket.sendData("CAP END",id);
+										}
+										break;
 									case "NAK":
 										socket.sendData("CAP END",id);
-										socket.sendData("NICK " + networkInfo.nick,id);
-										socket.sendData("user duckgoose * * :lol",id);
-										clearTimeout(capTimer);
 										break
 								}
 								break;
@@ -292,10 +365,10 @@ var socket = {
 									channel(cData, id).create("new_channel_window").show();
 									cache = [];
 								}else{
-									channel(cData, id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has joined the channel.", "text-in" );
+									if(!ignore.check(data)) channel(cData, id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has joined the channel.", "text-in" );
 									cache = [];
 									channel(cData, id).object.find("div.channel_users div.user").each(function(){
-										cache.push($(this).attr("onick"));
+										cache.push(HTML.decodeParm($(this).attr("onick")));
 									});
 									cache.push(usr.nick);
 									addNicksToChannel(cData, cache);
@@ -307,14 +380,9 @@ var socket = {
 								var kickee = bits[3];
 								var chan = bits[2];
 								var reason = HTML.encodeString(cData);
-								//blah!j!j kick ### bob :reasons
-
 								channel(chan, id).addInfo( "<b>" + kicker + "</b> has kicked <b>" + HTML.encodeString(kickee) + "</b> from the channel (" + reason + ")", "", true );
-								
 								channel(chan, id).object.find("div.channel_users div.user:iAttrContains('nick','" + kickee.toLowerCase() + "')").remove();
-								
 								channel(chan, id).recount();
-								
 								break;
 								
 							case "MODE":
@@ -332,9 +400,9 @@ var socket = {
 								break;
 								
 							case "NOTICE":
-								//:zoo84754!~lol@2001:470:5:c75:f187:7a19:c549:299a NOTICE duckgoose :butt
-								channel("*",id).addInfo("-<b>" + HTML.encodeString(parseUser(bits[0]).nick) + "</b>-: " + HTML.encodeString(cData), "", true);
-								//channel("*",id).addInfo("Notice sent from " + parseUser(bits[0]).nick + " to " + bits[2]);
+								if(ignore.check(data)) return;
+								if(cData.substr(0,1) == String.fromCharCode(1)) return parseCTCP();
+								channel("*",id).addInfo("-<b>" + HTML.encodeString(parseUser(bits[0]).nick) + "</b>-: " + HTML.linkify(HTML.encodeString(cData)), "", true);
 								break;
 								
 							case "PART":
@@ -344,7 +412,7 @@ var socket = {
 									channel(bits[2], id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has left the channel (" + cData + ").", "text-out" );
 									channel(bits[2], id).addInfo( "You're no longer in this channel.", "error-info" );
 								}else{
-									channel(bits[2], id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has left the channel (" + cData + ").", "text-out" );
+									if(!ignore.check(data)) channel(bits[2], id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has left the channel (" + cData + ").", "text-out" );
 									channel(bits[2], id).object.find("div.channel_users div.user:iAttrContains('nick','" + usr.nick.toLowerCase() + "')").remove();
 									channel(bits[2], id).recount();
 								}
@@ -377,6 +445,11 @@ var socket = {
 								var chan = bits[2].toLowerCase();
 								var nick = parseUser(bits[0]).nick;
 								var highlight = highlights.process(networkInfo.nick, cData);
+								
+								if(ignore.check(data)) return;
+								
+								if(cData.substr(0,1) == String.fromCharCode(1) && cData.toUpperCase().slice(1,7) != "ACTION") return parseCTCP();
+								
 								if(chan == networkInfo.nick.toLowerCase()){
 									//it's a message directly to me!
 									//:buttbot!897776e2@gateway/web/freenode/ip.137.119.118.226 PRIVMSG duckgoose :dfgdfg
@@ -399,7 +472,20 @@ var socket = {
 										}
 									}
 								}
+								
 								break;
+							case "TOPIC":
+								var chan = bits[2].toLowerCase();
+								var nick = parseUser(bits[0]).nick;
+								if(channel(chan, id).object.length > 0){
+									channel(chan, id).object.find("div.title span.topic").text(cData);
+									channel(chan, id).addInfo( nick + " has changed the topic to: " + cData );
+								}
+								break;
+								
+								
+							default:
+								console.log(data);
 						}
 					
 					}
@@ -409,7 +495,46 @@ var socket = {
 		
 		
 		
-		/* below are some common functons we use during data parsing */
+		/* below are some common functions we use during data parsing */
+		
+		function secure(e){
+			e = e.replace(/\=\s*?(\"|\'|(ht|f)tp)/ig, "[filtered]");
+			e = e.replace(/<script/ig, "<" + String.fromCharCode(5082) + "cript");
+			return e;
+		}
+		
+		function parseCTCP(){
+			var nick = parseUser(bits[0]).nick;
+			var ctcpMsg = cData.slice(1,-1).toUpperCase().split(" ");
+			var cChar = String.fromCharCode(1);
+			
+			if( bits[1].toUpperCase() == "NOTICE" ){
+				/* it's a CTCP reply */
+				channel("*",id).addInfo("-<b>" + HTML.encodeString(nick) + "</b>- CTCP Reply <span class=orange>" + HTML.encodeString(cData.slice(1,-1)) + "</span>", "", true);
+				
+			}else{
+			
+				channel("*",id).addInfo("-<b>" + HTML.encodeString(nick) + "</b>- Requested CTCP <span class=orange>" + HTML.encodeString(ctcpMsg[0]) + "</span>", "", true);
+				
+				switch(ctcpMsg[0]){
+					case "VERSION":
+						socket.sendData("NOTICE " + nick + " :" + cChar + "VERSION Burd IRC " + appVersion + cChar,id);
+						break;
+					case "PING":
+						if(ctcpMsg.length > 1) socket.sendData("NOTICE " + nick + " :" + cChar + "PING " + ctcpMsg[1] + cChar,id);
+						break;
+					case "TIME":
+						socket.sendData("NOTICE " + nick + " :" + cChar + "TIME " + getDateStr(Date.now()/1000) + cChar,id);
+						break;
+				}
+			
+			}
+			
+			console.log("CTCP:" + data);
+			//:duckgoose_!~lol@2001:470:5:c75:4156:ea25:b45:d43e PRIVMSG duckgoose :[1]VERSION[1]
+			
+		}
+		
 		
 		function getDateStr(UNIX_timestamp){
 			/* https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript */
@@ -448,7 +573,6 @@ var socket = {
 		
 		
 		function parseMode(){
-			// :zoo84754!~lol@2001:470:5:c75:f187:7a19:c549:299a MODE ##coffeeisgood +k lol
 			var nickInfo = parseUser(bits[0]);
 			if( networkInfo.getISUPPORT("chantypes").indexOf( bits[2].substr(0,1) ) > -1  ){
 				/* it's a channel mode */
@@ -470,32 +594,40 @@ var socket = {
 							break;
 							
 						case "o":
-							setChanUserSym(args[argIndex], "@", adding);
-							argIndex++;
-							break;
-							
 						case "v":
-							setChanUserSym(args[argIndex], "+", adding);
-							argIndex++;
+							setChanUserSym(args[argIndex], modeToSym(modeData[i]), adding);
 							break;
 							
-						case "b":
-						case "I":
-							argIndex++;
+						case "h":
+						case "Y":
+						case "a":
+						case "q":
+							if( networkInfo.getISUPPORT("prefix").includes(modeData[i]) ){
+								setChanUserSym(args[argIndex], modeToSym(modeData[i]), adding);
+							}
 							break;
 							
 					}
 					
+					if( argModes.includes(modeData[i]) ) argIndex++;
+					
 				}
-				
+
 				channel(chan, id).addInfo("<b>" + HTML.encodeString(nickInfo.nick) + "</b> has set mode: " + HTML.encodeString(bits[3] + " " + args), "", true);
+				
+				function modeToSym(mode){
+					var sym = networkInfo.getISUPPORT("prefix").substr(1).split(")");
+					for(var i in sym[0]){
+						if(sym[0][i] == mode) return sym[1][i];
+					}
+				}
 				
 				function setChanUserSym(user, sym, add){
 					var no = channel(chan, id).object.find("div.channel_users div.user:iAttrContains('nick','" + user.toLowerCase() + "')");
 					if(add){
-						no.attr("onick", sym + no.attr("onick"));
+						no.attr("onick", sym + HTML.encodeParm(no.attr("onick").replace(sym, "")));
 					}else{
-						no.attr("onick", no.attr("onick").replace(sym, ""));
+						no.attr("onick", HTML.encodeParm(no.attr("onick").replace(sym, "")));
 					}
 					resortNicks(chan);
 				}
@@ -510,8 +642,8 @@ var socket = {
 				if( no.length > 0 ){
 					var chanName = $(this).attr("channel");
 					no.text(n);
-					no.attr("nick", n);
-					no.attr("onick", nickModes(no.attr("onick")) + n);
+					no.attr("nick", HTML.encodeParm(n));
+					no.attr("onick", nickModes(HTML.decodeParm(no.attr("onick"))) + HTML.encodeParm(n));
 					channel(chanName, id).addInfo( "<b>" + HTML.encodeString(o) + "</b> has changed their nick to <b>" + HTML.encodeString(n) + "</b>", "", true );
 					resortNicks(chanName);
 				}
@@ -549,13 +681,17 @@ var socket = {
 					msg = msg + " " + bits[e[i]];
 				}
 			}
-			channel("*",id).addInfo(msg, "text-in");
+			if(networkInfo["loggedin"]){
+				channel("*",id).addInfo(msg, "text-in");
+			}else{
+				channel("network console",id).addInfo(msg, "text-in");
+			}
 		}
 		
 		function resortNicks(chan){
 			cache = [];
 			channel(chan, id).object.find("div.channel_users div.user").each(function(){
-				cache.push($(this).attr("onick"));
+				cache.push(HTML.decodeParm($(this).attr("onick")));
 			});
 			addNicksToChannel(chan, cache);
 		}
@@ -591,7 +727,7 @@ var socket = {
 					fNick = fNick.replace( prefix[j], "" );
 				}
 				nickCount++;
-				nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + '" onick="' + HTML.encodeString(cache[i]) + '" nick="' + HTML.encodeString(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
+				nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + '" onick="' + HTML.encodeParm(cache[i]) + '" nick="' + HTML.encodeParm(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
 				
 			}
 			
@@ -599,6 +735,12 @@ var socket = {
 			channel(chan, id).object.find("div.usercount").html("Users Here - " + nickCount);
 			cache = [];
 			
+		}
+		
+		function getKeyFromNumber(e){
+			for(var i in E){
+				if(E[i] == e) return i;
+			}
 		}
 		
 		function sortNames(names) {
@@ -622,8 +764,3 @@ var socket = {
 		
 	}
 }
-		function getKeyFromNumber(e){
-			for(var i in E){
-				if(E[i] == e) return i;
-			}
-		}

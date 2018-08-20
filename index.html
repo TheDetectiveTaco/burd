@@ -1,10 +1,11 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>title</title>
+		<title>Burd IRC</title>
 		<meta charset="utf-8">
 		<link href="global/css/scrollbar.css" rel="stylesheet">
 		<link href="default.css" rel="stylesheet">
+		<link href="global/css/menu.css" rel="stylesheet">
 		<style>
 
 			div.server-info{
@@ -52,41 +53,7 @@
 				display:none;
 			}
 			
-			/* the menus */
-			div.simple_menu{
-				position:absolute;
-				background:white;
-				min-width:100px;
-				color:black;
-				top:7px;
-				left:7px;
-				border:1px solid black;
-				z-index:99;
-				box-shadow: 2px 3px black;
-			}
-			div.simple_menu ul{
-				list-style-type: none;
-				padding:0;
-				margin:0;
-			}
-			div.simple_menu ul li{
-				padding:0.7em;
-				padding-left:1em;
-				padding-right:1em;
-				white-space: nowrap;
-			}
-			div.simple_menu ul li.menu_title{
-				font-weight:bold;
-				border-bottom: 1px solid #b9b9b9;
-			}
-			div.simple_menu ul li.menu_title:hover{
-				background:white;
-				cursor:default;
-			}
-			div.simple_menu ul li:hover{
-				background:#eaeaea;
-				cursor:pointer;
-			}
+
 			.blur{
 				filter: grayscale(0.5) blur(8px);
 			}
@@ -120,6 +87,47 @@
 			.highlight{
 				background:#4e5156;
 			}
+			
+			div#update{
+				position:absolute;
+				background:#1a1b1f;
+				height:205px;
+				width:500px;
+				left:calc(50% - 500px / 2);
+				top:calc(50% - 205px / 2);
+				z-index:10;
+				display:none;
+				border-radius:10px;
+			}
+			
+			
+			input[type='button']{
+				background: #58595d;
+				color: white;
+				border: 1px solid #2B2B2E;
+				padding: 5px;
+				border-radius: 5px;
+			}
+			
+			div#input_request{
+				position:absolute;
+				background:#1a1b1f;
+				height:165px;
+				width:400px;
+				left:calc(50% - 400px / 2);
+				top:calc(50% - 165px / 2);
+				z-index:10;
+				display:none;
+				border-radius:10px;
+				
+			}
+			div.input_title{
+				font-size:17px;padding:5px;background:#34353a;
+			}
+			div.input_content{
+				font-size:15px;padding:10px;height:70px;
+			}
+
 		</style>
 		<script src="global/js/jquery.min.js"></script>
 		<script>
@@ -128,12 +136,13 @@
 			}
 			if(typeof(require)!="undefined") window.$ = window.jQuery = require('./global/js/jquery.min.js');
 		</script>
-		<script src="js/color.js"></script>
 		<script src="js/config.js"></script>
+		<script src="js/color.js"></script>
 		<script src="js/enums.js"></script>
 		<script src="js/socket.js"></script>
 		<script src="js/main.js"></script>
-		<script src="js/menu.js"></script>
+		<script src="global/js/menu.js"></script>
+		<script src="js/menuobjects.js"></script>
 		<script src="js/iframe.js"></script>
 		<script src="js/postmessage.js"></script>
 		<script src="js/parseinput.js"></script>
@@ -141,10 +150,59 @@
 		<script src="js/onclick.js"></script>
 		<script src="js/highlights.js"></script>
 		<script src="js/tabcomplete.js"></script>
+		<script src="js/ignore.js"></script>
+		<script src="js/updatechecker.js"></script>
+		<script src="js/inputrequest.js"></script>
 	</head>
 	<body>
 		<div id="overlay" class="covering">
 			&nbsp;
+		</div>
+		<div id="input_request" class="covering">
+			<div class="input_title" style="">
+				Input Requested
+			</div>
+			<div class="input_content" style="">
+				
+				<!--
+				<table class="input" style="width:100%;">
+					<tr>
+						<td>Your name:</td>
+						<td><input type="text" style="width:100%;"></td>
+					</tr>
+					<tr>
+						<td>Your name:</td>
+						<td><input type="text" style="width:100%;"></td>
+					</tr>
+					<tr>
+						<td>Your name:</td>
+						<td><input type="text" style="width:100%;"></td>
+					</tr>
+				</table>
+				-->
+			</div>
+			<div class="input_buttons" style="text-align:right;padding:10px;">
+				<input type="button" value="OK" style="width:70px;">
+			</div>
+		</div>
+		<div id="update" class="covering">
+				<div style="font-size:20px;padding:10px;background:#34353a;">
+					Client updates found
+				</div>
+				<div style="font-size:15px;padding:10px;">
+					A more up-to-date version of this client was found.
+				</div>
+				<div style="font-size:15px;padding:10px;">
+					<table>
+						<tr><td>Current version:</td> <td class="myver">0.00</td></tr>
+						<tr><td>New version:</td> <td class="newver">0.00</td></tr>
+						<tr><td>Update type:</td> <td class="updatetype">bugfix</td></tr>
+					</table>
+				</div>
+				<div style="text-align:right;padding-right:10px" class="update_buttons">
+					<input type="button" value="Cancel" id="cancel_update">
+					<input type="button" value="Update now" id="update_go">
+				</div>
 		</div>
 		<div id="sidebar_iframe" class="covering">
 			<iframe src="about:blank"></iframe>
@@ -367,15 +425,23 @@
 		</template>
 		
 		<template id="new_channel_item">
-			<div network="%network%" channel="%lchannel%" class="channel_item">
+			<div network="%network%" channel="%attrname%" class="channel_item">
 				<span class="title">%channel%</span>
 				<div class="unread">0</div>
 				<div class="channel_closer">&nbsp;</div>
 			</div>
 		</template>
 		
+		<template id="new_pm_item">
+			<div network="%network%" channel="%attrname%" class="channel_item pm_item">
+				<span class="title">%channel%</span>
+				<div class="unread">0</div>
+				<div class="channel_closer">&nbsp;</div>
+			</div>
+		</template>		
+		
 		<template id="new_pm_window">
-				<div class="channel" network="%network%" type="pm" channel="%lcasechannel%">
+				<div class="channel" network="%network%" type="pm" channel="%attrname%">
 					<div class="meta">
 						<div class="title">
 							<span class="chan_name">%channelname%</span>
@@ -386,13 +452,13 @@
 
 					</div>
 					<div class="bottom">
-						<input type="text" class="channel_input">
+						<input type="text" class="channel_input"> <div class="chan_smile">&nbsp;</div>
 					</div>
 				</div>
 		</template>
 		
 		<template id="new_channel_window">
-				<div class="channel" network="%network%" type="channel" channel="%lcasechannel%">
+				<div class="channel" network="%network%" type="channel" channel="%attrname%">
 					<div class="meta">
 						<div class="title">
 							<span class="chan_name">%channelname%</span>
@@ -417,7 +483,7 @@
 		
 		<template id="new_console_window">
 
-			<div class="channel" network="%network%" channel="%lcasechannel%" style="display:none">
+			<div class="channel" network="%network%" channel="%attrname%" style="display:none">
 				<div class="meta">
 					<div class="title">
 						<span class="chan_name">%channel%</span>

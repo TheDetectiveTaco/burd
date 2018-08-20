@@ -4,5 +4,8 @@
   "main": "index.js",
   "devDependencies": {
     "electron": "^1.8.2"
+  },
+  "dependencies": {
+    "tar-fs": "^1.16.3"
   }
 }

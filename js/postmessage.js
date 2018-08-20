@@ -9,6 +9,32 @@ window.addEventListener("message", function(e){
 		case "close_iframe":
 			iframe.hide();
 			break;
+		case "save_network":
+			e.data.network.auth.password = crypt.encrypt(e.data.network.auth.password);
+			config.networks.push(e.data.network);
+			saveSettings();
+			break;
+		case "delete_network":
+			config.networks.splice(e.data.network,1);
+			saveSettings();
+			break;
+		case "connect":
+			network.create(e.data.network);
+			break;
+		case "get_version":
+			e.source.postMessage({c: "version", version: appVersion}, "*");
+			break;
+		case "get_settings":
+			e.source.postMessage({c: "settings", data: config}, "*");
+			break;
+		case "update_settings":
+			config = e.data.data;
+			break;
+		case "open_url":
+			openURL(e.data.url);
+			break;
+		default:
+			console.log(e.data);
 	}
 }, false);
 

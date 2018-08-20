@@ -1,0 +1,7 @@
+div.login_method,div.login_info_div{
+	display:none;
+}
+div.error{
+	color:#f19c9c;
+	display:none;
+}
