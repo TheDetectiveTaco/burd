@@ -1,4 +1,4 @@
-var appVersion = "0.04";
+var appVersion = "0.05";
 var config = {
 	animation:200,
 	scrollback: 150,

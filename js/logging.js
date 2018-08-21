@@ -10,15 +10,9 @@ var logging = {
 		for(var i in this.cache){
 			var a = this.cache[i];
 			var d = new Date(a.date);
-<<<<<<< HEAD
-			var path = removeBadChars(config.logs.path.replace("%dataPath%", dataPath) + "/" + a.network);
+			var path = config.logs.path.replace("%dataPath%", dataPath) + "/" + removeBadStr(a.network.toLowerCase());
 			if (!fs.existsSync(path)) fs.mkdirSync(path);
-			path += "/" + removeBadChars(a.channel);
-=======
-			var path = config.logs.path.replace("%dataPath%", dataPath) + "/" + a.network;
-			if (!fs.existsSync(path)) fs.mkdirSync(path);
-			path += "/" + a.channel;
->>>>>>> 8f2ef63dbbbf701d0e01762dc3aa59c5c4bf23e2
+			path += "/" + removeBadStr(a.channel.toLowerCase());
 			if (!fs.existsSync(path)) fs.mkdirSync(path);
 			var db = d.toString().split(" ");
 			var messageStr = "";
@@ -34,14 +28,38 @@ var logging = {
 			fs.appendFileSync(path + "/" + db[0]+" "+db[1]+" "+db[2]+" "+db[3] + ".txt", messageStr);
 		}
 		this.cache = [];
-<<<<<<< HEAD
 		
-		function removeBadChars(e){
-			e = e.replace(/\*/, "_");
+		function removeBadStr(e){
+			var chars = [
+				"*",
+				"\\",
+				"/",
+				":",
+				"|",
+				"\"",
+				"^",
+				"con",
+				"nul",
+				"prn",
+				"?",
+				">",
+				"."
+			];
+			
+			var replaced = true;
+			while(replaced == true){
+				replaced = false;
+				for(var i in chars){
+					if(e.indexOf(chars[i])>-1){
+						e = e.replace(chars[i], "_");
+						replaced = true;
+					}
+				}
+			}
+			e = e.replace(/com[0-9]/ig, "_");
+			e = e.replace(/lpt[0-9]/ig, "_");
 			return e;
 		}
-=======
->>>>>>> 8f2ef63dbbbf701d0e01762dc3aa59c5c4bf23e2
 	}
 }
 
