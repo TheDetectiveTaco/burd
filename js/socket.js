@@ -23,6 +23,7 @@ var socket = {
 	close: function(id){
 		/* close a socket matching id */
 		var sock = this.getSocketByID(id);
+		if(!sock) return;
 		sock.networkInfo["loggedin"] = false;
 		if(sock.networkInfo.reconnect){
 			channel("!", id).addInfo( "Disconnected from IRC. Reconnecting in 10 seconds..." );
@@ -135,8 +136,9 @@ var socket = {
 		if(this.logData) console.log("> " + data);
 		
 		if(data.substr(0, 1) != ":") data = ":server.address " + data;
-		
-		var networkInfo = socket.getSocketByID(id).networkInfo;
+		var socketObj = socket.getSocketByID(id);
+		if(socketObj==false) return;
+		var networkInfo = socketObj.networkInfo;
 		var bits = data.split(" ");
 		var cData = bits[bits.length - 1]; //data after " :"
 		var capTimer = 0;
@@ -331,6 +333,7 @@ var socket = {
 								}else{
 									socket.sendData("CAP END",id);
 								}
+
 								break;
 							case "CAP":
 								switch(bits[3].toUpperCase()){
@@ -372,6 +375,7 @@ var socket = {
 									});
 									cache.push(usr.nick);
 									addNicksToChannel(cData, cache);
+									logging.addLog({date: Date.now(), network: networkInfo.getISUPPORT("network"), channel: cData, user: usr.nick, type: "join"});
 								}
 								break;
 								
@@ -415,6 +419,7 @@ var socket = {
 									if(!ignore.check(data)) channel(bits[2], id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has left the channel (" + cData + ").", "text-out" );
 									channel(bits[2], id).object.find("div.channel_users div.user:iAttrContains('nick','" + usr.nick.toLowerCase() + "')").remove();
 									channel(bits[2], id).recount();
+									logging.addLog({date: Date.now(), network: networkInfo.getISUPPORT("network"), channel: bits[2], user: usr.nick, type: "part"});
 								}
 								break;
 								
@@ -432,6 +437,7 @@ var socket = {
 											chanUserObj.remove();
 											channel($(this).attr("channel"), id).recount();
 											channel($(this).attr("channel"), id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has quit (" + cData + ")", "text-out" );
+											logging.addLog({date: Date.now(), network: networkInfo.getISUPPORT("network"), channel: $(this).attr("channel"), user: usr.nick, type: "quit"});
 										}
 									});
 									
@@ -445,7 +451,7 @@ var socket = {
 								var chan = bits[2].toLowerCase();
 								var nick = parseUser(bits[0]).nick;
 								var highlight = highlights.process(networkInfo.nick, cData);
-								
+
 								if(ignore.check(data)) return;
 								
 								if(cData.substr(0,1) == String.fromCharCode(1) && cData.toUpperCase().slice(1,7) != "ACTION") return parseCTCP();

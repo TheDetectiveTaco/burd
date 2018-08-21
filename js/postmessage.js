@@ -28,6 +28,8 @@ window.addEventListener("message", function(e){
 			e.source.postMessage({c: "settings", data: config}, "*");
 			break;
 		case "update_settings":
+			if(e.data.data["networks"]==undefined) return;
+			if(e.data.data["ignores"]==undefined) return;
 			config = e.data.data;
 			break;
 		case "open_url":

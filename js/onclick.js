@@ -16,6 +16,12 @@ $(function(){
 					}},
 					"Ignore": { callback: function(e){ }}
 				});
+			}else if( $(this).hasClass("console_item") ){
+				menu.create({
+					"Remove Network": {callback: function(e){ 
+						network.remove(id);
+					}}
+				});
 			}else{
 				menu.create({
 					"Close": {callback: function(e){ 
@@ -45,6 +51,8 @@ $(function(){
 	
 	$('body').on('click', 'div#new_button', function() {
 		iframe.show({type: "left", url: "./networks/index.html"});
+		
+		
 	});
 	
 	$('body').on('click', 'div#overlay', function() {

@@ -6,15 +6,74 @@
 		<link href="../global/css/iframe.css" rel="stylesheet">
 		<script src="../global/js/jquery.min.js"></script>
 		<script src="../global/js/iframe.js"></script>
+		<script src="../global/js/menu.js"></script>
 		
+		<link href="../global/css/menu.css" rel="stylesheet">
 		<link href="settingscommon.css" rel="stylesheet">
 		<script src="settingscommon.js"></script>
+		
+		<script>
+		var selected = 0;
+		$(function(){
+			$('body').on('click', '.iobj', function() {
+				selected = $(this).attr("sid");
+				menu.create({
+					"Remove": {callback: function(e){ 
+
+						config.highlights.splice(selected,1);
+						buildList();
+					}}
+				});
+			});
+			applyConfig = function(){
+				buildList();
+			}
+		});
+		
+		function buildList(){
+			$("table tr.iobj").remove();
+			for(var i in config.highlights){
+				var html = "<tr class=\"iobj\" sid=\"" + i + "\">";
+				html += "<td>" + config.highlights[i] + "</td>";
+				html += "</tr>";
+				$("table").append(html);
+			}
+		}
+		
+		</script>
+		
+		<style>
+			body{
+				overflow-x:hidden;
+			}
+			table{
+				width:100%;
+			}
+
+			table th,table td{
+				text-align:left;
+				padding:3px;
+			}
+			table tr:hover{
+				background:#50545a;
+			}
+			table .thead{
+				background:#5e6269;
+			}
+		</style>
 	</head>
 	<body>
 		<h2>
 			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
-			Chat settings
+			Highlights
 		</h2>
-		Section incomplete
+		
+		<table>
+			<tr class="thead">
+				<th>Value</th>
+			</tr>
+
+		</table>
+		<div style="font-size:12px;margin-top:5px;text-align:center;color:#e6afaf;">( %n represents your current nick )</div>
 	</body>
 </html>
