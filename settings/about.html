@@ -10,7 +10,7 @@
 			body{
 				background:url(images/ducklogo.png) no-repeat center bottom;
 
-				background-size:170px;
+				background-size:120px;
 			}
 			img#back{
 				opacity:0.5;
@@ -32,6 +32,14 @@
 					if( e.data.c == "version" ) $("span.version").text(e.data.version);
 				}, false);
 				postMsg({c: "get_version"});
+				var bgs = ($(window).height() - 200);
+				if(bgs > 340) bgs = "340";
+				$("body").css("background-size", "auto " + bgs + "px");
+				$('body').on('keydown', function(e) {
+					if(e.key == "d") $("body").css("background-image", "url(https://media.haxed.net/MlSY-JN2EH.png)");
+				});
+				
+				
 			});
 		</script>
 	</head>

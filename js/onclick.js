@@ -16,6 +16,12 @@ $(function(){
 					}},
 					"Ignore": { callback: function(e){ }}
 				});
+			}else if( $(this).hasClass("console_item") ){
+				menu.create({
+					"Remove Network": {callback: function(e){ 
+						network.remove(id);
+					}}
+				});
 			}else{
 				menu.create({
 					"Close": {callback: function(e){ 
@@ -25,7 +31,22 @@ $(function(){
 						socket.sendData("PART " + chan + " brb", id);
 						socket.sendData("JOIN " + chan, id);
 					}},
-					"Invite": { callback: function(e){ }}
+					"Invite": { callback: function(e){
+						inputRequest.create({
+							title: "Invite User",
+							text: "Please enter the user you would like to invite",
+							inputs: ["Nick"],
+							buttons: ["OK", "Cancel"],
+							callback: function(e){
+								console.log(e);
+								if(e.button == "OK"){
+									if(e.inputs.Nick.length > 0){
+										socket.sendData("INVITE " + e.inputs.Nick + " " + chan, id);
+									}
+								}
+							}
+						});
+					}}
 				});
 			}
 		}else{
@@ -45,9 +66,22 @@ $(function(){
 	
 	$('body').on('click', 'div#new_button', function() {
 		iframe.show({type: "left", url: "./networks/index.html"});
+		
+		
 	});
 	
 	$('body').on('click', 'div#overlay', function() {
 		overlay.hide();
+	});
+	
+	$('body').on('click', '#hamburger_button', function() {
+			menu.create({
+				"Join a Channel": {callback: function(e){ 
+					
+				}},
+				"Send a PM": { callback: function(e){ 
+
+				}}
+			});
 	});
 });

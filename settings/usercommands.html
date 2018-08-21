@@ -6,15 +6,105 @@
 		<link href="../global/css/iframe.css" rel="stylesheet">
 		<script src="../global/js/jquery.min.js"></script>
 		<script src="../global/js/iframe.js"></script>
+		<script src="../global/js/menu.js"></script>
 		
+		<link href="../global/css/menu.css" rel="stylesheet">
 		<link href="settingscommon.css" rel="stylesheet">
 		<script src="settingscommon.js"></script>
+		
+		<script>
+		var selected = 0;
+		$(function(){
+			$('body').on('click', '.iobj', function() {
+				selected = $(this).attr("sid");
+				menu.create({
+					"Remove": {callback: function(e){ 
+						config.userCommands.splice(selected,1);
+						buildList();
+					}}
+				});
+			});
+			$('body').on('click', '#add', function() {
+				if($("input#com").val()==""||$("input#val").val()==""){
+					alert("nothing to add");
+				}else{
+					config.userCommands.push({
+						command: $("input#com").val(),
+						action: $("input#val").val()
+					});
+					buildList();
+				}
+			});
+			applyConfig = function(){
+				buildList();
+			}
+		});
+		
+		function buildList(){
+			$("table tr.iobj").remove();
+			for(var i in config.userCommands){
+				var html = "<tr class=\"iobj\" sid=\"" + i + "\">";
+				html += "<td>" + config.userCommands[i].command + "</td>";
+				html += "<td>" + config.userCommands[i].action + "</td>";
+				html += "</tr>";
+				$("table").append(html);
+			}
+		}
+		
+		</script>
+		
+		<style>
+			body{
+				
+			}
+			table{
+				width:100%;
+			}
+			td{
+
+			}
+
+			table th,table td{
+				text-align:left;
+				padding:3px;
+			}
+			table tr:hover{
+				background:#50545a;
+			}
+			table .thead{
+				background:#5e6269;
+			}
+			div.hdr{
+				float:left;
+				width:80px;
+			}
+		</style>
 	</head>
 	<body>
 		<h2>
 			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
-			Chat settings
+			User commands
 		</h2>
-		Section incomplete
+		<table>
+			<tr class="thead">
+				<th>Command</th>
+				<th>Action</th>
+			</tr>
+			<tr class="iobj">
+				<td>regex</td>
+				<td>/test/</td>
+			</tr>
+		</table>
+		<div style="padding-top:5px;margin-top:5px;border-top:1px solid #848484;">
+			<div class="hdr">Command:</div>
+			<div class="vlu"><input type="text" id="com" style="width:190px"></div>
+		</div>
+		<div>
+			<div class="hdr">Action:</div>
+			<div class="vlu"><input type="text" id="val" style="width:190px"></div>
+		</div>
+		<div>
+			<input type="button" id="add" style="width:70px" value="Add">
+		</div>
 	</body>
 </html>

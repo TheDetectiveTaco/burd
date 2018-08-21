@@ -28,10 +28,16 @@ window.addEventListener("message", function(e){
 			e.source.postMessage({c: "settings", data: config}, "*");
 			break;
 		case "update_settings":
+			if(e.data.data["networks"]==undefined) return;
+			if(e.data.data["ignores"]==undefined) return;
 			config = e.data.data;
 			break;
 		case "open_url":
 			openURL(e.data.url);
+			break;
+		case "shell":
+			e.data.path = e.data.path.replace("%dataPath%", dataPath);
+			shell.openItem( e.data.path );
 			break;
 		default:
 			console.log(e.data);

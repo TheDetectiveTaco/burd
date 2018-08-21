@@ -13,12 +13,14 @@
 		<script src="settingscommon.js"></script>
 		
 		<script>
-
+		var selected = 0;
 		$(function(){
 			$('body').on('click', '.iobj', function() {
+				selected = $(this).attr("sid");
 				menu.create({
 					"Remove": {callback: function(e){ 
-						
+						config.ignores.splice(selected,1);
+						buildList();
 					}}
 				});
 			});
@@ -42,9 +44,13 @@
 		</script>
 		
 		<style>
+			body{
+				overflow-x:hidden;
+			}
 			table{
 				width:100%;
 			}
+
 			table th,table td{
 				text-align:left;
 				padding:3px;

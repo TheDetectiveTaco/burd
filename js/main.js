@@ -3,6 +3,7 @@ var dataPath = remote.app.getPath("userData");
 var fs = require('fs');
 var tar = require('tar-fs');
 var appPath = ".";
+var shell = require('electron').shell;
 
 var firstRun = false;
 
@@ -49,6 +50,9 @@ $(function(){
 				parseInput( $(this).val(), $("div.channel:visible").attr("channel"), $("div.channel:visible").attr("network") );
 				break;
 		}
+	});
+	$('body').on('keydown', 'div#input_request', function(e) {
+		if(e.key == "Enter") $("div#input_request input[type='button']:first").click();
 	});
 	
 });
@@ -134,6 +138,7 @@ function channel(name,network){
 				sound.play("sounds/highlight.mp3");
 				if(channelObj.is(":hidden")) switchObj.addClass("notice");
 			}
+			logging.addLog({date: Date.now(), network: socket.getSocketByID(network).networkInfo.getISUPPORT("network"), channel: name, user: user, type: "privmsg", message: message});
 			return this;
 		},
 		addAction: function(user,hostmask,color,highlight,message){
@@ -201,6 +206,14 @@ var network = {
 		
 		channel("network console",sock.id).show();
 		
+	},
+	remove: function(sid){
+		var s = socket.getSocketByID(sid);
+		s.networkInfo.reconnect = false;
+		s.socket.end();
+		$("div.channel[network='" + sid + "']").remove();
+		$("div.server_list[network='" + sid + "']").remove();
+		socket.sockets.splice(socket.sockets.indexOf(s),1);
 	}
 };
 
@@ -470,7 +483,7 @@ function generateColor(str){
 
 var overlay = {
 	show: function(){
-		$("div#overlay").show();
+		$("div#overlay").fadeIn();
 		$("div#main_container").addClass("blur");
 	},
 	hide: function(){

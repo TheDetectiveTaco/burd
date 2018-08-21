@@ -1,5 +1,5 @@
 function openURL(e){
-	if(e.substr(0,6) == "https:" || e.substr(0,5) == "http:"){
+	if(e.toLowerCase().substr(0,6) == "https:" || e.toLowerCase().substr(0,5) == "http:"){
 		require('electron').shell.openExternal(e);
 	}
 }

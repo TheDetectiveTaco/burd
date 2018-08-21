@@ -1,10 +1,11 @@
-function parseInput(input,chan,network){
+function parseInput(input,chan,network,userCommand){
 	chan = HTML.decodeParm(chan);
 	if(input == "") return;
 	var co = channel(chan,network);
 	var bits = input.substr(1).split(" ");
 	var UC = bits[0].toUpperCase();
-	var nick = socket.getSocketByID(network).networkInfo.nick;
+	var sock = socket.getSocketByID(network);
+	var nick = sock.networkInfo.nick;
 	var color = $("div.user:iAttrContains('nick','" + nick.toLowerCase() + "')").css("color");
 	var type = co.object.attr("type");
 	co.object.find("input.channel_input").val("");
@@ -55,7 +56,11 @@ function parseInput(input,chan,network){
 			case "DEOP":
 				socket.sendData("PART " + chan, network);
 				socket.sendData("JOIN " + chan, network);
-				break;		
+				break;	
+				
+			case "ECHO":
+				co.addInfo(getAfter(1));
+				break;
 				
 			case "HOP":
 				if(pCount(1)){
@@ -298,7 +303,7 @@ function parseInput(input,chan,network){
 				break;
 			
 			default:
-				socket.sendData(input.substr(1), network);
+				if(userCommand==true || !parseUserCommand()) socket.sendData(input.substr(1), network);
 		}
 		
 	}else{
@@ -326,6 +331,47 @@ function parseInput(input,chan,network){
 			start += (bits[i].length + 1);
 		}
 		return input.substr(start + 1);
+	}
+	
+	
+	function parseUserCommand(){
+		
+		var uc = config.userCommands;
+		var d = new Date();
+		for( var i in uc ) {
+			if( uc[i].command.toUpperCase() == UC ){
+				var action = uc[i].action;
+				action = action.replace( /\%c/g, chan );
+				action = action.replace( /\%e/g, sock.networkInfo.getISUPPORT("network") );
+				action = action.replace( /\%n/g, sock.networkInfo.nick );
+				action = action.replace( /\%v/g, appVersion );
+				action = action.replace( /\%t/g, d.toTimeString() );
+				action = action.replace( /\%d/g, d.toLocaleDateString() );
+				action = wordToEnd( action, input );
+				input = "/" + action;
+				parseInput(input,chan,network,true);
+				return true;
+			}
+		}
+		return false; /* if false is returned then no user command was processed */
+
+		function wordToEnd( i, z ){
+			var words = ( "undefined " + z ).split( " " ); /* add undefined to pad the indexes out, making 1 the first word */
+			for (a = 1; a < 9; a++) { 
+				if( i.indexOf( "&" + a ) > -1 ) {
+					var start = 0;
+					for (b = 1; b < a; b++) { 
+						start += words[b].length + 1;
+					}
+					for (k = 0; k < 9; k++) { 
+						i = i.replace( "&" + a, z.substr( start ) );
+						i = i.replace( "%" + a, words[a] );
+					}
+				}
+			}
+			return i;
+		}
+
 	}
 }
 

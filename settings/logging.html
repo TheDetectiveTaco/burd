@@ -9,12 +9,34 @@
 		
 		<link href="settingscommon.css" rel="stylesheet">
 		<script src="settingscommon.js"></script>
+		<script>
+			$(function(){
+				$("input").on("click", function(){
+					postMsg({c: "shell", path: config.logs.path});
+				});
+
+				slider.addEventListener(function(e){
+					console.log(e);
+					if(e.id == "enableLogging") config.logs.enabled = e.state;
+				});
+			});
+			
+			applyConfig = function(){
+				if(config.logs.enabled) $("div#enableLogging").addClass("slider_on");
+			}
+		</script>
 	</head>
 	<body>
 		<h2>
 			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
-			Chat settings
+			Logging
 		</h2>
-		Section incomplete
+
+		<div class="slider" id="enableLogging">
+			Enable logging
+		</div>
+		<div class="section" style="margin-top:10px;">
+			<input type="button" value="Open Log Folder" id="openlog">
+		</div>
 	</body>
 </html>

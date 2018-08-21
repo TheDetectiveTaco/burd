@@ -19,6 +19,25 @@
 				background:#5b5d61;
 				cursor:pointer;
 			}
+			input.content_button{
+				background-size: 17px;
+				background-repeat: no-repeat;
+				background-position: center center;
+				height:30px;
+				width:30px;
+
+			}
+			div.color{
+				height:20px;
+				width:20px;
+				margin:3px;
+				float:left;
+				cursor:pointer;
+				border:1px solid black;
+			}
+			div.color:hover{
+				border-color:white;
+			}
 		</style>
 	</head>
 	<body>
@@ -57,8 +76,34 @@
 			<div class="emoji">&#x1F924;</div>
 			<div class="emoji">&#x1F4A9;</div>
 			<div class="emoji">&#x1F928;</div>
-			<div style="text-align:right;clear:both;padding-top:5px;"><a href="http://haxed.net/burd/emoji.html">View more emojis...</a></div>
+			<div style="text-align:right;clear:both;padding-top:5px;"><a href="https://emojipedia.org">View more emojis...</a></div>
 		</div>
 		<h4 style="padding-top:10px;">Text Controls</h4>
+		
+		<div>
+			<input type="button" sid="2" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_bold_white_18dp.png);">
+			<input type="button" sid="29" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_italic_white_18dp.png);">
+			<input type="button" sid="31" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_underlined_white_18dp.png);">
+		</div>
+		<h4 style="padding-top:10px;">Colors</h4>
+		
+		<div>
+			<div class="color" style="background:white;" sid="0">&nbsp;</div>
+			<div class="color" style="background:black;" sid="1">&nbsp;</div>
+			<div class="color" style="background:#001D7F" sid="2">&nbsp;</div>
+			<div class="color" style="background:#22B14C" sid="3">&nbsp;</div>
+			<div class="color" style="background:#333439" sid="4">&nbsp;</div>
+			<div class="color" style="background:#963634" sid="5">&nbsp;</div>
+			<div class="color" style="background:#A249A4" sid="6">&nbsp;</div>
+			<div class="color" style="background:#FF7F27" sid="7">&nbsp;</div>
+			<div class="color" style="background:#FFF200" sid="8">&nbsp;</div>
+			<div class="color" style="background:#B6E81E" sid="9">&nbsp;</div>
+			<div class="color" style="background:#21B19F" sid="10">&nbsp;</div>
+			<div class="color" style="background:#98D9EA" sid="11">&nbsp;</div>
+			<div class="color" style="background:#00A2E8" sid="12">&nbsp;</div>
+			<div class="color" style="background:#FF91B5" sid="13">&nbsp;</div>
+			<div class="color" style="background:#7F7F7F" sid="14">&nbsp;</div>
+			<div class="color" style="background:#C3C3C3" sid="15">&nbsp;</div>
+		</div>
 	</body>
 </html>

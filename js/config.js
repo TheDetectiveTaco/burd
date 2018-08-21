@@ -1,4 +1,4 @@
-var appVersion = "0.03";
+var appVersion = "0.04";
 var config = {
 	animation:200,
 	scrollback: 150,
@@ -9,9 +9,12 @@ var config = {
 	showModeMessages: true,
 	nickColors: true,
 	textColors: true,
-	logging: true,
 	checkForUpdates: true,
 	cryptoKey: "Pizza",
+	logs: {
+		enabled: true,
+		path: "%dataPath%/logs"
+	},
 	userCommands: [
 		{ command: "action", action: "me &2" },
 		{ command: "m", action: "msg &2" },
