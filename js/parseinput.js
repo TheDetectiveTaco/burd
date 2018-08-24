@@ -53,11 +53,6 @@ function parseInput(input,chan,network,userCommand){
 				remote.getCurrentWindow().toggleDevTools();
 				break;
 			
-			case "DEOP":
-				socket.sendData("PART " + chan, network);
-				socket.sendData("JOIN " + chan, network);
-				break;	
-				
 			case "ECHO":
 				co.addInfo(getAfter(1));
 				break;
@@ -103,13 +98,13 @@ function parseInput(input,chan,network,userCommand){
 				break;
 				
 			case "MODE":
-				if(pCount(1)){
+				
 					if(type == "channel"){
-						socket.sendData("MODE " + chan + " " + getAfter(2), network);
+						socket.sendData("MODE " + chan + " " + getAfter(1), network);
 					}else{
-						socket.sendData("MODE " + nick + " " + getAfter(2), network);
+						socket.sendData("MODE " + nick + " " + getAfter(1), network);
 					}
-				}
+				
 				break;
 				
 			case "MSG":
@@ -295,12 +290,19 @@ function parseInput(input,chan,network,userCommand){
 					}
 				}
 				break;
-			
+			case "SYSINFO":
+				var sinfo = sysinfo();
+				socket.sendData("PRIVMSG " + chan + " :" + sinfo, network);
+				co.addPrivmsg(nick, "*!*@*", color, false, sinfo);
+				
+				break;
 			case "VERSION":
 				if(pCount(1)){
 					socket.sendData("PRIVMSG " + bits[1] + " :" + String.fromCharCode(1) + "VERSION" + String.fromCharCode(1), network);
 				}
 				break;
+				
+			
 			
 			default:
 				if(userCommand==true || !parseUserCommand()) socket.sendData(input.substr(1), network);

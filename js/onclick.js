@@ -73,6 +73,13 @@ $(function(){
 	$('body').on('click', 'div#overlay', function() {
 		overlay.hide();
 	});
+	$('body').on('click', 'div.usercount', function() {
+		menu.create({
+			"List bans": {callback: function(e){ 
+				
+			}}
+		});
+	});
 	
 	$('body').on('click', '#hamburger_button', function() {
 			menu.create({

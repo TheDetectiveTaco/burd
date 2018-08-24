@@ -500,9 +500,9 @@ var crypt = {
 		var keyIndex = 0;
 		var res = "";
 		for(var i in e){
-			res += String.fromCharCode(e[i].charCodeAt(0) + config.cryptoKey.charCodeAt(keyIndex));
+			res += String.fromCharCode(e[i].charCodeAt(0) + cryptoKey.charCodeAt(keyIndex));
 			keyIndex++;
-			if(keyIndex==config.cryptoKey.length) keyIndex = 0;
+			if(keyIndex==cryptoKey.length) keyIndex = 0;
 		}
 		return btoa(res);
 	},
@@ -511,9 +511,9 @@ var crypt = {
 		var res = "";
 		e = atob(e);
 		for(var i in e){
-			res += String.fromCharCode(e[i].charCodeAt(0) - config.cryptoKey.charCodeAt(keyIndex));
+			res += String.fromCharCode(e[i].charCodeAt(0) - cryptoKey.charCodeAt(keyIndex));
 			keyIndex++;
-			if(keyIndex==config.cryptoKey.length) keyIndex = 0;
+			if(keyIndex==cryptoKey.length) keyIndex = 0;
 		}
 		return res;
 	}
@@ -527,11 +527,64 @@ var sound = {
 }
 
 
+function sysinfo(){
+	var os = require('os');
+	var txt = "<b>Client<b>: Burd " + appVersion + " * <b>OS<b>: ";
+	switch(os.platform().toLowerCase()){
+		case "win32":
+			txt += "Windows";
+			break;
+		case "darwin":
+			txt += "Mac";
+			break;
+		case "linux":
+			txt += "Linux";
+			break;
+		case "android":
+			txt += "Android";
+			break;
+	}
+	
+	txt += " (" +  os.arch() + ") " + os.release() + " * ";
+	
+	txt += "<b>CPU<b>: " + os.cpus()[0].model + " * ";
+	txt += "<b>Memory<b>: " + humanFileSize(os.totalmem()) + " total (" + humanFileSize(os.freemem()) + " free) * ";
+	txt += "<b>Uptime<b>: " + convertSeconds(parseInt(os.uptime()));
+
+	
+	return txt.replace(/\<b\>/g, String.fromCharCode(2)).replace(/\*/g, String.fromCharCode(8226));
+	
+	
+	function humanFileSize(bytes, si) {
+		var thresh = si ? 1000 : 1024;
+		if(Math.abs(bytes) < thresh) {
+			return bytes + ' B';
+		}
+		var units = si
+			? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+			: ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+		var u = -1;
+		do {
+			bytes /= thresh;
+			++u;
+		} while(Math.abs(bytes) >= thresh && u < units.length - 1);
+		return bytes.toFixed(1)+' '+units[u];
+	}
+}
 
 
 
-
-
+function convertSeconds(ms) {
+  var d, h, m, s;
+  s = ms;
+  m = Math.floor(s / 60);
+  s = s % 60;
+  h = Math.floor(m / 60);
+  m = m % 60;
+  d = Math.floor(h / 24);
+  h = h % 24;
+  return d + " day(s), " + h + " hour(s), " + m + " minute(s)";
+};
 
 
 

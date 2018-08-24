@@ -1,10 +1,13 @@
+var editing = window.location.href.toString().split("=")[1];
+var networks = [];
+
+
 slider.addEventListener(function(e){
 	console.log(e);
 });
 
 var newServer = {
 	server: { host: "chat.freenode.net", port: 6667 },
-	name: "Blank",
 	nick: "null",
 	altNick: "null",
 	user: "Burd",
@@ -26,7 +29,47 @@ radio.addEventListener(function(e){
 	if(e.id == "radio_none") $("div.login_info_div").hide();
 });
 
+window.addEventListener("message", function(e){
+	switch(e.data.c){
+		case "networks":
+			networks = e.data.data;
+			newServer = networks[editing];
+			fillInInfo();
+			break;
+	}
+}, false);
+
+function fillInInfo(){
+	$("input#nick").val(newServer.nick);
+	$("input#second_nick").val(newServer.altNick);
+	$("input#username").val(newServer.user);
+	$("input#realname").val(newServer.realName);
+	
+	$("input#server_name").val(newServer.name || "Blank");
+	$("input#server_address").val(newServer.server.host);
+	$("input#server_port").val(newServer.server.port);
+	
+	if(newServer.reconnect) $("div#reconnect").addClass("slider_on");
+	if(newServer.startup) $("div#startup").addClass("slider_on");
+	if(newServer.SSL) $("div#ssl").addClass("slider_on");
+	
+	if(newServer.auth.type == "nickserv") $("div#radio_nickserv").click();
+	if(newServer.auth.type == "server_password") $("div#radio_serverpassword").click();
+	if(newServer.auth.type == "sasl_plain") $("div#radio_saslplain").click();
+	
+	$("input#sasl_password,input#nickserv_password,input#server_password").val(newServer.auth.password);
+	$("input#sasl_user").val(newServer.auth.user);
+	
+	$("input#commands").val(newServer.commands.join(","));
+	
+}
+
+
 $(function(){
+	postMsg({c: "get_networks"});
+	
+	
+	
 	$('body').on('click', 'input#save_button', function(e) {
 		
 		var nickName = $("input#nick").val();
@@ -64,8 +107,7 @@ $(function(){
 		newServer.nick = nickName;
 		newServer.altNick = altNickName;
 		newServer.realName = realName;
-		
-		newServer.commands = [];
+
 		newServer.SSL = slider.getState("ssl");
 		newServer.reconnect = slider.getState("reconnect");
 		newServer.startup = slider.getState("startup");
@@ -76,9 +118,11 @@ $(function(){
 		newServer.commands = $("input#commands").val().split(",");
 		newServer.name = $("input#server_name").val();
 		
-		postMsg({c: "save_network", network: newServer});
+		postMsg({c: "edit_network", network: newServer, index: editing});
+		setTimeout(function(){
+			window.location.href="index.html";
+		},100);
 		
-		window.location.href="index.html";
 		
 	});
 });

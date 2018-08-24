@@ -8,126 +8,7 @@
 		<link href="global/css/menu.css" rel="stylesheet">
 		<style>
 
-			div.server-info{
-				background: url('images/icons/ic_priority_high_white_24px.svg') no-repeat center left;
-				background-size:1.2em;
-				padding:3px;
-				padding-left:18px;
-			}
 
-			
-			div.user{
-				font-size: 1em;
-				padding-left: 1em;
-				background-repeat: no-repeat;
-				background-position: center left;
-				background-size: 0.8em;
-			}
-			div.user:hover{
-				background-color:#47484F;
-				cursor:pointer;
-			}
-			div.voice{
-				background-image: url(images/squares/blue.png);
-			}
-			div.op{
-				background-image: url(images/squares/green.png);
-			}
-			
-			div.channel_closer{
-				background:url('images/icons/baseline_more_vert_white_18dp.png') no-repeat center top;
-				background-size:17px;
-				float:right;
-				color:white;
-				font-size:0.7em;
-				padding:0.1em;
-				width:20px;
-				height:20px;
-				text-align:center;
-				display:none;
-			}
-			div.server_list div.channel_item:hover div.channel_closer{
-				display:block;
-			}
-			div.server_list div.channel_item:hover div.unread{
-				display:none;
-			}
-			
-
-			.blur{
-				filter: grayscale(0.5) blur(8px);
-			}
-			div#overlay{
-				position:absolute;
-				top:0;
-				left:0;
-				height:100%;
-				width:100%;
-				background:rgba(0, 0, 0, 0.22);
-				z-index:1;
-				display:none;
-			}
-			div#sidebar_iframe{
-				position:absolute;
-				top:0;
-				left:0;
-				height:calc(100% - 1px);
-				width:300px;
-				background:#44474E;
-				z-index:3;
-				display:none;
-				box-shadow:rgba(0, 0, 0, 0.38) 3px 3px 6px 2px, rgba(0, 0, 0, 0.38) -3px 4px 9px 0px;
-			}
-			div#sidebar_iframe iframe{
-				margin:0;
-				padding:0;
-				border:0;
-				height:100%;
-				width:100%;
-			}
-			.highlight{
-				background:#4e5156;
-			}
-			
-			div#update{
-				position:absolute;
-				background:#1a1b1f;
-				height:205px;
-				width:500px;
-				left:calc(50% - 500px / 2);
-				top:calc(50% - 205px / 2);
-				z-index:10;
-				display:none;
-				border-radius:10px;
-			}
-			
-			
-			input[type='button']{
-				background: #58595d;
-				color: white;
-				border: 1px solid #2B2B2E;
-				padding: 5px;
-				border-radius: 5px;
-			}
-			
-			div#input_request{
-				position:absolute;
-				background:#1a1b1f;
-				height:165px;
-				width:400px;
-				left:calc(50% - 400px / 2);
-				top:calc(50% - 165px / 2);
-				z-index:10;
-				display:none;
-				border-radius:10px;
-				
-			}
-			div.input_title{
-				font-size:17px;padding:5px;background:#34353a;
-			}
-			div.input_content{
-				font-size:15px;padding:10px;height:70px;
-			}
 
 		</style>
 		<script src="global/js/jquery.min.js"></script>
@@ -155,6 +36,7 @@
 		<script src="js/updatechecker.js"></script>
 		<script src="js/inputrequest.js"></script>
 		<script src="js/logging.js"></script>
+		<script src="js/parsedata.js"></script>
 	</head>
 	<body>
 		<div id="overlay" class="covering">

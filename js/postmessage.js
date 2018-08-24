@@ -14,6 +14,13 @@ window.addEventListener("message", function(e){
 			config.networks.push(e.data.network);
 			saveSettings();
 			break;
+		case "edit_network":
+			if(e.data.network.auth.password != config.networks[e.data.index].auth.password){
+				e.data.network.auth.password = crypt.encrypt(e.data.network.auth.password);
+			}
+			config.networks[e.data.index] = e.data.network;
+			saveSettings();
+			break;
 		case "delete_network":
 			config.networks.splice(e.data.network,1);
 			saveSettings();

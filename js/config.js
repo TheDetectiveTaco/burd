@@ -1,4 +1,5 @@
-var appVersion = "0.05";
+var appVersion = "0.05.1";
+var cryptoKey = "Pizza";
 var config = {
 	animation:200,
 	scrollback: 150,
@@ -10,7 +11,6 @@ var config = {
 	nickColors: true,
 	textColors: true,
 	checkForUpdates: true,
-	cryptoKey: "Pizza",
 	logs: {
 		enabled: true,
 		path: "%dataPath%/logs"

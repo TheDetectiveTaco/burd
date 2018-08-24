@@ -1,4 +1,5 @@
 var menu = {
+	test: "ok",
 	create: function(e){
 		$("div.simple_menu").remove();
 		this.lastMenu = e;
@@ -28,6 +29,10 @@ var menu = {
 		}
 		if( mouseLeft > ($( window ).width() - $("div.simple_menu").width() - 20) ) mouseLeft = $( window ).width() - $("div.simple_menu").width() - 10;
 		if( mouseTop > ($( window ).height() - $("div.simple_menu").height() - 20) ) mouseTop = $( window ).height() - $("div.simple_menu").height() - 10;
+		
+		if( mouseTop < 15 ) mouseTop = 0;
+		if( mouseLeft < 40 ) mouseLeft = 0;
+		
 		$("div.simple_menu").css("left", mouseLeft + "px");
 		$("div.simple_menu").css("top", mouseTop + "px");
 		
