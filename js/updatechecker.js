@@ -1,8 +1,11 @@
-var http = require('http');
+
 
 function httpGet(e, callback){
 	
-	http.get(e, (resp) => {
+	var h = http;
+	if(e.split(":")[0] == "https") h = https;
+	
+	h.get(e, (resp) => {
 	var data = '';
 	resp.on('data', (chunk) => {
 		data += chunk;
@@ -15,11 +18,11 @@ function httpGet(e, callback){
 	});
 
 }
-function updateCheck(){
-	httpGet("http://haxed.net/burd/latest.json", function(e){
+function updateCheck(f){
+	httpGet("https://haxed.net/burd/latest.json", function(e){
 			try{
 				var res = JSON.parse(e);
-				if(res.version != appVersion){
+				if(res.version > appVersion || f){
 					overlay.show();
 					$("div#update").show();
 					$("div#update .myver").text( appVersion );
@@ -39,7 +42,7 @@ $(function(){
 		$("div.update_buttons").html('<img src="images/loading.svg" style="width:30px">');
 		var tarball = "";
 		var file = fs.createWriteStream("update.tar");
-		var request = http.get("http://haxed.net/burd/latest.tar", function(response) {
+		var request = http.get("https://haxed.net/burd/latest.tar", function(response) {
 			var fp = response.pipe(file);
 			fp.on('finish', function () {
 				var piped = fs.createReadStream('update.tar').pipe(tar.extract(appPath));

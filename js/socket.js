@@ -27,6 +27,7 @@ var socket = {
 		sock.networkInfo["loggedin"] = false;
 		if(sock.networkInfo.reconnect){
 			channel("!", id).addInfo( "Disconnected from IRC. Reconnecting in 10 seconds..." );
+			clearTimeout(sock.reconnectTimer);
 			sock.reconnectTimer = setTimeout(function(){
 				socket.create(sock.networkInfo.server, sock.networkInfo.port, sock.networkInfo.SSL, sock.id);
 

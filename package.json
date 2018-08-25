@@ -2,10 +2,12 @@
   "name": "burd",
   "version": "0.0.1",
   "main": "index.js",
+  "description": "A simple IRC client",
   "devDependencies": {
     "electron": "^1.8.2"
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "tar-fs": "^1.16.3"
   }
 }

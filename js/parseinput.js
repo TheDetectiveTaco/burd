@@ -15,6 +15,10 @@ function parseInput(input,chan,network,userCommand){
 		
 		switch(UC){
 			
+			case "LIST":
+				window.open("chanlist/index.html");
+				break;
+			
 			case "AWAY":
 				socket.sendData(bits[0].toUpperCase() + " :" + getAfter(1), network);
 				break;

@@ -4,6 +4,8 @@ var fs = require('fs');
 var tar = require('tar-fs');
 var appPath = ".";
 var shell = require('electron').shell;
+var http = require('http');
+var https = require('https');
 
 var firstRun = false;
 

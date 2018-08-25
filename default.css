@@ -387,7 +387,7 @@
 			
 
 			.blur{
-				filter: grayscale(0.5) blur(8px);
+				/* filter: grayscale(0.5) blur(8px); makes it laggy */
 			}
 			div#overlay{
 				position:absolute;
@@ -395,7 +395,7 @@
 				left:0;
 				height:100%;
 				width:100%;
-				background:rgba(0, 0, 0, 0.22);
+				background:rgba(0, 0, 0, 0.50);
 				z-index:1;
 				display:none;
 			}
