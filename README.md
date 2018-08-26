@@ -4,11 +4,14 @@
 
 AppVeyor: https://ci.appveyor.com/project/BurdIRC/burd
 
-Burd IRC is a Windows IRC client written on Electron.
-
 Website: https://haxed.net
 
-Credits:
+## About
+
+Burd IRC is an IRC client that is currently only compatible with Windows. A macOS version of Burd IRC will exist in the very near future. Stay tuned for that.
+
+## Credits
+
 Matthew Ryan - Programming - matt@haxed.net
 
 DetectiveTaco - Support/Development - chris@haxed.net
