@@ -10,7 +10,7 @@ var newServer = {
 	user: "Burd",
 	realName: "Burd IRC",
 	commands: [],
-	SSL: false,
+	SSL: true,
 	reconnect: true,
 	startup: false,
 	auth: {

@@ -9,6 +9,8 @@ var https = require('https');
 
 var firstRun = false;
 
+var modal = false;
+
 //check for log folder, create it
 if (fs.existsSync(dataPath + "/logs")){
 	fs.readFile(dataPath + "/config.json", function(err, f){
@@ -588,7 +590,10 @@ function convertSeconds(ms) {
   return d + " day(s), " + h + " hour(s), " + m + " minute(s)";
 };
 
-
+function openWin(e,s){
+	if(modal) modal.close();
+	modal = window.open(e, "", s);
+}
 
 
 

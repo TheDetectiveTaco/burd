@@ -3,6 +3,24 @@ window.addEventListener("message", function(e){
 		case "get_networks":
 			e.source.postMessage({c: "networks", data: config.networks}, "*");
 			break;
+		case "get_active_network":
+			var aNet = $("div#main_list_container div.selected").attr("network");
+			e.source.postMessage({c: "active_network", id: aNet, name: socket.getSocketByID(aNet).networkInfo.getISUPPORT("network")}, "*");
+			break;
+		case "hook_data":
+			var aNet = $("div#main_list_container div.selected").attr("network");
+			var s = socket.getSocketByID(aNet);
+			var sWin = e.source;
+			s.dataHook = function(e){
+				sWin.postMessage({c: "data", data: e}, "*");
+			};
+			e.source.postMessage({c: "hook_set"}, "*");
+			break;
+		case "unhook_data":
+			var s = socket.getSocketByID(e.data.id);
+			s.dataHook = function(e){};
+			e.source.postMessage({c: "hook_unset"}, "*");
+			break;
 		case "add_input_text":
 			$("input.channel_input:visible").val( $("input.channel_input:visible").val() + e.data.text ).focus();
 			break;
@@ -33,6 +51,9 @@ window.addEventListener("message", function(e){
 			break;
 		case "get_settings":
 			e.source.postMessage({c: "settings", data: config}, "*");
+			break;
+		case "send_data":
+			socket.sendData(e.data.data, e.data.id);
 			break;
 		case "update_settings":
 			if(e.data.data["networks"]==undefined) return;

@@ -4,21 +4,136 @@
 		<title>Burd IRC - Channel List</title>
 		<meta charset="utf-8">
 		<script src="../global/js/jquery.min.js"></script>
+		<script>
+			window.eval = global.eval = function () {
+				throw new Error(`Sorry, this app does not support window.eval().`)
+			}
+			if(typeof(require)!="undefined") window.$ = window.jQuery = require('../global/js/jquery.min.js');
+		</script>
+		<script src="../global/js/iframe.js"></script>
 		<script src="main.js"></script>
 		<link href="../default.css" rel="stylesheet">
+		<link href="../global/css/iframe.css" rel="stylesheet">
 		<style>
 			body,html{
 				padding:5px;
-				font-size:15px;
+				font-size:14px;
+			}
+			body{
+				overflow: auto;
+				width: calc(100% - 17px);
 			}
 			div.caption{
 				text-align:center;
 			}
+			div.list{
+				height: calc(100% - 108px);
+				margin-top:20px;
+				overflow-x:auto;
+			}
+			.x{
+				
+				max-width: 80px;
+				text-align:right;
+			}
 		</style>
+		<script>
+			var network = 0;
+			var cache = [
+			];
+			window.addEventListener("message", function(e){
+				switch(e.data.c){
+					case "active_network":
+						network = e.data.id;
+						window.opener.postMessage({c:"hook_data", id: e.data.id}, "*");
+						break;
+					case "hook_set":
+						window.opener.postMessage({c:"send_data", id: network, data: "LIST >0"}, "*");
+						break;
+					case "data":
+						parseData(e.data.data.data);
+						break;
+				}
+				console.log(e.data);
+			}, false);
+			
+			window.opener.postMessage({c:"get_active_network"}, "*");
+			
+			window.onbeforeunload = function(){
+				window.opener.postMessage({c:"unhook_data", id: network}, "*");
+			}
+			
+
+			function parseData(data){
+				var bits = data.split(" ");
+				var cData = data.substr(data.indexOf(" :") + 2);
+				
+				if(bits.length > 1 && bits[1] == "322"){
+					cache.push(data);
+				}
+			}
+			
+			function processResults(str,min,arr){
+				var added = 0;
+				$("table#chans").html("<tr><th style=\"max-width: 150px;\">Channel</td><th class=\"x\">Users</td><th>Topic</td></tr>");
+				for(var i in arr){
+					if(added>200) return;
+					
+					var data = arr[i];
+					var bits = data.split(" ");
+					var cData = data.substr(data.indexOf(" :") + 2);
+					
+					if((bits[3].toLowerCase() + " " + cData.toLowerCase()).indexOf( str.toLowerCase() ) > -1 && bits[4] >= min){
+						var td = "<tr><td>";
+						td += bits[3];
+						td += '</td><td class="x" style="background: #4c4d54;">';
+						td += bits[4];
+						td += "</td><td>" +cData +"</td>";
+						td += "</tr>";
+						$("table#chans").append(td);
+						added++;
+					}
+					
+				}
+				
+			}
+			
+			setTimeout(function(){
+				processResults("",1,cache);	
+			},2000);
+			
+			$(function(){
+				$('body').on('click', 'input#filterbutton', function() {
+					processResults($('input#filtertext').val(),$('input#filtermin').val(),cache);	
+				});
+				$('body').on('keydown', 'input#filtertext', function(e) {
+					if(e.key == "Enter") processResults($('input#filtertext').val(),$('input#filtermin').val(),cache);	
+				});
+			});
+		</script>
 	</head>
 	<body>
-		<div class="caption">
-			Channel List
+		<table style="width:100%;">
+			<tr>
+				<td width=100>Filter text:</td>
+				<td><input type="text" id="filtertext" style="width:99%;"></td>
+			</tr>
+			<tr>
+				<td width=100>Minimum users:</td>
+				<td><input type="number" id="filtermin" value=1 style="width:100px;"></td>
+			</tr>
+			<tr>
+				<td width=100><input type="button" id="filterbutton" value="Filter"></td>
+			</tr>
+		</table>
+		<div class="list">
+			<table id="chans" style="width:100%;">
+				<tr>
+					<th style="max-width: 150px;">Channel</td>
+					<th class="x">Users</td>
+					<th>Topic</td>
+				</tr>
+			</table>
 		</div>
 	</body>
 </html>

@@ -17,6 +17,8 @@ socket.parseData = function(data, id){
 		cData = data.substr(data.indexOf(" :") + 2);
 	}
 	
+	socketObj.dataHook({id: id, data: data});
+	
 	if(data == ":server.address CONNECTED"){
 		channel("network console",id).addInfo("Registering with network...", "text-out");
 		if(networkInfo.auth.type == "server_password"){

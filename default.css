@@ -8,6 +8,7 @@
 				width:100%;
 				font-size:15px;
 				overflow:hidden;
+				image-rendering: -webkit-optimize-contrast;
 			}
 			input{
 				font-family: 'Roboto', sans-serif;
@@ -211,7 +212,7 @@
 				opacity: 1;
 			}
 			
-			input[type='text']{
+			input[type='text'],input[type='number']{
 				border:0;
 				background:#58595d;
 				height:16px;

@@ -16,7 +16,7 @@ function parseInput(input,chan,network,userCommand){
 		switch(UC){
 			
 			case "LIST":
-				window.open("chanlist/index.html");
+				openWin("chanlist/index.html", "width=700,height=500");
 				break;
 			
 			case "AWAY":

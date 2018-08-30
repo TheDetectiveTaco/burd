@@ -36,10 +36,7 @@ var socket = {
 		}else{
 			channel("!", id).addInfo( "Disconnected from IRC" );
 		}
-		
-		
 
-		
 	},
 	
 	create: function(server, port, ssl, id){
@@ -65,7 +62,7 @@ var socket = {
 			sObject.socket = sock;
 		}else{
 			
-			var sObject = { id: sid, socket: sock, networkInfo: {}, cache: "", tmpPacketHold: [], reconnectTimer: 0 };
+			var sObject = { id: sid, socket: sock, networkInfo: {}, cache: "", tmpPacketHold: [], reconnectTimer: 0, dataHook: function(e){} };
 			sObject.networkInfo.getISUPPORT = function(e){
 				 for(var i in this.ISUPPORT){
 					 var sb = this.ISUPPORT[i].split("=");
