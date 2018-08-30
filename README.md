@@ -16,10 +16,6 @@ Matthew Ryan - Programming - matt@haxed.net
 
 DetectiveTaco - Support/Development - chris@haxed.net
 
-Time-Warp - Beta Testing
-
-shan - Beta Testing
-
 Sounds - Leszek Szary - https://freesound.org/people/fins/
 
 ## Support
