@@ -102,13 +102,15 @@ function parseInput(input,chan,network,userCommand){
 				break;
 				
 			case "MODE":
-				
+				if(bits[1].substr(0,1) == "+" || bits[1].substr(0,1) == "-"){
 					if(type == "channel"){
 						socket.sendData("MODE " + chan + " " + getAfter(1), network);
 					}else{
 						socket.sendData("MODE " + nick + " " + getAfter(1), network);
 					}
-				
+				}else{
+					socket.sendData("MODE " + getAfter(1), network);
+				}
 				break;
 				
 			case "MSG":

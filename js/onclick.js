@@ -71,7 +71,7 @@ $(function(){
 	});
 	
 	$('body').on('click', 'div#overlay', function() {
-		overlay.hide();
+		if( $("div#update:visible").length == 0 ) overlay.hide();
 	});
 	$('body').on('click', 'div.usercount', function() {
 		menu.create({

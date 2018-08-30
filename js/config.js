@@ -1,4 +1,4 @@
-var appVersion = "0.05.1";
+var appVersion = "0.05.2";
 var cryptoKey = "Pizza";
 var config = {
 	animation:200,

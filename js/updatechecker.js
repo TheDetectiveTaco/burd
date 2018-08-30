@@ -19,7 +19,7 @@ function httpGet(e, callback){
 
 }
 function updateCheck(f){
-	httpGet("https://haxed.net/burd/latest.json", function(e){
+	httpGet("https://haxed.net/burd/updates.json.php?ver=" + appVersion, function(e){
 			try{
 				var res = JSON.parse(e);
 				if(res.version > appVersion || f){
@@ -28,6 +28,11 @@ function updateCheck(f){
 					$("div#update .myver").text( appVersion );
 					$("div#update .newver").text( res.version );
 					$("div#update .updatetype").text( res.type );
+					$("div#update .update-info").text( res.description );
+					if(res.type == "security"){
+						$("div#update .updatetype").css("color", "red");
+						$("input#cancel_update").remove();
+					}
 				}
 			}catch(err){
 			}
@@ -42,7 +47,7 @@ $(function(){
 		$("div.update_buttons").html('<img src="images/loading.svg" style="width:30px">');
 		var tarball = "";
 		var file = fs.createWriteStream("update.tar");
-		var request = http.get("https://haxed.net/burd/latest.tar", function(response) {
+		var request = https.get("https://haxed.net/burd/latest.tar", function(response) {
 			var fp = response.pipe(file);
 			fp.on('finish', function () {
 				var piped = fs.createReadStream('update.tar').pipe(tar.extract(appPath));
