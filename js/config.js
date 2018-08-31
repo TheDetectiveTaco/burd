@@ -1,4 +1,4 @@
-var appVersion = "0.05.2";
+var appVersion = "0.05.3";
 var cryptoKey = "Pizza";
 var config = {
 	animation:200,
@@ -22,14 +22,14 @@ var config = {
 		{ command: "sv", action: "echo You're using Burd %v" },
 		{ command: "wii", action: "whois &2 &2" }
 	],
-	highlights: [ "%n", "quack" ],
+	highlights: [ "%n" ],
 	CTCP: {
 		version: "Burd IRC http://haxed.net/burd",
 		rateLimit: 1
 	},
 	ignores:[
 		{type: "regex", value: "^quack123$"},
-		{type: "user", value: "test!*@*"}
+		{type: "user", value: "faketestnick!*@*"}
 	],
 	sounds: { highlight: true, pm: true, notice: true },
 	networks: [

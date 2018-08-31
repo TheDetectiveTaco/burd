@@ -7,9 +7,34 @@
 		<link href="default.css" rel="stylesheet">
 		<link href="global/css/menu.css" rel="stylesheet">
 		<style>
-
-
-
+			div#stickies{
+				width:500px;
+				position:absolute;
+				z-index:5;
+				 left:calc(50% - 500px / 2); 
+			}
+			div#stickies div.sticky{
+				background:#E76820;
+				padding:10px;
+				border-top:1px solid #C02E1D;
+				color:white;
+				font-size:0.9em;
+				text-align:center;
+			}
+			div#stickies div.sticky div.closer{
+				background: url('images/icons/baseline_clear_white_18dp.png') no-repeat center center;
+				float:right;
+				height:15px;
+				width:15px;
+				background-size:15px;
+				cursor:pointer;
+			}
+			div#stickies div.sticky div.closer:hover{
+				background-size:20px;
+			}
+			div#stickies a{
+				color:white;
+			}
 		</style>
 		<script src="global/js/jquery.min.js"></script>
 		<script>
@@ -90,6 +115,9 @@
 		</div>
 		<div id="sidebar_iframe" class="covering">
 			<iframe src="about:blank"></iframe>
+		</div>
+		<div id="stickies">
+			
 		</div>
 		<div id="main_container">
 			<div style="float:left;height:calc(100% - 1px);">

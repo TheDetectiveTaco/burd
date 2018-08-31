@@ -17,6 +17,10 @@ $(function(){
 			case "channel":
 				
 				break;
+			case "schannel":
+				$(this).parent().find("div.closer").click();
+				socket.sendData("JOIN " + $(this).text(), $(this).parent().attr("network"));
+				break;
 
 		}
 		event.preventDefault();

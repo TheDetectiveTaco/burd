@@ -9,6 +9,9 @@ var https = require('https');
 
 var firstRun = false;
 
+var messageHistory = [];
+var historyIndex = 0;
+
 var modal = false;
 
 //check for log folder, create it
@@ -51,7 +54,20 @@ $(function(){
 		}
 		switch(e.key){
 			case "Enter":
+				historyIndex = 0;
 				parseInput( $(this).val(), $("div.channel:visible").attr("channel"), $("div.channel:visible").attr("network") );
+				break;
+			case "ArrowUp":
+				if(messageHistory.length == 0) return;
+				historyIndex -= 1;
+				if(historyIndex < 0) historyIndex = messageHistory.length - 1;
+				$(this).val(messageHistory[historyIndex]);
+				break;
+			case "ArrowDown":
+				if(messageHistory.length == 0) return;
+				historyIndex += 1;
+				if(historyIndex > (messageHistory.length - 1)) historyIndex = 0;
+				$(this).val(messageHistory[historyIndex]);
 				break;
 		}
 	});
@@ -60,6 +76,8 @@ $(function(){
 	});
 	
 });
+
+
 
 function channel(name,network){
 	var channelObj = null;
@@ -135,6 +153,7 @@ function channel(name,network){
 		addPrivmsg: function(user,hostmask,color,highlight,message){
 			var classes = "";
 			if( highlight ) classes = "highlight";
+			if( message.match(/(^([\uD800-\uDBFF][\uDC00-\uDFFF]\s?\=?\>?){1,9}$)/g) != null ) classes += " emoji";
 			channelObj.find("div.channel_content").append(HTML.linkify(HTML.getTemplate("new_user_message", { nick: user, message: message, color: color, date: getDate(1), classes: classes })));
 			this.scrollBottom();
 			this.unread();
@@ -181,6 +200,12 @@ function channel(name,network){
 	return r;
 }
 
+var sticky = {
+	create: function(network,message){
+		$("div#stickies").append('<div network="' + network + '" class="sticky">' + message + '<div class="closer">&nbsp;</div></div>');
+	}
+}
+
 var network = {
 	create: function(e){
 		/*e = { server: { host: "irc.irc.com", port: 6667, password: "blanky" }, nick, user, password, channels }
@@ -201,6 +226,7 @@ var network = {
 		sock.networkInfo["server"] = e.server.host;
 		sock.networkInfo["port"] = e.server.port;
 		sock.networkInfo["SSL"] = e.SSL;
+		sock.networkInfo["commands"] = e.commands;
 		sock.networkInfo["cache"] = [];
 		sock.networkInfo["reconnect"] = e.reconnect;
 		sock.networkInfo["loggedin"] = false;
@@ -245,6 +271,7 @@ var HTML = {
 		
 		return html;
 	},
+	emojiPattern: /([\uD800-\uDBFF][\uDC00-\uDFFF])/g,
 	encodeParm: function(str){
 		str = str.replace(/\\/g, ",spchr92,");
 		return str;

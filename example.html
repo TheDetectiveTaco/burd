@@ -1,0 +1,962 @@
+<html><head>
+		<title>Burd IRC</title>
+		<meta charset="utf-8">
+		<link href="global/css/scrollbar.css" rel="stylesheet">
+		<link href="default.css" rel="stylesheet">
+		<link href="global/css/menu.css" rel="stylesheet">
+		<style>
+
+
+		</style>
+		<script src="global/js/jquery.min.js"></script>
+
+	</head>
+	<body>
+		<div id="overlay" class="covering" style="display: none;">
+			&nbsp;
+		</div>
+		<div id="input_request" class="covering" style="display: none;">
+			<div class="input_title" style="">
+				Input Requested
+			</div>
+			<div class="input_content" style="">
+				
+				<!--
+				<table class="input" style="width:100%;">
+					<tr>
+						<td>Your name:</td>
+						<td><input type="text" style="width:100%;"></td>
+					</tr>
+					<tr>
+						<td>Your name:</td>
+						<td><input type="text" style="width:100%;"></td>
+					</tr>
+					<tr>
+						<td>Your name:</td>
+						<td><input type="text" style="width:100%;"></td>
+					</tr>
+				</table>
+				-->
+			</div>
+			<div class="input_buttons" style="text-align:right;padding:10px;">
+				<input type="button" value="OK" style="width:70px;">
+			</div>
+		</div>
+		<div id="update" class="covering" style="display: none;">
+				<div style="font-size:20px;padding:10px;background:#34353a;">
+					Client updates found
+				</div>
+				<div class="update-info" style="font-size:15px;padding:10px;">
+					A more up-to-date version of this client was found.
+				</div>
+				<div style="font-size:15px;padding:10px;">
+					<table>
+						<tbody><tr><td>Current version:</td> <td class="myver">0.00</td></tr>
+						<tr><td>New version:</td> <td class="newver">0.00</td></tr>
+						<tr><td>Update type:</td> <td class="updatetype">bugfix</td></tr>
+					</tbody></table>
+				</div>
+				<div style="text-align:right;padding-right:10px" class="update_buttons">
+					<input type="button" value="Cancel" id="cancel_update">
+					<input type="button" value="Update now" id="update_go">
+				</div>
+		</div>
+		<div id="sidebar_iframe" class="covering" style="display: none; left: 0px;">
+			<iframe src="about:blank"></iframe>
+		</div>
+		
+		<div id="stickies">
+			<div class="sticky">
+				Time-Warp has invited you to join <a href="">##channel</a>
+				<div class="closer">&nbsp;</div>
+			</div>
+			<div class="sticky">
+				Time-Warp has invited you to join ##channel
+				<div class="closer">&nbsp;</div>
+			</div>
+		</div>
+		
+		
+		<div id="main_container" class="">
+			<div style="float:left;height:calc(100% - 1px);">
+				<div id="main_list_container">
+					<div class="server_list" style="display:none;">
+						<div class="server_title">
+							Test
+						</div>
+						<div class="channel_item">
+							<span class="title">Network Console</span>
+						</div>
+						<div class="channel_item notice">
+							<span class="title">#ThisIsAChannel</span>
+						</div>
+						<div network="2" channel="#test2" class="channel_item">
+							<span class="title">#test2</span>
+							<div class="unread">2</div>
+							<div class="channel_closer">&nbsp;</div>
+						</div>
+						<div network="2" channel="lol" class="channel_item">
+							<span class="title">LOL</span>
+							<div class="unread">20</div>
+							<div class="channel_closer">&nbsp;</div>
+						</div>
+					</div>
+
+					
+				
+			<div class="server_list" network="44592">
+				<div class="server_title">Igloo</div>
+				<div network="44592" channel="network console" class="channel_item console_item">
+					<span class="title">Network Console</span>
+					<div class="unread" style="display: none;">0</div>
+					<div class="channel_closer">&nbsp;</div>
+				</div>
+			
+			<div network="44592" channel="#igloo" class="channel_item selected">
+				<span class="title">#igloo</span>
+				<div class="unread" style="display: none;">0</div>
+				<div class="channel_closer">&nbsp;</div>
+			</div>
+		</div>
+		</div>
+				<div id="bottom_menu">
+					<div id="settings_button" class="i_button" style="float:left;margin-right:10px;">&nbsp;</div>
+					<div id="new_button" class="i_button" style="float:left;background-image:url(images/icons/baseline_fiber_new_white_18dp.png);">&nbsp;</div>
+					<div id="hamburger_button" class="i_button" style="float:right;background-image:url(images/icons/baseline_menu_white_18dp.png);">&nbsp;</div>
+				</div>
+			</div>
+			<div id="channel_container">
+		
+		
+				<div class="channel" network="2" channel="lol" type="pm" style="display:none">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">LOL</span>
+
+						</div>
+
+						<div class="clear">&nbsp;</div>
+					</div>
+					<div class="channel_content">
+					
+						<div class="user_message">
+							<div class="message_date">[11:11:11]</div>
+							<div class="user_name">
+								‹<span class="name" style="color:#1395BA">JimJohn</span>›
+							</div>
+							<div class="message">
+								Hello this is my message.
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+						
+					</div>
+					<div class="bottom">
+						<input type="text" class="channel_input">
+					</div>
+				</div>
+				
+			
+
+				<div class="channel" network="44592" type="channel" channel="#igloo" style="display: block;">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">#igloo</span>
+
+							<span class="topic">Igloo - https://iglooirc.com | Latest Stable: 1.2.3 | Latest TestFlight: 1.2.4 (6991) | Download: https://get.iglooirc.com | ZNC Push Module: https://znc.iglooirc.com</span>
+						</div>
+						<div class="usercount">Users Here - 17</div>
+						<div class="clear">&nbsp;</div>
+					</div>
+
+					<div class="channel_users"><div class="user op nick29" onick="@ChanServ" nick="ChanServ" fullmask="">ChanServ</div><div class="user op nick12" onick="@eskimo" nick="eskimo" fullmask="">eskimo</div><div class="user op nick25" onick="@Holo" nick="Holo" fullmask="">Holo</div><div class="user op nick29" onick="@jexxley" nick="jexxley" fullmask="">jexxley</div><div class="user halfop nick17" onick="%God" nick="God" fullmask="">God</div><div class="user voice nick30" onick="+AndroidKitKat" nick="AndroidKitKat" fullmask="">AndroidKitKat</div><div class="user voice nick25" onick="+eNigmaFx" nick="eNigmaFx" fullmask="">eNigmaFx</div><div class="user voice nick24" onick="+iAdam1n" nick="iAdam1n" fullmask="">iAdam1n</div><div class="user voice nick29" onick="+kirb" nick="kirb" fullmask="">kirb</div><div class="user voice nick26" onick="+snowhare" nick="snowhare" fullmask="">snowhare</div><div class="user voice nick1" onick="+Vermont" nick="Vermont" fullmask="">Vermont</div><div class="user nick13" onick="cheers" nick="cheers" fullmask="">cheers</div><div class="user nick25" onick="DetectiveTaco" nick="DetectiveTaco" fullmask="">DetectiveTaco</div><div class="user nick21" onick="duckgoose" nick="duckgoose" fullmask="">duckgoose</div><div class="user nick29" onick="jq" nick="jq" fullmask="">jq</div><div class="user nick29" onick="Mahjong" nick="Mahjong" fullmask="">Mahjong</div><div class="user nick27" onick="MuffinMedic" nick="MuffinMedic" fullmask="">MuffinMedic</div></div>
+			<div class="channel_content">
+					
+					
+			<div class="channel_info truncate">
+				<div class="message_date">[20:01:44]</div>
+				<div class="icon info-default">
+					&nbsp;
+				</div>
+				<div class="message">
+					<b>Topic</b>: Igloo - <a href="https://iglooirc.com" target="_blank">https://iglooirc.com</a> | Latest Stable: 1.2.3 | Latest TestFlight: 1.2.4 (6991) | Download: <a href="https://get.iglooirc.com" target="_blank">https://get.iglooirc.com</a> | ZNC Push Module: <a href="https://znc.iglooirc.com" target="_blank">https://znc.iglooirc.com</a>
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="channel_info truncate">
+				<div class="message_date">[20:01:44]</div>
+				<div class="icon text-in">
+					&nbsp;
+				</div>
+				<div class="message">
+					Topic was set by <span class="teal">eskimo</span> on <span class="orange">Wed Aug 29 14:01:36 2018</span>
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:44]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:undefined">***</span>›
+				</div>
+				<div class="message">
+					Buffer Playback...
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:44]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(213, 236, 100)">jexxley</span>›
+				</div>
+				<div class="message">
+					[18:45:01] Idk nigga ¯\_(ツ)_/¯
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[18:54:47] !w
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(213, 236, 100)">jexxley</span>›
+				</div>
+				<div class="message">
+					[18:54:50] Idk nigga ¯\_(ツ)_/¯
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate emoji">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					😉😏
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(213, 236, 100)">jexxley</span>›
+				</div>
+				<div class="message">
+					[18:55:04] it’s perfect crack the window and wear a hoodie weather with the heat on a little bit
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[18:56:07] I'd rather hear it from yahoo. thanks though. 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[18:59:51] hi AndroidKitKat 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[18:59:55] &gt;_&gt; 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[18:59:57] Whoa
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:00:00] It’s cheers 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:00:17] wut
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:00:43] How’d you know what client I’m using cheers
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:00:58] ctcp?
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:01:00] &gt;_&gt; 'cause it says
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:01:07] in the screenshot
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:01:16] Oh
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:01:18] The arxius 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:01:19] lol 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(213, 236, 100)">jexxley</span>›
+				</div>
+				<div class="message">
+					[19:01:21] AndroidKitKat (Catalan): The archives
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:47]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:01:24] oh yeah 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:01:39] is he a stalker AndroidKitKat 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:01:47] Kline him 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:01:50] :( 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:01:53] lol 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:02:56] anyway 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:03:04] back to teh youtubes 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:03:09] Cheers you use ios?
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:03:13] Igloo is for iOS 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:03:13] ye
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:03:23] im on mutter rn
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(213, 236, 100)">jexxley</span>›
+				</div>
+				<div class="message">
+					[19:03:25] cheers (German): im on mother rn
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:03:28] ew 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:03:31] kline time 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:03:34] :((
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:03:47] mutter &lt; anything else 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:03:48] Get igloo
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:04:19] Igloo is really chill 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:04:21] maybe tomorrow i dont feel like transferring my znc settings
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:04:23] And the dev is right here 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:04:25] rn
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:48]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:04:43] The push module for igloo sells it 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:04:54] mutter has one too I think 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(160, 215, 213)">AndroidKitKat</span>›
+				</div>
+				<div class="message">
+					[19:04:56] So I can get motifs when I’m disconnected from my client 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:05:00] yeah im using the mutter push module
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:05:10] I'm pretty sure MuffinMedic made it 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(154, 170, 121)">cheers</span>›
+				</div>
+				<div class="message">
+					[19:05:11] ill set it up tomorrow maybe
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 111, 116)">eskimo</span>›
+				</div>
+				<div class="message">
+					[19:05:12] lol 
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 161, 243)">DetectiveTaco</span>›
+				</div>
+				<div class="message">
+					[19:35:01] !w
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(213, 236, 100)">jexxley</span>›
+				</div>
+				<div class="message">
+					[19:35:03] Idk nigga ¯\_(ツ)_/¯
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:rgb(207, 161, 243)">DetectiveTaco</span>›
+				</div>
+				<div class="message">
+					[19:35:08] still down heh
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="user_message truncate ">
+				<div class="message_date">[20:01:49]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:undefined">***</span>›
+				</div>
+				<div class="message">
+					Playback Complete.
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="channel_info truncate">
+				<div class="message_date">[20:01:49]</div>
+				<div class="icon info-default">
+					&nbsp;
+				</div>
+				<div class="message">
+					-<b>NickServ</b>-: [16:25:56] Welcome to Igloo, duckgoose! Here on Igloo, we provide services to enable the registration of nicknames and channels! For details, type <span style="font-weight:bold;text-shadow:none;">/msg NickServ help</span> and <span style="font-weight:bold;text-shadow:none;">/msg ChanServ help</span>.
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		
+			<div class="channel_info truncate">
+				<div class="message_date">[20:01:49]</div>
+				<div class="icon info-default">
+					&nbsp;
+				</div>
+				<div class="message">
+					-<b>hopm</b>-: [16:25:56] You are now being scanned for open proxies. If you have nothing to hide, you have nothing to fear.
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		</div>
+					<div class="bottom">
+						<input type="text" class="channel_input"> <div class="chan_smile">&nbsp;</div>
+					</div>
+				</div>
+		</div>
+		</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<div id="sound" style="display:none;">
+		</div>
+		
+		
+		
+		
+		
+		
+		<template id="new_user_message">
+			<div class="user_message truncate %classes%">
+				<div class="message_date">[%date%]</div>
+				<div class="user_name">
+					‹<span class="name" style="color:%color%">%nick%</span>›
+				</div>
+				<div class="message">
+					%message%
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_channel_info">
+			<div class="channel_info truncate">
+				<div class="message_date">[%date%]</div>
+				<div class="icon %class%">
+					&nbsp;
+				</div>
+				<div class="message">
+					%message%
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_user_action_message">
+			<div class="user_message action_message truncate %classes%">
+				<div class="message_date">[%date%]</div>
+				<div class="user_name">
+					* <span class="name">%nick%</span>
+				</div>
+				<div class="message">
+					%message% *
+				</div>
+				<div class="clear">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_server_item">
+			<div class="server_list" network="%network%">
+				<div class="server_title">
+					%name%
+				</div>
+				<div network="%network%" channel="network console" class="channel_item console_item">
+					<span class="title">Network Console</span>
+					<div class="unread">0</div>
+					<div class="channel_closer">&nbsp;</div>
+				</div>
+			</div>
+		</template>
+		
+		<template id="new_channel_item">
+			<div network="%network%" channel="%attrname%" class="channel_item">
+				<span class="title">%channel%</span>
+				<div class="unread">0</div>
+				<div class="channel_closer">&nbsp;</div>
+			</div>
+		</template>
+		
+		<template id="new_pm_item">
+			<div network="%network%" channel="%attrname%" class="channel_item pm_item">
+				<span class="title">%channel%</span>
+				<div class="unread">0</div>
+				<div class="channel_closer">&nbsp;</div>
+			</div>
+		</template>		
+		
+		<template id="new_pm_window">
+				<div class="channel" network="%network%" type="pm" channel="%attrname%">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">%channelname%</span>
+						</div>
+						<div class="clear">&nbsp;</div>
+					</div>
+					<div class="channel_content">
+
+					</div>
+					<div class="bottom">
+						<input type="text" class="channel_input"> <div class="chan_smile">&nbsp;</div>
+					</div>
+				</div>
+		</template>
+		
+		<template id="new_channel_window">
+				<div class="channel" network="%network%" type="channel" channel="%attrname%">
+					<div class="meta">
+						<div class="title">
+							<span class="chan_name">%channelname%</span>
+
+							<span class="topic">&nbsp;</span>
+						</div>
+						<div class="usercount">Users Here - 0</div>
+						<div class="clear">&nbsp;</div>
+					</div>
+
+					<div class="channel_users">
+
+					</div>
+					<div class="channel_content">
+
+					</div>
+					<div class="bottom">
+						<input type="text" class="channel_input"> <div class="chan_smile">&nbsp;</div>
+					</div>
+				</div>
+		</template>
+		
+		<template id="new_console_window">
+
+			<div class="channel" network="%network%" channel="%attrname%" style="display:none">
+				<div class="meta">
+					<div class="title">
+						<span class="chan_name">%channel%</span>
+						/
+						<span class="topic">%netname%</span>
+						
+					</div>
+					<div class="clear">&nbsp;</div>
+				</div>
+				<div class="channel_content">
+					<!--
+					<div class="server-info">
+						generic
+					</div>
+					<div class="server-info error-info">
+						Error oh no!
+					</div>
+					<div class="server-info user-info">
+						user info
+					</div>
+					<div class="server-info text-in">
+						test123
+					</div>
+					<div class="server-info text-out">
+						test123
+					</div>
+					-->
+				</div>
+				<div class="bottom">
+					<input type="text" class="channel_input">
+				</div>
+			</div>
+		</template>
+	
+
+</body></html>

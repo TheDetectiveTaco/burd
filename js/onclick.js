@@ -60,6 +60,13 @@ $(function(){
 		iframe.show({type: "right", url: "./emoji/index.html"});
 	});
 	
+	$('body').on('click', 'div#stickies div.sticky div.closer', function() {
+		$(this).parent().hide(config.animation, function(){
+			$(this).remove();
+		});
+		
+	});
+	
 	$('body').on('click', 'div#settings_button', function() {
 		iframe.show({type: "left", url: "./settings/index.html"});
 	});
@@ -76,7 +83,7 @@ $(function(){
 	$('body').on('click', 'div.usercount', function() {
 		menu.create({
 			"List bans": {callback: function(e){ 
-				
+				socket.sendData("MODE " + $("div.channel_item.selected .title").text() + " +b", $("div.channel_item.selected").attr("network"));
 			}}
 		});
 	});
@@ -84,11 +91,38 @@ $(function(){
 	$('body').on('click', '#hamburger_button', function() {
 			menu.create({
 				"Join a Channel": {callback: function(e){ 
-					
+					inputRequest.create({
+						title: "Join a channel",
+						text: "Please enter the channel name",
+						inputs: ["Channel"],
+						buttons: ["OK", "Cancel"],
+						callback: function(e){
+							console.log(e);
+							if(e.button == "OK"){
+								if(e.inputs.Channel.length > 0){
+									socket.sendData("JOIN " + e.inputs.Channel, $("div.channel_item.selected").attr("network"));
+								}
+							}
+						}
+					});
 				}},
 				"Send a PM": { callback: function(e){ 
-
+					inputRequest.create({
+						title: "Send a PM",
+						text: "Please enter the nick you would like to message",
+						inputs: ["Nick"],
+						buttons: ["OK", "Cancel"],
+						callback: function(e){
+							console.log(e);
+							if(e.button == "OK"){
+								if(e.inputs.Nick.length > 0){
+									channel(e.inputs.Nick, $("div.channel_item.selected").attr("network")).create("new_pm_window");
+								}
+							}
+						}
+					});
 				}}
 			});
+			
 	});
 });

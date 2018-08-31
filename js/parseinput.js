@@ -10,6 +10,8 @@ function parseInput(input,chan,network,userCommand){
 	var type = co.object.attr("type");
 	co.object.find("input.channel_input").val("");
 	
+	messageHistory.push(input);
+	if(messageHistory.length > 20) messageHistory.splice(0,1);
 	
 	if( input.substr(0,1) == "/" ){
 		
@@ -69,7 +71,17 @@ function parseInput(input,chan,network,userCommand){
 						co.addInfo("Not a channel window", "error-info");
 					}
 				}
-				break;		
+				break;
+
+			case "INVITE":
+				if(pCount(1)){
+					if(bits.length > 2){
+						socket.sendData("INVITE " + getAfter(1), network);
+					}else{
+						socket.sendData("INVITE " + getAfter(1) + " " + chan, network);
+					}
+				}
+				break;
 				
 			case "KICKBAN":
 				if(pCount(1)){
@@ -117,7 +129,7 @@ function parseInput(input,chan,network,userCommand){
 			case "QUERY":
 				if(pCount(1)){
 					if(bits.length == 2){
-						channel(bits[1], id).create("new_pm_window");
+						channel(bits[1], network).create("new_pm_window");
 					}else{
 						socket.sendData("PRIVMSG " + bits[1] + " :" + getAfter(2), network);
 					}
@@ -296,12 +308,20 @@ function parseInput(input,chan,network,userCommand){
 					}
 				}
 				break;
+				
 			case "SYSINFO":
 				var sinfo = sysinfo();
 				socket.sendData("PRIVMSG " + chan + " :" + sinfo, network);
 				co.addPrivmsg(nick, "*!*@*", color, false, sinfo);
 				
 				break;
+				
+			case "UMODE":
+				if(pCount(1)){
+					socket.sendData("MODE " + nick + " " + getAfter(1), network);
+				}
+				break;
+				
 			case "VERSION":
 				if(pCount(1)){
 					socket.sendData("PRIVMSG " + bits[1] + " :" + String.fromCharCode(1) + "VERSION" + String.fromCharCode(1), network);

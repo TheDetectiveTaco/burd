@@ -41,15 +41,38 @@ socket.parseData = function(data, id){
 						case E.RPL_WELCOME:
 							setTimeout(function(){
 								networkInfo["loggedin"] = true;
+								/*
+									send on-connect commands on a 3 second delay
+									so chanserv has time to log us in
+								*/
+								for(var i in networkInfo.commands){
+									socket.sendData(networkInfo.commands[i],id);
+								}
 							},3000);
-							printMsg(getKeyFromNumber(num), [cData]);
 							
+							
+							if(networkInfo.auth.type == "nickserv"){
+								/*
+									send NICKSERV as a command and not a nick to prevent
+									password leaking
+								*/
+								socket.sendData("NICKSERV IDENTIFY " + crypt.decrypt(networkInfo.auth.password),id);
+							}
+
+							
+							printMsg(getKeyFromNumber(num), [cData]);
 							break;
+							
+						case E.RPL_LIST:
+							/* don't do anything. this is handled by channel list window */
+							break;
+							
 						case E.RPL_YOURHOST:
 						case E.RPL_CREATED:
 						case E.RPL_LUSERCLIENT:
 						case E.RPL_LUSERME:
 						case E.RPL_STATSCONN:
+						case E.RPL_UMODEIS:
 							printMsg(getKeyFromNumber(num), [cData]);
 							break;
 							
@@ -60,6 +83,7 @@ socket.parseData = function(data, id){
 						case E.RPL_ENDOFSTATS:
 						case E.RPL_TRYAGAIN:
 						case E.RPL_ENDOFBANLIST:
+						case E.RPL_KNOCKDLVR:
 							printMsg(getKeyFromNumber(num), [3, cData]);
 							break;
 							
@@ -198,10 +222,12 @@ socket.parseData = function(data, id){
 						case E.ERR_NICKNAMEINUSE:
 						case E.ERR_INVITEONLYCHAN:
 						case E.ERR_CHANOPRIVSNEEDED:
+						case E.ERR_NEEDMOREPARAMS:
 							printMsg(getKeyFromNumber(num), [3, cData]);
 							break;
 							
 						case E.ERR_NOPRIVILEGES:
+						case E.ERR_USERSDONTMATCH:
 							printMsg(getKeyFromNumber(num), [cData]);
 							break;
 							
@@ -212,6 +238,24 @@ socket.parseData = function(data, id){
 						case E.SASL_AUTH_SUCCESS:
 							socket.sendData("CAP END",id);
 							break;
+							
+						case E.ERR_BADCHANNELKEY:
+							var chan = bits[3];
+							inputRequest.create({
+								title: "Channel key required",
+								text: "Please enter the key to join " + HTML.encodeString(chan),
+								inputs: ["Key"],
+								buttons: ["OK", "Cancel"],
+								callback: function(e){
+									if(e.button == "OK"){
+										if(e.inputs.Key.length > 0){
+											socket.sendData("JOIN "+ chan + " " + e.inputs.Key, id);
+										}
+									}
+								}
+							});
+							break;
+							
 						default:
 							console.log("UNHANDLED: " + data);
 					}
@@ -383,7 +427,11 @@ socket.parseData = function(data, id){
 							}
 							break;
 							
-							
+						case "INVITE":
+							var nick = parseUser(bits[0]).nick;
+							var chan = HTML.encodeString(cData);
+							sticky.create(id,HTML.encodeString(nick) + ' has invited you to <a href="schannel:'+chan+'">' + chan + '</a>');
+							break;
 						default:
 							console.log(data);
 					}
@@ -663,3 +711,10 @@ socket.parseData = function(data, id){
 	}
 	
 }
+
+/* remove code below after beta  */
+	function getKeyFromNumber(e){
+		for(var i in E){
+			if(E[i] == e) return i;
+		}
+	}
