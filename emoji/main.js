@@ -41,7 +41,7 @@ function performUpload(){
 		processData: false,
 		dataType: 'json',
 		complete: function(response){
-			if(response.responseText.indexOf("https") > -1) window.parent.postMessage({c: "add_input_text", text: response.responseText, send: true, retain: false }, "*");
+			if(response.responseText.indexOf("https") > -1) window.parent.postMessage({c: "add_input_text", text: response.responseText }, "*");
 			window.parent.postMessage({c: "close_iframe"}, "*");
 		},
 		error: function(){

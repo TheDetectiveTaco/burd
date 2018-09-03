@@ -38,14 +38,12 @@ $(function(){
 				dataType: 'json',
 				complete: function(response){
 					overlay.hide();
-					
-					$("input.channel_input:visible").val( response.responseText ).focus();
 
-					var e = jQuery.Event("keydown");
-					e.which = 13;
-					e.keyCode = 13;
-					e.key = "Enter";
-					$("input.channel_input:visible").trigger(e);
+					if($("input.channel_input:visible").val().length > 0){
+						$("input.channel_input:visible").val( $("input.channel_input:visible").val() + " " + response.responseText ).focus();
+					}else{
+						$("input.channel_input:visible").val( $("input.channel_input:visible").val() + response.responseText ).focus();
+					}
 					
 					
 				},

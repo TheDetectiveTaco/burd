@@ -25,7 +25,11 @@ window.addEventListener("message", function(e){
 			if(e.data.retain != undefined && e.data.retain == false){
 				$("input.channel_input:visible").val( e.data.text ).focus();
 			}else{
-				$("input.channel_input:visible").val( $("input.channel_input:visible").val() + e.data.text ).focus();
+				if($("input.channel_input:visible").val().length > 0){
+					$("input.channel_input:visible").val( $("input.channel_input:visible").val() + " " + e.data.text ).focus();
+				}else{
+					$("input.channel_input:visible").val( $("input.channel_input:visible").val() + e.data.text ).focus();
+				}
 			}
 			
 			
