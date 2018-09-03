@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, session} = require('electron');
 if (handleSquirrelEvent()) {
   // squirrel event handled and app will exit in 1000ms, so don't do anything else
   return;
@@ -71,7 +71,10 @@ const url = require('url');
 
 let win
 
+
 function createWindow () {
+	
+
   // Create the browser window.
   win = new BrowserWindow({width: 1000, height: 600, icon: path.join(__dirname, 'icons/256.png')})
   //win.setMenu(null);

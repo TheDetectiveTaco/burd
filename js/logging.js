@@ -9,6 +9,7 @@ var logging = {
 	pushToFile: function(){
 		for(var i in this.cache){
 			var a = this.cache[i];
+			if(a.network==false) return;
 			var d = new Date(a.date);
 			var path = config.logs.path.replace("%dataPath%", dataPath) + "/" + removeBadStr(a.network.toLowerCase());
 			if (!fs.existsSync(path)) fs.mkdirSync(path);

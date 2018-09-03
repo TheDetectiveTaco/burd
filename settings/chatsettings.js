@@ -17,9 +17,17 @@ applyConfig = function(){
 		if(config.sounds.notice) $("#noticesound").addClass("slider_on");
 		
 		$("#scrollback").val(config.scrollback);
+		$("#tabnickchar").val(config.tabnickchar);
 	}
 }
-
+$(function(){
+	$("#scrollback").on("keyup", function(){
+		config.scrollback = $("#scrollback").val();
+	});
+	$("#tabnickchar").on("keyup", function(){
+		config.tabnickchar = $(this).val();
+	});
+});
 slider.addEventListener(function(e){
 	console.log(e);
 	switch(e.id){

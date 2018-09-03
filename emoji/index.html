@@ -38,72 +38,102 @@
 			div.color:hover{
 				border-color:white;
 			}
+			
+			input.img_button{
+				background-size: 17px;
+				background-repeat: no-repeat;
+				background-position: center left;
+				padding-left:17px;
+			}
+			
+			
 		</style>
 	</head>
 	<body>
-		<h2>Add channel content</h2>
-		<h4>Emojis</h4>
-		<div class="emojis">
-			<div class="emoji">&#x1F60A;</div>
-			<div class="emoji">&#x1F602;</div>
-			<div class="emoji">&#x1F612;</div>
-			<div class="emoji">&#x1F60D;</div>
-			<div class="emoji">&#x1F44C;</div>
-			<div class="emoji">&#x1F497;</div>
-			<div class="emoji">&#x1F618;</div>
-			<div class="emoji">&#x1F60A;</div>
-			<div class="emoji">&#x1F614;</div>
-			<div class="emoji">&#x1F629;</div>
-			<div class="emoji">&#x1F62D;</div>
-			<div class="emoji">&#x1F60F;</div>
-			<div class="emoji">&#x1F600;</div>
-			<div class="emoji">&#x1F495;</div>
-			<div class="emoji">&#x1F633;</div>
-			<div class="emoji">&#x1F44D;</div>
-			<div class="emoji">&#x1F64C;</div>
-			<div class="emoji">&#x1F609;</div>
-			<div class="emoji">&#x1F60E;</div>
-			<div class="emoji">&#x1F61E;</div>
-			<div class="emoji">&#x1F4A4;</div>
-			<div class="emoji">&#x1F44F;</div>
-			<div class="emoji">&#x1F644;</div>
-			<div class="emoji">&#x1F615;</div>
-			<div class="emoji">&#x1F914;</div>
-			<div class="emoji">&#x1F622;</div>
-			<div class="emoji">&#x1F610;</div>
-			<div class="emoji">&#x1F621;</div>
-			<div class="emoji">&#x1F922;</div>
-			<div class="emoji">&#x1F924;</div>
-			<div class="emoji">&#x1F4A9;</div>
-			<div class="emoji">&#x1F928;</div>
-			<div style="text-align:right;clear:both;padding-top:5px;"><a href="https://emojipedia.org">View more emojis...</a></div>
+		<div class="main_content">
+			<h2>Add channel content</h2>
+			<h4>Emojis</h4>
+			<div class="emojis">
+				<div class="emoji">&#x1F60A;</div>
+				<div class="emoji">&#x1F602;</div>
+				<div class="emoji">&#x1F612;</div>
+				<div class="emoji">&#x1F60D;</div>
+				<div class="emoji">&#x1F44C;</div>
+				<div class="emoji">&#x1F497;</div>
+				<div class="emoji">&#x1F618;</div>
+				<div class="emoji">&#x1F60A;</div>
+				<div class="emoji">&#x1F614;</div>
+				<div class="emoji">&#x1F629;</div>
+				<div class="emoji">&#x1F62D;</div>
+				<div class="emoji">&#x1F60F;</div>
+				<div class="emoji">&#x1F600;</div>
+				<div class="emoji">&#x1F495;</div>
+				<div class="emoji">&#x1F633;</div>
+				<div class="emoji">&#x1F44D;</div>
+				<div class="emoji">&#x1F64C;</div>
+				<div class="emoji">&#x1F609;</div>
+				<div class="emoji">&#x1F60E;</div>
+				<div class="emoji">&#x1F61E;</div>
+				<div class="emoji">&#x1F4A4;</div>
+				<div class="emoji">&#x1F44F;</div>
+				<div class="emoji">&#x1F644;</div>
+				<div class="emoji">&#x1F615;</div>
+				<div class="emoji">&#x1F914;</div>
+				<div class="emoji">&#x1F622;</div>
+				<div class="emoji">&#x1F610;</div>
+				<div class="emoji">&#x1F621;</div>
+				<div class="emoji">&#x1F922;</div>
+				<div class="emoji">&#x1F924;</div>
+				<div class="emoji">&#x1F4A9;</div>
+				<div class="emoji">&#x1F928;</div>
+				<div style="text-align:right;clear:both;padding-top:5px;"><a href="https://emojipedia.org">View more emojis...</a></div>
+			</div>
+			<h4 style="padding-top:10px;">Text Controls</h4>
+			
+			<div>
+				<input type="button" sid="2" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_bold_white_18dp.png);">
+				<input type="button" sid="29" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_italic_white_18dp.png);">
+				<input type="button" sid="31" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_underlined_white_18dp.png);">
+			</div>
+			<h4 style="padding-top:10px;">Colors</h4>
+			
+			<div>
+				<div class="color" style="background:white;" sid="0">&nbsp;</div>
+				<div class="color" style="background:black;" sid="1">&nbsp;</div>
+				<div class="color" style="background:#001D7F" sid="2">&nbsp;</div>
+				<div class="color" style="background:#22B14C" sid="3">&nbsp;</div>
+				<div class="color" style="background:#333439" sid="4">&nbsp;</div>
+				<div class="color" style="background:#963634" sid="5">&nbsp;</div>
+				<div class="color" style="background:#A249A4" sid="6">&nbsp;</div>
+				<div class="color" style="background:#FF7F27" sid="7">&nbsp;</div>
+				<div class="color" style="background:#FFF200" sid="8">&nbsp;</div>
+				<div class="color" style="background:#B6E81E" sid="9">&nbsp;</div>
+				<div class="color" style="background:#21B19F" sid="10">&nbsp;</div>
+				<div class="color" style="background:#98D9EA" sid="11">&nbsp;</div>
+				<div class="color" style="background:#00A2E8" sid="12">&nbsp;</div>
+				<div class="color" style="background:#FF91B5" sid="13">&nbsp;</div>
+				<div class="color" style="background:#7F7F7F" sid="14">&nbsp;</div>
+				<div class="color" style="background:#C3C3C3" sid="15">&nbsp;</div>
+			</div>
+			
+			<h4 style="padding-top:10px;clear:both">Misc</h4>
+			<div>
+				<input type="button" id="send_file" class="img_button" value="Send a file" style="background-image:url(../images/icons/baseline_attach_file_white_18dp.png);">
+			</div>
 		</div>
-		<h4 style="padding-top:10px;">Text Controls</h4>
 		
-		<div>
-			<input type="button" sid="2" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_bold_white_18dp.png);">
-			<input type="button" sid="29" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_italic_white_18dp.png);">
-			<input type="button" sid="31" class="content_button" value="" style="background-image:url(../images/icons/baseline_format_underlined_white_18dp.png);">
+		
+		
+		
+		
+		<!--hidden stuff-->
+		<div style="display:none">
+			<input type="file" id="theFile" />
 		</div>
-		<h4 style="padding-top:10px;">Colors</h4>
-		
-		<div>
-			<div class="color" style="background:white;" sid="0">&nbsp;</div>
-			<div class="color" style="background:black;" sid="1">&nbsp;</div>
-			<div class="color" style="background:#001D7F" sid="2">&nbsp;</div>
-			<div class="color" style="background:#22B14C" sid="3">&nbsp;</div>
-			<div class="color" style="background:#333439" sid="4">&nbsp;</div>
-			<div class="color" style="background:#963634" sid="5">&nbsp;</div>
-			<div class="color" style="background:#A249A4" sid="6">&nbsp;</div>
-			<div class="color" style="background:#FF7F27" sid="7">&nbsp;</div>
-			<div class="color" style="background:#FFF200" sid="8">&nbsp;</div>
-			<div class="color" style="background:#B6E81E" sid="9">&nbsp;</div>
-			<div class="color" style="background:#21B19F" sid="10">&nbsp;</div>
-			<div class="color" style="background:#98D9EA" sid="11">&nbsp;</div>
-			<div class="color" style="background:#00A2E8" sid="12">&nbsp;</div>
-			<div class="color" style="background:#FF91B5" sid="13">&nbsp;</div>
-			<div class="color" style="background:#7F7F7F" sid="14">&nbsp;</div>
-			<div class="color" style="background:#C3C3C3" sid="15">&nbsp;</div>
+		<div class="uploading" style="display:none;text-align:center;padding-top:20px">
+			<div style="margin-bottom:20px;">Your file is being uploaded...</div>
+			<div><img src="../images/loading.svg"></div>
+			
 		</div>
 	</body>
 </html>

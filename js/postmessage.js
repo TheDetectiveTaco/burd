@@ -22,7 +22,20 @@ window.addEventListener("message", function(e){
 			e.source.postMessage({c: "hook_unset"}, "*");
 			break;
 		case "add_input_text":
-			$("input.channel_input:visible").val( $("input.channel_input:visible").val() + e.data.text ).focus();
+			if(e.data.retain != undefined && e.data.retain == false){
+				$("input.channel_input:visible").val( e.data.text ).focus();
+			}else{
+				$("input.channel_input:visible").val( $("input.channel_input:visible").val() + e.data.text ).focus();
+			}
+			
+			
+			if(e.data.send != undefined && e.data.send == true){
+				var e = jQuery.Event("keydown");
+				e.which = 13;
+				e.keyCode = 13;
+				e.key = "Enter";
+				$("input.channel_input:visible").trigger(e);
+			}
 			break;
 		case "close_iframe":
 			iframe.hide();

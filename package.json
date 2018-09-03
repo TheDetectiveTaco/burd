@@ -1,6 +1,6 @@
 {
   "name": "burd",
-  "version": "0.0.1",
+  "version": "0.05.4",
   "main": "index.js",
   "description": "A simple IRC client",
   "devDependencies": {

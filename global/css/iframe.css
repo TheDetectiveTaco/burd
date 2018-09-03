@@ -101,7 +101,7 @@ div.text_input input{
 
 
 
-input[type='text'],input[type='password'] {
+input[type='text'],input[type='password'],input[type='number'] {
     border: 0;
     background: #58595d;
     height: 16px;

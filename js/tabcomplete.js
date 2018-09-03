@@ -23,7 +23,11 @@ var tabComplete = {
 	applyNick: function(){
 		var a = $("input.channel_input:visible").val();
 		a = a.substr(0, a.lastIndexOf(" ") + 1);
-		$("input.channel_input:visible").val(a+this.userCache[this.index]);
+		if(a.substr(0,1) == "/"){
+			$("input.channel_input:visible").val(a+this.userCache[this.index]);
+		}else{
+			$("input.channel_input:visible").val(a+this.userCache[this.index]+config.tabnickchar);
+		}
 		this.index++;
 		if(this.index > this.userCache.length - 1) this.index = 0;
 	},

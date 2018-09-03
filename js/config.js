@@ -1,4 +1,4 @@
-var appVersion = "0.05.3";
+var appVersion = "0.05.4";
 var cryptoKey = "Pizza";
 var config = {
 	animation:200,
@@ -11,6 +11,7 @@ var config = {
 	nickColors: true,
 	textColors: true,
 	checkForUpdates: true,
+	tabnickchar: ":",
 	logs: {
 		enabled: true,
 		path: "%dataPath%/logs"

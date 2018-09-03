@@ -21,6 +21,7 @@ if (fs.existsSync(dataPath + "/logs")){
 		for(var i in nconfig){
 			config[i] = nconfig[i];
 		}
+		startupConnect();
 	});
 }else{
 	fs.mkdirSync(dataPath + "/logs", 0777);
@@ -31,7 +32,7 @@ if (fs.existsSync(dataPath + "/logs")){
 if(fs.existsSync("./resources/app")) appPath = "./resources/app";
 
 function saveSettings(){
-	fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
+	if(config.networks.length>0) fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
 }
 
 $(function(){
@@ -74,9 +75,27 @@ $(function(){
 	$('body').on('keydown', 'div#input_request', function(e) {
 		if(e.key == "Enter") $("div#input_request input[type='button']:first").click();
 	});
-	
+
 });
 
+var startupCache = [];
+var startupInt = 0;
+function startupConnect(){
+	for(var i in config.networks){
+		if(config.networks[i].startup){
+			startupCache.push(config.networks[i]);
+		}
+	}
+	startupInt = setInterval(function(){
+		if(startupCache.length == 0){
+			clearInterval(startupInt);
+			return;
+		}else{
+			network.create(startupCache[0]);
+			startupCache.splice(0,1);
+		}
+	},500);
+}
 
 
 function channel(name,network){
@@ -167,7 +186,7 @@ function channel(name,network){
 		addAction: function(user,hostmask,color,highlight,message){
 			var classes = "";
 			if( highlight ) classes = "highlight";
-			channelObj.find("div.channel_content").append(HTML.getTemplate("new_user_action_message", { nick: user, message: message, color: color, date: getDate(1), classes: classes }));
+			channelObj.find("div.channel_content").append(HTML.linkify(HTML.getTemplate("new_user_action_message", { nick: user, message: message, color: color, date: getDate(1), classes: classes })));
 			this.scrollBottom();
 			this.unread();
 			if(highlight){
@@ -219,7 +238,6 @@ var network = {
 		*/
 		
 		var sock = socket.create(e.server.host, e.server.port, e.SSL);
-		
 		sock.networkInfo["nick"] = e.nick;
 		sock.networkInfo["auth"] = e.auth;
 		sock.networkInfo["ISUPPORT"] = [];
@@ -277,7 +295,7 @@ var HTML = {
 		return str;
 	},
 	decodeParm: function(str){
-		str = str.replace(/\,spchr92\,/g, "\\");
+		if(typeof(str) == "string") str = str.replace(/\,spchr92\,/g, "\\");
 		return str;
 	},
 	encodeString: function(str){
@@ -621,18 +639,6 @@ function openWin(e,s){
 	if(modal) modal.close();
 	modal = window.open(e, "", s);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
