@@ -3,6 +3,9 @@ window.addEventListener("message", function(e){
 		case "get_networks":
 			e.source.postMessage({c: "networks", data: config.networks}, "*");
 			break;
+		case "get_themes":
+			e.source.postMessage({c: "themes", data: themes}, "*");
+			break;
 		case "get_active_network":
 			var aNet = $("div#main_list_container div.selected").attr("network");
 			e.source.postMessage({c: "active_network", id: aNet, name: socket.getSocketByID(aNet).networkInfo.getISUPPORT("network")}, "*");
@@ -79,6 +82,9 @@ window.addEventListener("message", function(e){
 			break;
 		case "open_url":
 			openURL(e.data.url);
+			break;
+		case "set_theme":
+			$("link#theme").attr('href', 'themes/' + e.data.theme);
 			break;
 		case "shell":
 			e.data.path = e.data.path.replace("%dataPath%", dataPath);

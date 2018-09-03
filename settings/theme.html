@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<link href="../global/css/iframe.css" rel="stylesheet">
+		<script src="../global/js/jquery.min.js"></script>
+		<script src="../global/js/iframe.js"></script>
+		
+		<link href="settingscommon.css" rel="stylesheet">
+		<script src="settingscommon.js"></script>
+		<script>
+		$(function(){
+			$('body').on('click', 'div.simple_item', function(e) {
+				postMsg({c: "set_theme", theme: $(this).attr("id")});
+				config.theme = $(this).attr("id");
+				setTimeout(function(){
+					window.location.reload();
+				},100);
+			});
+			postMsg({c: "get_themes"});
+		});
+		var themes = [];
+		window.addEventListener("message", function(e){
+			switch(e.data.c){
+				case "themes":
+					themes = e.data.data;
+					buildList();
+					break;
+			}
+		}, false);
+		function buildList(){
+			for(var i in themes){
+				$("div.simple_list").append('<div class="simple_item" id="' + themes[i] + '">' + themes[i] + '</div>');
+			}
+		}
+		</script>
+	</head>
+	<body>
+		<h2>
+			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
+			Themes
+		</h2>
+		<div>
+			<div class="simple_list">
+				
+			</div>
+		</div>
+	</body>
+</html>

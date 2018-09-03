@@ -12,6 +12,7 @@ var socket = {
 
 	sendData: function(data, id){
 		/* sends data to a socket matching id */
+		data = data.replace(/\u00A0/g, " ");
 		var sock = this.getSocketByID(id);
 		sock.socket.write(data + "\r\n");
 		if(this.logData) console.log("< " + data);

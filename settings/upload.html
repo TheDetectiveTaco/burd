@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<link href="../global/css/iframe.css" rel="stylesheet">
+		<script src="../global/js/jquery.min.js"></script>
+		<script src="../global/js/iframe.js"></script>
+		
+		<link href="settingscommon.css" rel="stylesheet">
+		<script src="settingscommon.js"></script>
+		<script>
+			$(function(){
+				$("#apikey").on("keyup", function(){
+					config.uploadApiKey = $(this).val();
+				});
+			});
+			applyConfig = function(){
+				$("#apikey").val(config.uploadApiKey);
+			}
+		</script>
+	</head>
+	<body>
+		<h2>
+			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
+			Upload settings
+		</h2>
+		<div class="section">
+			<div class="text_input">
+				<div class="title">API Key:</div>
+				<div class="input"><input type="text" value="0" id="apikey"></div>
+			</div>
+
+		</div>
+	</body>
+</html>

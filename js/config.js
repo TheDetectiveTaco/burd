@@ -12,6 +12,8 @@ var config = {
 	textColors: true,
 	checkForUpdates: true,
 	tabnickchar: ":",
+	uploadApiKey: "0",
+	theme: "default.css",
 	logs: {
 		enabled: true,
 		path: "%dataPath%/logs"

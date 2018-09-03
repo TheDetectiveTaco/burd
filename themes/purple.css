@@ -1,0 +1,80 @@
+body,html{
+	color:#c4c3d8;
+	background:#151233;
+}
+
+
+
+/* style for the navigation pane on the left */
+div#main_list_container {
+    background: #323755;
+	color:#EBECEB;
+	border:0;
+}
+div.server_list div.selected {
+    background-color: #525a73;
+    color: white;
+}
+div#main_list_container div.unread{
+	background: #50A1F4;
+}
+div#main_list_container div.server_title{
+	color:#88c2ff;
+}
+div#bottom_menu{
+	background: #323755;
+	border:0;
+}
+.highlight {
+    background: #32345a;
+}
+
+/* styles for channel area */
+input[type='text'],input[type='password'],div.channel div.bottom input.channel_input{
+	background: #333B54;
+    border: 1px solid #161233;
+}
+div.channel div.channel_users{
+	background: #333755;
+}
+
+
+
+/* scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #525A74;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #000000;
+}
+::-webkit-scrollbar-track {
+  background: #161233;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*:focus {
+    outline: none;
+}

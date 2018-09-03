@@ -1,4 +1,5 @@
 function parseInput(input,chan,network,userCommand){
+	input = input.replace(/\u00A0/g, " ");
 	chan = HTML.decodeParm(chan);
 	if(input == "") return;
 	var co = channel(chan,network);
@@ -315,7 +316,12 @@ function parseInput(input,chan,network,userCommand){
 				co.addPrivmsg(nick, "*!*@*", color, false, sinfo);
 				
 				break;
-				
+			case "UPLOAD-KEY":
+				if(pCount(1)){
+					config.uploadApiKey = getAfter(1);
+					co.addInfo("Upload key has been set", "");
+				}
+				break;
 			case "UMODE":
 				if(pCount(1)){
 					socket.sendData("MODE " + nick + " " + getAfter(1), network);

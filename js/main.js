@@ -14,6 +14,8 @@ var historyIndex = 0;
 
 var modal = false;
 
+var themes = [];
+
 //check for log folder, create it
 if (fs.existsSync(dataPath + "/logs")){
 	fs.readFile(dataPath + "/config.json", function(err, f){
@@ -21,6 +23,7 @@ if (fs.existsSync(dataPath + "/logs")){
 		for(var i in nconfig){
 			config[i] = nconfig[i];
 		}
+		$("link#theme").attr('href', 'themes/' + config.theme);
 		startupConnect();
 	});
 }else{
@@ -34,6 +37,12 @@ if(fs.existsSync("./resources/app")) appPath = "./resources/app";
 function saveSettings(){
 	if(config.networks.length>0) fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
 }
+
+
+fs.readdir(appPath + "/themes", function(err, items) {
+    themes = items;
+});
+ 
 
 $(function(){
 	
@@ -94,7 +103,7 @@ function startupConnect(){
 			network.create(startupCache[0]);
 			startupCache.splice(0,1);
 		}
-	},500);
+	},200);
 }
 
 

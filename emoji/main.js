@@ -19,6 +19,7 @@ $(function(){
 		$("div.uploading").show();
 		performUpload();
 	});
+	postMsg({c: "get_settings"});
 });
 
 function performClick(elemId) {
@@ -33,6 +34,7 @@ function performClick(elemId) {
 function performUpload(){
 	var fd = new FormData();
 	fd.append('file', $("#theFile")[0].files[0]);
+	fd.append('apikey', config.uploadApiKey);
 	$.ajax({
 		url: 'https://arxius.io',
 		type: 'post',
@@ -49,3 +51,17 @@ function performUpload(){
 		}
 	});
 }
+
+var config = {};
+
+function applyConfig(){
+}
+
+window.addEventListener("message", function(e){
+	switch(e.data.c){
+		case "settings":
+			config = e.data.data;
+			applyConfig();
+			break;
+	}
+}, false);

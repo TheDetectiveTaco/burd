@@ -1,4 +1,7 @@
+$("head").append('<link id="theme" href="../' + window.parent.$("#theme").attr("href") + '" rel="stylesheet">');
+
 $(function(){
+
 	
 	$('body').on('click', 'div.slider', function(e) {
 		if($(this).hasClass("slider_on")){

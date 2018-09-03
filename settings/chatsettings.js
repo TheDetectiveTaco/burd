@@ -25,7 +25,7 @@ $(function(){
 		config.scrollback = $("#scrollback").val();
 	});
 	$("#tabnickchar").on("keyup", function(){
-		config.tabnickchar = $(this).val();
+		config.tabnickchar = $(this).val().replace(/\s/, "");
 	});
 });
 slider.addEventListener(function(e){

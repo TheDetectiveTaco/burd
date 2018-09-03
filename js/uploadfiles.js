@@ -17,6 +17,7 @@ $(function(){
         var file = e.originalEvent.dataTransfer.files;
         var fd = new FormData();
         fd.append('file', file[0]);
+		fd.append('apikey', config.uploadApiKey);
 
 		if(file[0].path.substr(-4) == ".css"){
 			/* it's a theme file */
