@@ -1,31 +1,31 @@
 
 .default{
 	color:#c4c3d8;
-	background-color:#151233;
+	background-color:#0d1831;
 }
 
 /* style for the navigation pane on the left */
 div#main_list_container {
-    background: #323755;
+    background: #072249;
 	color:#EBECEB;
 	border:0;
 }
 div.server_list div.selected {
-    background-color: #525a73;
+    background-color: #255D88;
     color: white;
 }
 div#main_list_container div.unread{
-	background: #50A1F4;
+	background: #5387B5;
 }
 div#main_list_container div.server_title{
 	color:#88c2ff;
 }
 div#bottom_menu{
-	background: #323755;
+	background: #072249;
 	border:0;
 }
 .highlight {
-    background: #32345a;
+    background: #0e3358;
 }
 
 /* styles for channel area */
@@ -34,7 +34,11 @@ input[type='text'],input[type='password'],input[type='number'],div.channel div.b
     border: 1px solid #161233;
 }
 div.channel div.channel_users{
-	background: #333755;
+	background: #08204B;
+}
+div.channel div.channel_users div.user:hover{
+	background-color: #255D88;
+	color:white;
 }
 
 

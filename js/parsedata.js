@@ -386,7 +386,7 @@ socket.parseData = function(data, id){
 							socket.sendData("PONG " + bits[2],id);
 							break;
 						case "PRIVMSG":
-							var chan = bits[2].toLowerCase();
+							var chan = bits[2].toLowerCase().replace(/^\@|\!|\&|\~/g, "");
 							var nick = parseUser(bits[0]).nick;
 							var highlight = highlights.process(networkInfo.nick, cData);
 

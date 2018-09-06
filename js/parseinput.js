@@ -140,6 +140,7 @@ function parseInput(input,chan,network,userCommand){
 			case "NOTICE":
 				if(pCount(2)){
 					socket.sendData("NOTICE " + bits[1] + " :" + getAfter(2), network);
+					co.addInfo("-&rsaquo;<b>" + HTML.encodeString(bits[1]) + "</b>&lsaquo;- " + HTML.encodeString(getAfter(2)), "", true);
 				}
 				break;
 				
@@ -321,6 +322,13 @@ function parseInput(input,chan,network,userCommand){
 					config.uploadApiKey = getAfter(1);
 					co.addInfo("Upload key has been set", "");
 				}
+				break;
+			case "UPDATE":
+				co.addInfo("Checking for updates now...", "");
+				updateCheck();
+				break;
+			case "RELOADTHEME":
+				$("link#theme").attr('href', 'themes/' + config.theme + "?");
 				break;
 			case "UMODE":
 				if(pCount(1)){

@@ -10,6 +10,10 @@
 				overflow:hidden;
 				image-rendering: -webkit-optimize-contrast;
 			}
+			.default{
+				color:#ADAEB0;
+				background: #3A3B40;
+			}
 			input{
 				font-family: 'Roboto', sans-serif;
 			}
@@ -436,7 +440,7 @@
 			
 			
 			input[type='button']{
-				background: #58595d;
+				background: rgba(255, 255, 255, 0.2);
 				color: white;
 				border: 1px solid #2B2B2E;
 				padding: 5px;
@@ -445,7 +449,6 @@
 			
 			div#input_request{
 				position:absolute;
-				background:#1a1b1f;
 				height:165px;
 				width:400px;
 				left:calc(50% - 400px / 2);
@@ -456,7 +459,7 @@
 				
 			}
 			div.input_title{
-				font-size:17px;padding:5px;background:#34353a;
+				font-size:17px;padding:5px;background:rgba(125, 125, 125, 0.28);
 			}
 			div.input_content{
 				font-size:15px;padding:10px;height:70px;
@@ -499,6 +502,39 @@
 		div.channel div.emoji div.message_date{
 			padding-top:1em;
 		}
+		
+		div#main_list_container span.title{
+			width: 148px;
+			display: inline-block;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		div.channel_media{
+			position:relative;
+		}
+		div.channel_media img.mediaimg{
+			max-width:70%;
+			max-height:300px;
+			padding:10px;
+			background:rgba(255,255,255,0.2);
+			border:2px solid #292929;
+			border-radius:5px;
+		}		
+		div.channel_media div.imgremove{
+			position:absolute;width:30px;height:30px;background:red;
+			background: url('images/close-button.png') no-repeat center center;
+			background-size:20px;
+			left:55px;
+			top:0;
+			opacity:0.7;
+			cursor:pointer;
+			
+		}
+		div.channel_media div.imgremove:hover{
+			opacity:1;
+		}
+		
 			
 			
 			

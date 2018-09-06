@@ -84,7 +84,6 @@ $(function(){
 	$('body').on('keydown', 'div#input_request', function(e) {
 		if(e.key == "Enter") $("div#input_request input[type='button']:first").click();
 	});
-
 });
 
 var startupCache = [];
@@ -189,6 +188,9 @@ function channel(name,network){
 				sound.play("sounds/highlight.mp3");
 				if(channelObj.is(":hidden")) switchObj.addClass("notice");
 			}
+			
+			media.parse(name,network,message);
+			
 			logging.addLog({date: Date.now(), network: socket.getSocketByID(network).networkInfo.getISUPPORT("network"), channel: name, user: user, type: "privmsg", message: message});
 			return this;
 		},
@@ -262,7 +264,7 @@ var network = {
 		$("div#channel_container").append(HTML.getTemplate("new_console_window", { attrname: HTML.encodeParm("network console"), channel: "Network Console", lcasechannel: "network console", network: sock.id, netname: e.server.host }));
 		
 		channel("network console",sock.id).show();
-		
+		$( ".sortable" ).sortable();
 	},
 	remove: function(sid){
 		var s = socket.getSocketByID(sid);
@@ -340,9 +342,43 @@ var HTML = {
 	}
 }
 
-random = {
+var random = {
 	number: function(min,max){
 		return Math.floor(Math.random() * (max - min + 1)) + min;
+	},
+	guid: function(){
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000)
+		  .toString(16)
+		  .substring(1);
+		}
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+
+	}
+}
+
+
+var media = {
+	pending: [],
+	parse: function(chan, network, message){
+		
+		var im = message.match(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/i);
+		if(im != null){
+			media.add(chan,network,im[0]);
+			return;
+		}
+		if(message.indexOf("arxius.io/i/") > -1){
+			var s = message.split("arxius.io/i/")[1].split(/\/|\s/)[0];
+			media.add(chan,network,"https://i.arxius.io/" + s);
+		}
+	},
+	add: function(chan, network, url){
+		var c = channel(chan, network);
+		var r = random.guid();
+		c.object.find("div.channel_content").append(HTML.getTemplate("new_channel_media", {guid: r, url: url }));
+		c.object.find("img.mediaimg:last").on('load', function() {
+			c.scrollBottom();
+		});
 	}
 }
 

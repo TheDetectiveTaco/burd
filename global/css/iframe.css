@@ -18,7 +18,7 @@ h1,h2,h3,h4{
 }
 h2{
 	font-size:1.6em;
-	border-bottom: 1px solid #868686;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.30);
 }
 h3{
 	font-size:1.4em;
@@ -68,10 +68,10 @@ a{
 
 div.list div.item{
 	padding:5px;
-	border-bottom: 1px solid #636363;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.30);
 }
 div.list div.item:hover,div.list div.selected{
-	background:#3A3B40;
+	background:rgba(255, 255, 255, 0.10);
 	cursor:default;
 }
 div.list div.item div.buttons{
@@ -129,7 +129,7 @@ div.simple_list div.simple_item{
 	padding:6px;
 }
 div.simple_list div.simple_item:hover{
-	background:#585A5E;
+	background: rgba(255, 255, 255, 0.12);
 	color:white;
 	cursor:default;
 }

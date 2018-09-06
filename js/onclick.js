@@ -1,5 +1,5 @@
 $(function(){
-	$('body').on('click', 'div.channel_item', function(e) {
+	$('body').on('mousedown', 'div.channel_item', function(e) {
 		//code
 		if($(e.target).hasClass("channel_closer")){
 			var chanWin = channel($(this).attr("channel"),$(this).attr("network"));
@@ -67,14 +67,17 @@ $(function(){
 		
 	});
 	
+	$('body').on('click', 'div.imgremove', function() {
+		
+		$(this).parent().remove();
+	});
+	
 	$('body').on('click', 'div#settings_button', function() {
 		iframe.show({type: "left", url: "./settings/index.html"});
 	});
 	
 	$('body').on('click', 'div#new_button', function() {
 		iframe.show({type: "left", url: "./networks/index.html"});
-		
-		
 	});
 	
 	$('body').on('click', 'div#overlay', function() {
