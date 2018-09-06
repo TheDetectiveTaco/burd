@@ -16,6 +16,10 @@ Matthew Ryan - Programming - matt@haxed.net
 
 DetectiveTaco - Support/Development - chris@haxed.net
 
+Jordan Koch - Beta Testing and other contributions
+
+Koragg - Beta Testing
+
 Sounds - Leszek Szary - https://freesound.org/people/fins/
 
 ## Support
