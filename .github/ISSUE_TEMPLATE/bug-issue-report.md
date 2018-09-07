@@ -4,7 +4,7 @@ about: Report any bugs or issues you have encountered or are currently encounter
 
 ---
 
-<!-- Questions? Come by #burdirc on Freenode and ask any questions you would like -->
+Questions? Come by #burdirc on Freenode and ask any questions you would like.
 
 We ask that you supply this information so that it is easier to resolve your issue or fix a bug.
 
