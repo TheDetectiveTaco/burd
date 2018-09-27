@@ -79,12 +79,16 @@ window.addEventListener("message", function(e){
 			if(e.data.data["networks"]==undefined) return;
 			if(e.data.data["ignores"]==undefined) return;
 			config = e.data.data;
+			applyConfig();
 			break;
 		case "open_url":
 			openURL(e.data.url);
 			break;
 		case "set_theme":
 			$("link#theme").attr('href', 'themes/' + e.data.theme);
+			break;
+		case "upload_file":
+			uploadFile(e.data.file);
 			break;
 		case "shell":
 			e.data.path = e.data.path.replace("%dataPath%", dataPath);

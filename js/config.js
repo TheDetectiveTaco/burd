@@ -1,4 +1,5 @@
-var appVersion = "0.5.6";
+var appVersion = "0.6.0";
+var appURL = "http://burdirc.haxed.net/";
 var cryptoKey = "Pizza";
 var config = {
 	animation:200,
@@ -11,6 +12,7 @@ var config = {
 	nickColors: true,
 	textColors: true,
 	checkForUpdates: true,
+	textPrefixes: true,
 	tabnickchar: ":",
 	uploadApiKey: "0",
 	theme: "default.css",
@@ -27,7 +29,7 @@ var config = {
 	],
 	highlights: [ "%n" ],
 	CTCP: {
-		version: "Burd IRC http://haxed.net/burd",
+		version: "Burd IRC http://haxed.net/burdirc",
 		rateLimit: 1
 	},
 	ignores:[
@@ -35,9 +37,16 @@ var config = {
 		{type: "user", value: "faketestnick!*@*"}
 	],
 	sounds: { highlight: true, pm: true, notice: true },
-	networks: [
-
-	]
+	showChannelMedia: true,
+	mediaWhiteList: [
+		
+	],
+	fileUploadService: {
+		uri: "https://arxius.io/",
+		fileParam: "file",
+		miscParams: ["apikey=10101010101010", "example=test"]
+	},
+	networks: []
 }
 
 

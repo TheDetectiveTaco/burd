@@ -14,9 +14,10 @@ var menu = {
 		
 		this.repos();
 		
-		$("div.simple_menu").hide().fadeIn(config.animation, function(){
-			$(this).addClass("ani_complete");
-		});
+		$("div.simple_menu").show();
+		setTimeout(function(){
+			$("div.simple_menu").addClass("ani_complete");
+		},300);
 	},
 	repos: function(){
 		var mouseLeft = mousePos.x - 20;
@@ -63,7 +64,7 @@ $(function(){
 	$('body').on('click', 'div.simple_menu ul li', function(e) {
 		if($(this).hasClass("menu_title")) return;
 		$(this).css("background", "rgb(204, 204, 204)");
-		$(this).animate({backgroundColor: '#ffffff'}, config.animation, function(){
+		$(this).animate({backgroundColor: '#ffffff'}, 200, function(){
 			for(var i in menu.lastMenu){
 				if( i == $(this).text() ){
 					if( menu.lastMenu[i].subMenu == undefined ){

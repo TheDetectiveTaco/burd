@@ -13,6 +13,7 @@ window.addEventListener("message", function(e){
 }, false);
 
 window.onbeforeunload = function(){
+	unloading();
 	if(config != {}) postMsg({c: "update_settings", data: config});
 }
 
@@ -22,3 +23,6 @@ $(function(){
 	});
 	postMsg({c: "get_settings"});
 });
+
+function unloading(){
+}

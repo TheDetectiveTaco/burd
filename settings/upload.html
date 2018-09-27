@@ -10,27 +10,44 @@
 		<link href="settingscommon.css" rel="stylesheet">
 		<script src="settingscommon.js"></script>
 		<script>
-			$(function(){
-				$("#apikey").on("keyup", function(){
-					config.uploadApiKey = $(this).val();
-				});
-			});
+			unloading = function(){
+				config.fileUploadService.uri = $("#uri").val();
+				config.fileUploadService.fileParam = $("#fileParam").val();
+				config.fileUploadService.miscParams = $("#params").val().replace(/\r/g, "").split("\n");
+			}
 			applyConfig = function(){
-				$("#apikey").val(config.uploadApiKey);
+				$("#uri").val(config.fileUploadService.uri);
+				$("#fileParam").val(config.fileUploadService.fileParam);
+				$("#params").val(config.fileUploadService.miscParams.join("\r\n"));
 			}
 		</script>
+
 	</head>
 	<body class="default">
 		<h2>
 			<img id="back" style="width: 18px;" src="../images/icons/baseline_arrow_back_white_18dp.png">
-			Upload settings
+			File upload settings
 		</h2>
 		<div class="section">
 			<div class="text_input">
-				<div class="title">API Key:</div>
-				<div class="input"><input type="text" value="0" id="apikey"></div>
+				<div class="title">Post URL:</div>
+				<div class="input"><input type="text" value="https://arxius.io" id="uri"></div>
+			</div>
+			<div class="text_input">
+				<div class="title">File Param:</div>
+				<div class="input"><input type="text" value="file" id="fileParam"></div>
+			</div>
+			
+			<div class="datalist">
+				<div class="datalisthead">
+					Misc Params
+				</div>
+				<textarea id="params" style="width:268px;height:200px;">apikey=00000000</textarea>
 			</div>
 
+			<div>
+				* Expected result is a URL to the uploaded media
+			</div>
 		</div>
 	</body>
 </html>

@@ -5,3 +5,41 @@ img#back:hover{
 	opacity:1;
 	cursor:default;
 }
+table{
+	width:100%;
+}
+
+table th,table td{
+	text-align:left;
+	padding:3px;
+}
+table tr:hover{
+	background:rgba(255, 255, 255, 0.12);
+}
+table .thead{
+	background:rgba(255, 255, 255, 0.12);
+}
+
+div.datalist{
+	margin-top:1em;
+	border: 1px solid rgba(0,0,0, 0.5);
+}
+div.datalisthead{
+	/*border: 1px solid rgba(255, 255, 255, 0.2);*/
+	font-size:1.1em;
+	font-weight:bold;
+	margin-bottom:0.5em;
+	
+}
+div.datalist-inputs{
+	margin-top:0.5em;
+	padding:5px;
+}
+div.datalist-inputs input{
+	height:20px;
+	width:94px;
+}
+div.datalist-inputs input[type='button']{
+	height:27px;
+	width:50px;
+}

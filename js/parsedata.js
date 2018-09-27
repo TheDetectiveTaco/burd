@@ -1,5 +1,6 @@
-socket.parseData = function(data, id){
+socket.parseData = function(data, id, whox){
 	/* IRC packets are sent to this function for processing */
+
 	if(data.length < 3) return;
 	
 	data = secure(data);
@@ -20,6 +21,7 @@ socket.parseData = function(data, id){
 	socketObj.dataHook({id: id, data: data});
 	
 	if(data == ":server.address CONNECTED"){
+		
 		channel("network console",id).addInfo("Registering with network...", "text-out");
 		if(networkInfo.auth.type == "server_password"){
 			socket.sendData("PASS " + crypt.decrypt(networkInfo.auth.password),id);
@@ -35,6 +37,7 @@ socket.parseData = function(data, id){
 			if(bits.length > 1){
 				if(isNaN(bits[1]) == false){
 					//IRC Numeric!
+					
 					var num = parseInt(bits[1]);
 					switch(num){
 						
@@ -48,6 +51,7 @@ socket.parseData = function(data, id){
 								for(var i in networkInfo.commands){
 									socket.sendData(networkInfo.commands[i],id);
 								}
+								
 							},3000);
 							
 							
@@ -73,33 +77,36 @@ socket.parseData = function(data, id){
 						case E.RPL_LUSERME:
 						case E.RPL_STATSCONN:
 						case E.RPL_UMODEIS:
-							printMsg(getKeyFromNumber(num), [cData]);
+							printMsg(getKeyFromNumber(num), [cData], "network console");
 							break;
 							
 						case E.RPL_LUSEROP:
 						case E.RPL_LUSERCHANNELS:
-						case E.RPL_CHANNEL_URL:
 						case E.RPL_STATSPLINE:
 						case E.RPL_ENDOFSTATS:
 						case E.RPL_TRYAGAIN:
 						case E.RPL_ENDOFBANLIST:
 						case E.RPL_KNOCKDLVR:
+							printMsg(getKeyFromNumber(num), [3, cData], "network console");
+							break;
+							
+						case E.RPL_CHANNEL_URL:
 							printMsg(getKeyFromNumber(num), [3, cData]);
 							break;
 							
 						case E.RPL_STATSILINE:
-							channel("*", id).addInfo( getAfter(data, 3), "text-in" );
+							channel("network console", id).addInfo( getAfter(data, 3), "text-in" );
 							break;
 							
 						case E.RPL_LOCALUSERS:
 						case E.RPL_GLOBALUSERS:
-							printMsg(getKeyFromNumber(num), [3, 4, cData]);
+							printMsg(getKeyFromNumber(num), [3, 4, cData], "network console");
 							break;
 							
 						case E.RPL_MOTDSTART:
 						case E.RPL_MOTD:
 						case E.RPL_ENDOFMOTD:
-							printMsg("MOTD:", [cData]);
+							printMsg("MOTD:", [cData], "network console");
 							break;
 						
 						case E.RPL_NAMREPLY:
@@ -109,6 +116,7 @@ socket.parseData = function(data, id){
 						case E.RPL_ENDOFNAMES:
 							addNicksToChannel(bits[3], cache);
 							cache = [];
+							whox.applyIdleStates(bits[3], id);
 							break;
 						
 						case E.RPL_MYINFO:
@@ -132,7 +140,7 @@ socket.parseData = function(data, id){
 							
 							if(networkInfo.getISUPPORT("network")){
 								var net = networkInfo.getISUPPORT("network");
-								$("div.server_list[network='" + id + "'] div.server_title").text(net);
+								$("div.server_list[network='" + id + "'] div.console_item span.title").text(net);
 								channel("network console",id).object.find("span.topic").text(net);
 							}
 							break;
@@ -141,15 +149,18 @@ socket.parseData = function(data, id){
 							
 						case E.RPL_TOPIC:
 							var chan = bits[3];
-							channel(bits[3], id).object.find("span.topic").text(cData);
-							channel(bits[3], id).addInfo( "<b>Topic</b>: " + HTML.linkify(HTML.encodeString(cData)), "", true );
+							if(networkInfo["redirectTopic"]) chan = "*";
+							channel(chan, id).object.find("span.topic").text(cData);
+							channel(chan, id).addInfo( "<b>Topic for " + HTML.encodeString(bits[3]) + "</b>: " + HTML.linkify(HTML.encodeString(cData)), "", true );
 							break;
 							
 						case E.RPL_TOPICWHOTIME:
 							var chan = bits[3];
+							if(networkInfo["redirectTopic"]) chan = "*";
 							var who = bits[4].split("!")[0];
 							var time = bits[5];
-							channel(bits[3], id).addInfo( "Topic was set by <span class=teal>" + HTML.encodeString(who) + "</span> on <span class=orange>" + getDateStr(time) + "</span>", "text-in", true );
+							channel(chan, id).addInfo( "Topic was set by <span class=teal>" + HTML.encodeString(who) + "</span> on <span class=orange>" + getDateStr(time) + "</span>", "text-in", true );
+							networkInfo["redirectTopic"] = false;
 							break;
 						
 
@@ -176,20 +187,46 @@ socket.parseData = function(data, id){
 						case E.RPL_AWAY:
 							channel("*", id).addInfo( "<span class=whois_name>[" + HTML.encodeString(bits[3]) + "]</span> is away (<span class=whois_away>" + HTML.encodeString(cData) + "</span>)", "text-in", true );
 							break;
-							
 						case E.RPL_WHOISACCOUNT:
 							channel("*", id).addInfo( "<span class=whois_name>[" + HTML.encodeString(bits[3]) + "]</span> is logged in as " + HTML.encodeString(bits[4]), "text-in", true );
 							break;
-							
 						case E.RPL_WHOISSECURE:
 							channel("*", id).addInfo( "<span class=whois_name>[" + HTML.encodeString(bits[3]) + "]</span> is using a secure connection", "text-in", true );
 							break;
-							
 						case E.RPL_WHOREPLY:
-							channel("*", id).addInfo( getAfter(data,3), "text-in" );
+							//console.log(bits[7]);
+							var userState = bits[8].substr(0,1);
+							var userNick = bits[7];
+							if(userState == "G"){
+								/* $("div.channel[network='" + socketObj.id + "'] div.channel_users div.user:iAttrContains('nick','" + userNick.toLowerCase() + "')").each(function(){
+									$(this).addClass("away");
+							}); */
+								if(!networkInfo.idleUsers.includes(userNick+":away") && !networkInfo.idleUsers.includes(userNick+":setaway")){
+									networkInfo.idleUsers.push(userNick+":away");
+								}
+							}else{
+								if(networkInfo.idleUsers.includes(userNick+":setaway")){
+									//user has returned from being away
+									for(var i in networkInfo.idleUsers){
+										if(networkInfo.idleUsers[i] == userNick + ":setaway"){
+											networkInfo.idleUsers.splice(i,1);
+											$("div.channel[network='" + socketObj.id + "'] div.channel_users div.user:iAttrContains('nick','" + userNick.toLowerCase() + "')").each(function(){
+												$(this).removeClass("away");
+											});
+										}
+									}
+								}
+							}
+							
+
+							
+							networkInfo.lastWhoPoll = Date.now();
+							//channel("*", id).addInfo( getAfter(data,3), "text-in" );
 							break;
+							
 						case E.RPL_ENDOFWHO:
-							channel("*", id).addInfo( "End of /WHO", "text-in" );
+							networkInfo.lastWhoPoll = Date.now();
+							//channel("*", id).addInfo( "End of /WHO", "text-in" );
 							break;
 							
 						case E.RPL_BANLIST:
@@ -217,12 +254,19 @@ socket.parseData = function(data, id){
 						case E.ERR_NOSUCHCHANNEL:
 						case E.ERR_NOSUCHNICK:
 						case E.ERR_BANNEDFROMCHAN:
-						case E.ERR_CANNOTSENDTOCHAN:
 						case E.ERR_ERRONEUSNICKNAME:
 						case E.ERR_NICKNAMEINUSE:
 						case E.ERR_INVITEONLYCHAN:
-						case E.ERR_CHANOPRIVSNEEDED:
 						case E.ERR_NEEDMOREPARAMS:
+						case E.ERR_UNAVAILRESOURCE:
+							printMsg(getKeyFromNumber(num), [3, cData], "network console");
+							networkInfo["redirectTopic"] = false;
+							break;
+							
+							
+						case E.ERR_CANNOTSENDTOCHAN:
+						case E.ERR_CHANOPRIVSNEEDED:
+						case E.ERR_NOTONCHANNEL:
 							printMsg(getKeyFromNumber(num), [3, cData]);
 							break;
 							
@@ -261,6 +305,7 @@ socket.parseData = function(data, id){
 					}
 				}else{
 					//packet was not irc numeric
+					
 					switch(bits[1].toUpperCase()){
 						case "AUTHENTICATE":
 							if(bits[2] == "+"){
@@ -277,7 +322,7 @@ socket.parseData = function(data, id){
 							switch(bits[3].toUpperCase()){
 								case "LS":
 									var caps = cData.toLowerCase().split(" ");
-									var supported = ["multi-prefix"];
+									var supported = ["multi-prefix", "away-notify", "extended-join"];
 									if(networkInfo.auth.type == "sasl_plain") supported.push("sasl");
 									var capRequest = "";
 									for(var i in caps){
@@ -303,16 +348,14 @@ socket.parseData = function(data, id){
 							var usr = parseUser(bits[0]);
 							if( usr.nick == networkInfo.nick ){
 								//we joined the channel! let's create the window!
-								channel(cData, id).create("new_channel_window").show();
+								channel(cData, id).create("new_channel_window");
+								if(requestedChannel.toLowerCase() == cData.toLowerCase()) channel(cData, id).show();
 								cache = [];
+								networkInfo.whoPollChans = [cData].concat(networkInfo.whoPollChans);
+								requestedChannel = "";
 							}else{
 								if(!ignore.check(data)) channel(cData, id).addInfo( usr.nick + " (" + usr.nick + "!" + usr.ident + "@" + usr.host + ") has joined the channel.", "text-in" );
-								cache = [];
-								channel(cData, id).object.find("div.channel_users div.user").each(function(){
-									cache.push(HTML.decodeParm($(this).attr("onick")));
-								});
-								cache.push(usr.nick);
-								addNicksToChannel(cData, cache);
+								resortNicks(cData, usr.nick);
 								logging.addLog({date: Date.now(), network: networkInfo.getISUPPORT("network"), channel: cData, user: usr.nick, type: "join"});
 							}
 							break;
@@ -332,13 +375,22 @@ socket.parseData = function(data, id){
 							break;
 							
 						case "NICK":
-							if( parseUser(bits[0]).nick == networkInfo.nick ){
+							var newNick = bits[2].replace(":","");
+							var oldNick = parseUser(bits[0]).nick;
+							if( oldNick == networkInfo.nick ){
 								/* our own nickname was changed */
-								networkInfo.nick = bits[2].replace(":","");
+								networkInfo.nick = newNick;
 							}else{
 								/* someone else */
 							}
-							nickChange(parseUser(bits[0]).nick,  bits[2].replace(":",""));
+							nickChange(oldNick,  newNick);
+							
+							for(var i in networkInfo.idleUsers){
+								if(networkInfo.idleUsers[i] == (oldNick + ":setaway") || networkInfo.idleUsers[i] == (oldNick + ":away")){
+									networkInfo.idleUsers.splice(i,1);
+									break;
+								}
+							}
 							break;
 							
 						case "NOTICE":
@@ -379,7 +431,16 @@ socket.parseData = function(data, id){
 									}
 								});
 								
+								for(var i in networkInfo.idleUsers){
+									if(networkInfo.idleUsers[i] == (usr.nick + ":setaway") || networkInfo.idleUsers[i] == (usr.nick + ":away")){
+										networkInfo.idleUsers.splice(i,1);
+										break;
+									}
+								}
+								
+								
 							}
+							
 							break;
 							
 						case "PING":
@@ -425,6 +486,7 @@ socket.parseData = function(data, id){
 								channel(chan, id).object.find("div.title span.topic").text(cData);
 								channel(chan, id).addInfo( nick + " has changed the topic to: " + cData );
 							}
+							
 							break;
 							
 						case "INVITE":
@@ -621,7 +683,8 @@ socket.parseData = function(data, id){
 		}
 	}
 	
-	function printMsg(msg,e){
+	function printMsg(msg,e,chan){
+		if(chan == undefined) chan = "*";
 		for(var i in e){
 			if(typeof(e[i]) == "string"){
 				msg = msg + " " + e[i];
@@ -629,17 +692,16 @@ socket.parseData = function(data, id){
 				msg = msg + " " + bits[e[i]];
 			}
 		}
-		if(networkInfo["loggedin"]){
-			channel("*",id).addInfo(msg, "text-in");
-		}else{
-			channel("network console",id).addInfo(msg, "text-in");
-		}
+		channel(chan,id).addInfo(msg, "text-in");
+
 	}
 	
-	function resortNicks(chan){
+	function resortNicks(chan, nickToAdd){
 		cache = [];
+		if(nickToAdd != undefined) cache.push(nickToAdd + ":false");
 		channel(chan, id).object.find("div.channel_users div.user").each(function(){
-			cache.push(HTML.decodeParm($(this).attr("onick")));
+			var isAway = $(this).hasClass("away");
+			cache.push(HTML.decodeParm($(this).attr("onick")) + ":" + isAway);
 		});
 		addNicksToChannel(chan, cache);
 	}
@@ -650,8 +712,11 @@ socket.parseData = function(data, id){
 		var prefix = "~&@%+";
 		var nickCount = 0;
 		for( var i in cache ) {
-			var fNick = cache[i];
+			var fNick = cache[i].split(":")[0];
+			var awayState = (cache[i].split(":")[1] == "true");
 			var uModes = "";
+			var classes = "";
+			if(awayState) classes = "away";
 			for( var j in prefix ) {
 				if( fNick.indexOf( prefix[j] ) > -1 ) {
 					switch( prefix[j] ) {
@@ -675,7 +740,7 @@ socket.parseData = function(data, id){
 				fNick = fNick.replace( prefix[j], "" );
 			}
 			nickCount++;
-			nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + '" onick="' + HTML.encodeParm(cache[i]) + '" nick="' + HTML.encodeParm(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
+			nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + ' ' + classes + '" onick="' + HTML.encodeParm(cache[i].split(":")[0]) + '" nick="' + HTML.encodeParm(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
 			
 		}
 		

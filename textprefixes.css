@@ -1,0 +1,21 @@
+div.channel_users div.away{
+	background-image: url('images/squares/away.png');
+	font-style: italic;
+	opacity: 0.5;
+	color: #c7c7c7;
+}
+div.channel_users div.voice{
+	background-image: url('images/squares/text-voice.png');
+}
+div.channel_users div.owner{
+	background-image: url('images/squares/text-owner.png');
+}
+div.channel_users div.admin{
+	background-image: url('images/squares/text-admin.png');
+}
+div.channel_users div.halfop{
+	background-image: url('images/squares/text-halfop.png');
+}
+div.channel_users div.op{
+	background-image: url('images/squares/text-op.png');
+}

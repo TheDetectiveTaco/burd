@@ -32,6 +32,7 @@ function performClick(elemId) {
 }
 
 function performUpload(){
+	/*
 	var fd = new FormData();
 	fd.append('file', $("#theFile")[0].files[0]);
 	fd.append('apikey', config.uploadApiKey);
@@ -50,6 +51,8 @@ function performUpload(){
 			window.parent.postMessage({c: "close_iframe"}, "*");
 		}
 	});
+	*/
+	window.parent.postMessage({c: "upload_file", file: $("#theFile")[0].files[0]}, "*");
 }
 
 var config = {};

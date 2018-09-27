@@ -49,12 +49,12 @@ var socket = {
 		sid = id||socket.newID();
 		if(ssl){
 			sock = tls.connect({port: port, host: server, rejectUnauthorized: false}, function() {
-				socket.parseData( "CONNECTED", sid );
+				socket.parseData( "CONNECTED", sid, who );
 			});
 		}else{
 			sock = new net.Socket();
 			sock.connect(port, server, function() {
-				socket.parseData( "CONNECTED", sid );
+				socket.parseData( "CONNECTED", sid, who );
 			});
 		}
 		
@@ -86,7 +86,7 @@ var socket = {
 				var db = (sObject.cache + data).split("\n");
 				sObject.cache = "";
 				for(var i in db){
-					socket.parseData(db[i], sObject.id);
+					socket.parseData(db[i], sObject.id, who);
 				}
 			}else{
 				/* mid packet, so lets cache. */
@@ -126,7 +126,7 @@ var socket = {
 		return Math.floor(Math.random()*99999) + 1;
 	},
 	
-	parseData: function(data, id){
+	parseData: function(data, id, who){
 		/* see parsedata.js */
 	}
 }

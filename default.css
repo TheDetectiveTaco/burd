@@ -32,6 +32,12 @@
 				border-right:2px solid #242629;
 				height: 25px;
 			}
+			div#new_button{
+				background-image:url(images/icons/baseline_fiber_new_white_18dp.png);
+			}
+			div#hamburger_button{
+				background-image:url(images/icons/baseline_menu_white_18dp.png);
+			}
 			div#main_container{
 				height:100%;
 			}
@@ -40,8 +46,8 @@
 				width:0px;
 				clear:both;
 			}
-			
-			
+
+
 			div.i_button{
 				height:20px;
 				width:20px;
@@ -53,15 +59,15 @@
 				opacity:1;
 				cursor:pointer;
 			}
-			
-			
+
+
 			/* server list */
 			div.server_list{
-				
+
 			}
 			div.server_list div.server_title,div.pm_title{
 				font-size:1.2em;
-				
+
 			}
 			div.server_list div.channel_item{
 				padding:5px;
@@ -72,11 +78,22 @@
 				background-position: center left;
 				background-size:17px;
 			}
+
+
+			div.server_list div.console_item{
+				font-weight:bold;
+				padding-left:0px;
+			}
+			div.server_list div.console_item span.title{
+				font-weight:bold;
+				padding-left:0px;
+				font-size: 1.1em;
+			}
 			div.server_list div.notice{
 				background-image: url('images/icons/ic_notifications_active_white_18px.svg');
 			}
-			
-			
+
+
 			div.server_list div.channel_item:hover{
 				color:white;
 			}
@@ -97,10 +114,10 @@
 			div.server_list div.selected div.unread{
 				display:none;
 			}
-			
-			
-			
-			
+
+
+
+
 			/* channel_container */
 			div#channel_container{
 				height:calc(100% - 10px);
@@ -149,14 +166,14 @@
 			div.channel div.user_message,div.channel div.channel_info{
 				margin-bottom: 5px;
 			}
-			
+
 			div.channel div.message{
 				display:table-cell;
 				padding-left:5px;
 				margin-bottom:5px;
 				word-break: break-word;
 			}
-			
+
 			div.channel div.message_date{
 				float:left;
 				opacity: 0.5;
@@ -170,17 +187,18 @@
 				margin-bottom:5px;
 				float:left;
 			}
-			
+
 			div.channel div.icon{
 				background-repeat:no-repeat;
 				background-position:center center;
 				background-size: 1.2em;
 				width:1.1em;
 			}
-			
+
 			div.channel div.user_name span.name{
 				font-weight:bold;
 				color:rgb(150, 152, 160);
+				cursor:pointer;
 			}
 			div.channel div.channel_users{
 				float:right;
@@ -215,8 +233,8 @@
 				cursor:pointer;
 				opacity: 1;
 			}
-			
-			input[type='text'],input[type='number']{
+
+			input[type='text'],input[type='number'],textarea{
 				border:0;
 				background:#58595d;
 				height:16px;
@@ -226,9 +244,9 @@
 				padding:2px;
 				border-radius:5px;
 			}
-			
-			
-			
+
+
+
 			div.pm{
 				padding:5px;
 				height:calc(100% - 10px);
@@ -256,9 +274,9 @@
 				width:calc(100% - 6px);
 				margin-top:10px;
 			}
-			
-			
-			
+
+
+
 			div.action-button{
 				background:url('images/icons/ic_clear_white_24px.svg') no-repeat center center;
 				background-size:16px 16px;
@@ -274,7 +292,7 @@
 			div.action-button:hover{
 				background-size:20px;
 			}
-			
+
 			div.info-default{
 				background-image: url('images/icons/ic_priority_high_white_24px.svg');
 			}
@@ -293,7 +311,7 @@
 			div.text-out{
 				background-image: url('images/icons/ic_navigate_before_white_24px.svg');
 			}
-			
+
 			div.action_message{
 				color: #c097c8;
 			}
@@ -319,20 +337,20 @@
 			span.whois_away{
 				color: #ff8328;
 			}
-			
+
 			span.teal{
 				color: #b5e4ff;
 			}
 			span.orange{
 				color: #daba81;
 			}
-			
-			
+
+
 			span.bold{
 				font-weight:bold;
 			}
-			
-			
+
+
 			div.server-info{
 				background: url('images/icons/ic_priority_high_white_24px.svg') no-repeat center left;
 				background-size:1.2em;
@@ -340,19 +358,25 @@
 				padding-left:18px;
 			}
 
-			
+
 			div.user{
 				font-size: 1em;
 				padding-left: 1em;
 				background-repeat: no-repeat;
 				background-position: center left;
 				background-size: 0.8em;
+
 			}
 			div.user:hover{
 				background-color:#47484F;
 				cursor:pointer;
 			}
-
+			div.channel_users div.away{
+				background-image: url('images/squares/away.png');
+				font-style: italic;
+				opacity: 0.5;
+				color: #c7c7c7;
+			}
 			div.channel_users div.voice{
 				background-image: url('images/squares/blue.png');
 			}
@@ -368,9 +392,9 @@
 			div.channel_users div.op{
 				background-image: url('images/squares/green.png');
 			}
-			
-			
-			
+
+
+
 			div.channel_closer{
 				background:url('images/icons/baseline_more_vert_white_18dp.png') no-repeat center top;
 				background-size:17px;
@@ -389,7 +413,7 @@
 			div.server_list div.channel_item:hover div.unread{
 				display:none;
 			}
-			
+
 
 			.blur{
 				/* filter: grayscale(0.5) blur(8px); makes it laggy */
@@ -425,7 +449,7 @@
 			.highlight{
 				background:#4e5156;
 			}
-			
+
 			div#update{
 				position:absolute;
 				background:#1a1b1f;
@@ -437,8 +461,20 @@
 				display:none;
 				border-radius:10px;
 			}
-			
-			
+			div#uploading{
+				position:absolute;
+				background:#1a1b1f;
+				height:105px;
+				width:300px;
+				left:calc(50% - 300px / 2);
+				top:calc(50% - 105px / 2);
+				z-index:10;
+				display:none;
+				border-radius:10px;
+				padding:5px;
+				text-align:center;
+			}
+
 			input[type='button']{
 				background: rgba(255, 255, 255, 0.2);
 				color: white;
@@ -446,7 +482,7 @@
 				padding: 5px;
 				border-radius: 5px;
 			}
-			
+
 			div#input_request{
 				position:absolute;
 				height:165px;
@@ -456,7 +492,7 @@
 				z-index:10;
 				display:none;
 				border-radius:10px;
-				
+
 			}
 			div.input_title{
 				font-size:17px;padding:5px;background:rgba(125, 125, 125, 0.28);
@@ -468,7 +504,7 @@
 			width:500px;
 			position:absolute;
 			z-index:5;
-			 left:calc(50% - 500px / 2); 
+			 left:calc(50% - 500px / 2);
 		}
 		div#stickies div.sticky{
 			background:#E76820;
@@ -492,7 +528,7 @@
 		div#stickies a{
 			color:white;
 		}
-		
+
 		div.channel div.emoji div.message{
 			font-size:1.7em;
 		}
@@ -502,7 +538,7 @@
 		div.channel div.emoji div.message_date{
 			padding-top:1em;
 		}
-		
+
 		div#main_list_container span.title{
 			width: 148px;
 			display: inline-block;
@@ -520,7 +556,7 @@
 			background:rgba(255,255,255,0.2);
 			border:2px solid #292929;
 			border-radius:5px;
-		}		
+		}
 		div.channel_media div.imgremove{
 			position:absolute;width:30px;height:30px;background:red;
 			background: url('images/close-button.png') no-repeat center center;
@@ -529,19 +565,19 @@
 			top:0;
 			opacity:0.7;
 			cursor:pointer;
-			
+
 		}
 		div.channel_media div.imgremove:hover{
 			opacity:1;
 		}
-		
-			
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
+
+
 .nick1{color:rgb(142,211,102);}
 .nick2{color:rgb(189,151,226);}
 .nick3{color:rgb(167,238,214);}

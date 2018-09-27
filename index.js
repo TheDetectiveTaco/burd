@@ -21,7 +21,7 @@ function handleSquirrelEvent() {
     let spawnedProcess, error;
 
     try {
-      spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
+	    spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
     } catch (error) {}
 
     return spawnedProcess;
@@ -91,7 +91,7 @@ function createWindow () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    win = null
+	  win = null
   })
 }
 
