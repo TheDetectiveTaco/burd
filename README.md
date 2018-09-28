@@ -1,5 +1,7 @@
 # Burd IRC Client
 
+[![Build status](https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true)](https://ci.appveyor.com/project/BurdIRC/burd/branch/master)
+
 Burd IRC is an IRC client written for Electron. It supports Windows and Debian based linux.
 
 Website: https://burdirc.haxed.net
