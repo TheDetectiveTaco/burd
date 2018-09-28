@@ -9,10 +9,6 @@ Matthew Ryan - Programming - matt@haxed.net
 
 DetectiveTaco - Support/Development - chris@haxed.net
 
-Time-Warp - Beta Testing
-
-shan - Beta Testing
-
 ## Support
 Need help? Visit our IRC channel #burdirc on chat.freenode.net 
 
