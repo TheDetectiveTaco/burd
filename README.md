@@ -19,10 +19,4 @@ Need help? Visit our IRC channel #burdirc on chat.freenode.net
 Or visit our documentation at https://burd.detectivetaco.net/en/latest/
 
 ## Cocktography planned removal
-Due to the arrogant and unprofessional nature of cocktography's creator I have chosen to end support for it. Take the below communication as an example.
- 
-[00:08:32] <GaryKurtz> I'm pretty sure he can't tell the difference because his implementation is garbage
-
-[00:11:36] <GaryKurtz> Am I supposed to be impressed that you did a garbage implementation of the system I designed?
-
-[00:14:11] <GaryKurtz> gtfo with your bullshit stunting
+Cocktography will soon be removed from the client due to being a very niche feature. There will be a scripting option in the near future, where support can be re-added if desired.
