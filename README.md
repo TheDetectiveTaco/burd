@@ -22,5 +22,7 @@ Or visit our documentation at https://burd.detectivetaco.net/en/latest/
 Due to the arrogant and unprofessional nature of cocktography's creator I have chosen to end support for it. Take the below communication as an example.
  
 [00:08:32] <GaryKurtz> I'm pretty sure he can't tell the difference because his implementation is garbage
+
 [00:11:36] <GaryKurtz> Am I supposed to be impressed that you did a garbage implementation of the system I designed?
+
 [00:14:11] <GaryKurtz> gtfo with your bullshit stunting
