@@ -38,11 +38,8 @@ if (fs.existsSync(dataPath + "/logs")){
 
 function applyConfig(){
 	$("link#theme").attr('href', 'themes/' + config.theme);
-	if(config.textPrefixes){
-		$("link#channelprefix").attr('href', 'textprefixes.css');
-	}else{
-		$("link#channelprefix").attr('href', 'blank.css');
-	}
+	$("body").css("font-size", config.fontSize);
+	scripting_iframe.contentWindow.postMessage({c: "config_loaded"}, "*");
 }
 
 
@@ -67,49 +64,6 @@ $(function(){
 		$("div.simple_menu").remove();
 	});
 	
-	$('body').on('keyup', function(e) {
-		if(e.key == "Tab"){
-			$("input.channel_input:visible").focus();
-		}else{
-			if($(':focus').length == 0){
-				if(e.ctrlKey == false){
-					if(e.key.length == 1) $("input.channel_input:visible").val($("input.channel_input:visible").val() + e.key);
-					$("input.channel_input:visible").focus();
-				}
-			}
-		}
-	});
-	
-	
-	$('body').on('keydown', 'input.channel_input', function(e) {
-		if(e.key=="Tab"){
-			tabComplete.process();
-			e.preventDefault();
-		}else{
-			tabComplete.reset();
-		}
-		switch(e.key){
-			case "Enter":
-				historyIndex = 0;
-				parseInput( $(this).val(), $("div.channel:visible").attr("channel"), $("div.channel:visible").attr("network") );
-				break;
-			case "ArrowUp":
-				if(messageHistory.length == 0) return;
-				historyIndex -= 1;
-				if(historyIndex < 0) historyIndex = messageHistory.length - 1;
-				$(this).val(messageHistory[historyIndex]);
-				break;
-			case "ArrowDown":
-				if(messageHistory.length == 0) return;
-				historyIndex += 1;
-				if(historyIndex > (messageHistory.length - 1)) historyIndex = 0;
-				$(this).val(messageHistory[historyIndex]);
-				break;
-		}
-	});
-	$('body').on('keydown', 'div#input_request', function(e) {
-		if(e.key == "Enter") $("div#input_request input[type='button']:first").click();
-	});
 });
 
 var startupCache = [];
@@ -738,23 +692,21 @@ function sysinfo(){
 
 
 function convertSeconds(ms) {
-  var d, h, m, s;
-  s = ms;
-  m = Math.floor(s / 60);
-  s = s % 60;
-  h = Math.floor(m / 60);
-  m = m % 60;
-  d = Math.floor(h / 24);
-  h = h % 24;
-  return d + " day(s), " + h + " hour(s), " + m + " minute(s)";
+	var d, h, m, s;
+	s = ms;
+	m = Math.floor(s / 60);
+	s = s % 60;
+	h = Math.floor(m / 60);
+	m = m % 60;
+	d = Math.floor(h / 24);
+	h = h % 24;
+	return d + " day(s), " + h + " hour(s), " + m + " minute(s)";
 };
 
 function openWin(e,s){
 	if(modal) modal.close();
 	modal = window.open(e, "", s);
 }
-
-
 
 $.expr[':'].iAttrContains = function(node, stackIndex, properties){
 	var args = properties[3].split(',').map(function(arg) {
@@ -767,13 +719,6 @@ $.expr[':'].iAttrContains = function(node, stackIndex, properties){
 		//return -1 !== $(node).attr(args[0]).toLowerCase().indexOf(args[1].toLowerCase());
 	}
 };
-
-
-
-
-
-
-
 
 var cocktography = {
 	cockCache: "",

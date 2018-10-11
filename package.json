@@ -1,10 +1,12 @@
 {
   "name": "burd",
+  "productName": "burd",
   "version": "0.6.0",
   "main": "index.js",
   "description": "A simple IRC client",
   "devDependencies": {
-    "electron": "^1.8.2"
+    "electron": "^1.8.8",
+    "electron-packager": "^12.1.2"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",

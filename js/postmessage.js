@@ -94,6 +94,7 @@ window.addEventListener("message", function(e){
 			e.data.path = e.data.path.replace("%dataPath%", dataPath);
 			shell.openItem( e.data.path );
 			break;
+
 		default:
 			console.log(e.data);
 	}

@@ -91,7 +91,7 @@ socket.parseData = function(data, id, whox){
 							break;
 							
 						case E.RPL_CHANNEL_URL:
-							printMsg(getKeyFromNumber(num), [3, cData]);
+							channel(bits[3], id).addInfo( "Channel url: <a href=" + cData + ">" + cData + "</a>", "text-in", true );
 							break;
 							
 						case E.RPL_STATSILINE:
@@ -118,7 +118,13 @@ socket.parseData = function(data, id, whox){
 							cache = [];
 							whox.applyIdleStates(bits[3], id);
 							break;
-						
+							
+						case E.RPL_KNOCK:
+							var chan = bits[3];
+							var user = bits[4].split("!")[0];
+							channel(chan, id).addInfo(user + " has requested an invite", "");
+							break;
+							
 						case E.RPL_MYINFO:
 							var info = {
 								serverName: bits[3],
@@ -150,8 +156,8 @@ socket.parseData = function(data, id, whox){
 						case E.RPL_TOPIC:
 							var chan = bits[3];
 							if(networkInfo["redirectTopic"]) chan = "*";
-							channel(chan, id).object.find("span.topic").text(cData);
-							channel(chan, id).addInfo( "<b>Topic for " + HTML.encodeString(bits[3]) + "</b>: " + HTML.linkify(HTML.encodeString(cData)), "", true );
+							channel(chan, id).object.find("span.topic").html(colors.parse(HTML.encodeString(cData)));
+							channel(chan, id).addInfo( "<b>Topic for " + HTML.encodeString(bits[3]) + "</b>: " + colors.parse(HTML.linkify(HTML.encodeString(cData))), "", true );
 							break;
 							
 						case E.RPL_TOPICWHOTIME:
@@ -235,7 +241,7 @@ socket.parseData = function(data, id, whox){
 							var banee = HTML.encodeString(bits[5]);
 							var time = bits[6];
 							
-							channel(chan, id).addInfo( '<span class="purple bold">' + chan + ':</span> <span class="teal">' + host + '</span> on <span class="orange">' + getDateStr(time) + '</span> by <span class="blue">' + banee + '</span>', "text-in", true );
+							channel("network console", id).addInfo( '<span class="purple bold">' + chan + ':</span> <span class="teal">' + host + '</span> on <span class="orange">' + getDateStr(time) + '</span> by <span class="blue">' + banee + '</span>', "text-in", true );
 							break;
 							
 						case E.RPL_CHANNELMODEIS:
@@ -358,6 +364,7 @@ socket.parseData = function(data, id, whox){
 								resortNicks(cData, usr.nick);
 								logging.addLog({date: Date.now(), network: networkInfo.getISUPPORT("network"), channel: cData, user: usr.nick, type: "join"});
 							}
+							postToScript({c: "channelJoin", nick: bits[0].substr(1), channel: cData, networkID: id});
 							break;
 							
 						case "KICK":
@@ -368,6 +375,8 @@ socket.parseData = function(data, id, whox){
 							channel(chan, id).addInfo( "<b>" + kicker + "</b> has kicked <b>" + HTML.encodeString(kickee) + "</b> from the channel (" + reason + ")", "", true );
 							channel(chan, id).object.find("div.channel_users div.user:iAttrContains('nick','" + kickee.toLowerCase() + "')").remove();
 							channel(chan, id).recount();
+							//if( kickee == networkInfo.nick ) socket.sendData("JOIN " + chan,id);
+							postToScript({c: "channelKick", kicker: bits[0].substr(1), kickee: kickee, message: reason, channel: chan, networkID: id});
 							break;
 							
 						case "MODE":
@@ -384,7 +393,7 @@ socket.parseData = function(data, id, whox){
 								/* someone else */
 							}
 							nickChange(oldNick,  newNick);
-							
+							postToScript({c: "nickChange", old: oldNick, new: newNick, networkID: id});
 							for(var i in networkInfo.idleUsers){
 								if(networkInfo.idleUsers[i] == (oldNick + ":setaway") || networkInfo.idleUsers[i] == (oldNick + ":away")){
 									networkInfo.idleUsers.splice(i,1);
@@ -397,6 +406,7 @@ socket.parseData = function(data, id, whox){
 							if(ignore.check(data)) return;
 							if(cData.substr(0,1) == String.fromCharCode(1)) return parseCTCP();
 							channel("*",id).addInfo("-<b>" + HTML.encodeString(parseUser(bits[0]).nick) + "</b>-: " + HTML.linkify(HTML.encodeString(cData)), "", true);
+							postToScript({c: "notice", nick: bits[0].substr(1), message: cData, networkID: id});
 							break;
 							
 						case "PART":
@@ -411,6 +421,7 @@ socket.parseData = function(data, id, whox){
 								channel(bits[2], id).recount();
 								logging.addLog({date: Date.now(), network: networkInfo.getISUPPORT("network"), channel: bits[2], user: usr.nick, type: "part"});
 							}
+							postToScript({c: "channelPart", nick: bits[0].substr(1), channel: bits[2], networkID: id});
 							break;
 							
 						case "QUIT":
@@ -440,7 +451,7 @@ socket.parseData = function(data, id, whox){
 								
 								
 							}
-							
+							postToScript({c: "userQuit", nick: bits[0].substr(1), message: cData, networkID: id});
 							break;
 							
 						case "PING":
@@ -454,6 +465,8 @@ socket.parseData = function(data, id, whox){
 							if(ignore.check(data)) return;
 							
 							if(cData.substr(0,1) == String.fromCharCode(1) && cData.toUpperCase().slice(1,7) != "ACTION") return parseCTCP();
+							
+							scripting_iframe.contentWindow.postMessage({c: "privmsg", nick: bits[0].substr(1), message: cData, channel: chan, networkID: id}, "*");
 							
 							if(chan == networkInfo.nick.toLowerCase()){
 								//it's a message directly to me!
@@ -486,13 +499,14 @@ socket.parseData = function(data, id, whox){
 								channel(chan, id).object.find("div.title span.topic").text(cData);
 								channel(chan, id).addInfo( nick + " has changed the topic to: " + cData );
 							}
-							
+							postToScript({c: "channelTopic", nick: bits[0].substr(1), channel: bits[2], topic: cData, networkID: id});
 							break;
 							
 						case "INVITE":
 							var nick = parseUser(bits[0]).nick;
 							var chan = HTML.encodeString(cData);
 							sticky.create(id,HTML.encodeString(nick) + ' has invited you to <a href="schannel:'+chan+'">' + chan + '</a>');
+							postToScript({c: "channelInvite", nick: bits[0].substr(1), channel: chan, networkID: id});
 							break;
 						default:
 							console.log(data);
@@ -754,6 +768,10 @@ socket.parseData = function(data, id, whox){
 		for(var i in E){
 			if(E[i] == e) return i;
 		}
+	}	
+	
+	function postToScript(e){
+		scripting_iframe.contentWindow.postMessage(e, "*");
 	}
 	
 	function sortNames(names) {

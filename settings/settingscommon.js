@@ -18,7 +18,7 @@ window.onbeforeunload = function(){
 }
 
 $(function(){
-	$('body').on('click', 'img#back', function() {
+	$('body').on('click', '#back', function() {
 		window.location.href = "index.html";
 	});
 	postMsg({c: "get_settings"});

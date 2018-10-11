@@ -38,7 +38,6 @@
 		</style>
 
 		<link id="theme" href="themes/default.css" rel="stylesheet">
-		<link id="channelprefix" href="blank.css" rel="stylesheet">
 
 		<script src="global/js/jquery.min.js"></script>
 		<script>
@@ -69,8 +68,10 @@
 		<script src="js/who.js"></script>
 		<script src="js/parsedata.js"></script>
 		<script src="js/uploadfiles.js"></script>
+		<script src="js/keyboardevents.js"></script>
 	</head>
 	<body class="default">
+		<iframe id="scripting_iframe" src="scripts_runner/index.html" style="display:none"></iframe>
 		<div id="overlay" class="covering">
 			&nbsp;
 		</div>
@@ -133,27 +134,6 @@
 		<div id="main_container">
 			<div style="float:left;height:calc(100% - 1px);">
 				<div id="main_list_container">
-					<div class="server_list" style="display:none;">
-						<div class="server_title">
-							Test
-						</div>
-						<div class="channel_item">
-							<span class="title">Network Console</span>
-						</div>
-						<div class="channel_item notice">
-							<span class="title">#ThisIsAChannel</span>
-						</div>
-						<div network=2 channel="#test2" class="channel_item selected">
-							<span class="title">#test2</span>
-							<div class="unread">2</div>
-							<div class="channel_closer">&nbsp;</div>
-						</div>
-						<div network=2 channel="lol" class="channel_item">
-							<span class="title">LOL</span>
-							<div class="unread">20</div>
-							<div class="channel_closer">&nbsp;</div>
-						</div>
-					</div>
 
 
 				</div>
@@ -165,118 +145,6 @@
 			</div>
 			<div id="channel_container">
 
-
-				<div class="channel" network=2 channel="lol" type="pm" style="display:none">
-					<div class="meta">
-						<div class="title">
-							<span class="chan_name">LOL</span>
-
-						</div>
-
-						<div class="clear">&nbsp;</div>
-					</div>
-					<div class="channel_content">
-
-						<div class="user_message">
-							<div class="message_date">[11:11:11]</div>
-							<div class="user_name">
-								‹<span class="name" style="color:#1395BA">JimJohn</span>›
-							</div>
-							<div class="message">
-								Hello this is my message.
-							</div>
-							<div class="clear">&nbsp;</div>
-						</div>
-
-					</div>
-					<div class="bottom">
-						<input type="text" class="channel_input">
-					</div>
-				</div>
-
-
-
-				<div class="channel" network=2 type="channel" channel="#test2">
-					<div class="meta">
-						<div class="title">
-							<span class="chan_name">#test2</span>
-
-							<span class="topic">
-								This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic This is a topic
-							</span>
-						</div>
-						<div class="usercount">Users Here - 11</div>
-						<div class="clear">&nbsp;</div>
-					</div>
-					<div class="channel_users">
-						<div class="user" style="color:#1395BA">JimBob</div>
-						<div class="user">Lol</div>
-					</div>
-					<div class="channel_content">
-
-						<div class="user_message">
-							<div class="message_date">[11:11:11]</div>
-							<div class="user_name">
-								‹<span class="name" style="color:#1395BA">JimJohn</span>›
-							</div>
-							<div class="message">
-								Hello this is my message.
-							</div>
-							<div class="clear">&nbsp;</div>
-						</div>
-
-						<div class="user_message">
-							<div class="message_date">[11:11:11]</div>
-							<div class="user_name">
-								‹<span class="name" style="color:#1395BA">JimJohn</span>›
-							</div>
-							<div class="message">
-								Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message.
-							</div>
-							<div class="clear">&nbsp;</div>
-						</div>
-
-						<div class="server-info text-in">password2 (password2!~password@unaffiliated/password2) has joined the channel.</div>
-
-						<div class="user_message">
-							<div class="message_date">[11:11:11]</div>
-							<div class="user_name">
-								<span class="name">JimJohnJimJohnJim</span>
-							</div>
-							<div class="message">
-								has joined the channel
-							</div>
-							<div class="clear">&nbsp;</div>
-						</div>
-
-
-						<div class="channel_info">
-							<div class="message_date">[11:11:11]</div>
-							<div class="icon text-out">
-								&nbsp;
-							</div>
-							<div class="message">
-								JimJohnJimJohnJim has joined the channel
-							</div>
-							<div class="clear">&nbsp;</div>
-						</div>
-
-						<div class="user_message">
-							<div class="message_date">[11:11:11]</div>
-							<div class="user_name">
-								‹<span class="name" style="color:#1395BA">JimJohnJimJohnJim</span>›
-							</div>
-							<div class="message">
-								Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message. Hello this is my message.
-							</div>
-							<div class="clear">&nbsp;</div>
-						</div>
-
-					</div>
-					<div class="bottom">
-						<input type="text" class="channel_input">
-					</div>
-				</div>
 			</div>
 		</div>
 
@@ -302,9 +170,7 @@
 				<div class="user_name">
 					&lt;<span class="name" style="color:%color%">%nick%</span>&gt;
 				</div>
-				<div class="message">
-					%message%
-				</div>
+				<div class="message">%message%</div>
 				<div class="clear">&nbsp;</div>
 			</div>
 		</template>
@@ -337,9 +203,7 @@
 				<div class="user_name">
 					* <span class="name">%nick%</span>
 				</div>
-				<div class="message">
-					%message% *
-				</div>
+				<div class="message">%message% *</div>
 				<div class="clear">&nbsp;</div>
 			</div>
 		</template>

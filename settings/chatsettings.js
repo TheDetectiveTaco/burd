@@ -8,7 +8,6 @@ applyConfig = function(){
 			case "showKickMessages":
 			case "nickColors":
 			case "textColors":
-			case "textPrefixes":
 				if(config[i]) $("#" + i).addClass("slider_on");
 				break;
 		}
@@ -39,7 +38,6 @@ slider.addEventListener(function(e){
 		case "showKickMessages":
 		case "nickColors":
 		case "textColors":
-		case "textPrefixes":
 			config[e.id] = e.state;
 			break;
 	}

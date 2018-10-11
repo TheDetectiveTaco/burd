@@ -1,9 +1,16 @@
-img#back{
+div#back{
+	background: url('../images/icons/baseline_arrow_back_white_18dp.png') no-repeat center center;
+	background-size:25px;
+	height:20px;
+	width: 20px;
+	float:left;
+	margin-right:5px;
+	margin-top:4px;
+	cursor:pointer;
 	opacity:0.5;
 }
-img#back:hover{
+div#back:hover{
 	opacity:1;
-	cursor:default;
 }
 table{
 	width:100%;

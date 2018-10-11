@@ -13,6 +13,7 @@ var socket = {
 	sendData: function(data, id){
 		/* sends data to a socket matching id */
 		data = data.replace(/\u00A0/g, " ");
+		scripting_iframe.contentWindow.postMessage({c: "irc_data_out", data: data, network: id}, "*");
 		var sock = this.getSocketByID(id);
 		sock.socket.write(data + "\r\n");
 		if(this.logData) console.log("< " + data);
@@ -86,7 +87,10 @@ var socket = {
 				var db = (sObject.cache + data).split("\n");
 				sObject.cache = "";
 				for(var i in db){
-					socket.parseData(db[i], sObject.id, who);
+					if(db[i] != ""){
+						scripting_iframe.contentWindow.postMessage({c: "irc_data", data: db[i], network: sObject.id}, "*");
+						socket.parseData(db[i], sObject.id, who);
+					}
 				}
 			}else{
 				/* mid packet, so lets cache. */
@@ -123,7 +127,7 @@ var socket = {
 	},
 	
 	newID: function(){
-		return Math.floor(Math.random()*99999) + 1;
+		return Math.floor(Math.random()*9999999) + 1;
 	},
 	
 	parseData: function(data, id, who){

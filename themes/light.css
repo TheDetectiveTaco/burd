@@ -1,0 +1,260 @@
+
+.default{
+	color:black;
+	background-color:#F3F3F3;
+}
+body,html{
+	color:black;
+}
+/* style for the navigation pane on the left */
+div#main_list_container {
+    background: #E4E4E7;
+	border:0;
+	border-right: 1px solid #A2A2A2;
+}
+div.channel_info{
+	opacity:0.8;
+}
+div.server_list div.channel_item:hover {
+    background-color: #DBDBDB;
+    color: black;
+}
+div.server_list div.selected {
+    background-color: #3399FF;
+    color: white;
+}
+div.server_list div.selected:hover {
+    background-color: #3399FF;
+    color: white;
+}
+div#main_list_container div.unread{
+	background: #ffffff;
+    color: black;
+    border: 1px solid #A2A2A2;
+	min-width: 19px;
+}
+div#main_list_container div.server_title{
+	color:#88c2ff;
+}
+div#bottom_menu{
+	background: #E4E4E7;
+	border-right: 1px solid #A2A2A2;
+}
+.highlight {
+    background: #E3E3E6;
+
+}
+div.simple_menu{
+	border: 1px solid #A2A2A2;
+	box-shadow:2px 3px #9a9a9a;
+}
+div.channel div.meta span.chan_name{
+	color:black;
+}
+
+/* styles for channel area */
+input[type='text'],input[type='password'],input[type='number'],div.channel div.bottom input.channel_input,textarea{
+	background: #DCDCDC;
+    border: 1px solid #A2A2A2;
+		color:black;
+}
+div.channel div.channel_users{
+	background: #E4E4E7;
+}
+div.channel div.channel_users div.user:hover{
+	background-color: #DBDBDB;
+	color: black;
+}
+
+div.channel_content div.message_date{
+	color: black;
+
+  opacity: 0.7;
+}
+div.channel div.channel_users div.away{
+	color:black;
+}
+
+div#settings_button{
+	background-image:url("../images/icons-black/baseline-settings-20px.svg");
+}
+div#new_button{
+	background-image:url("../images/icons-black/baseline-fiber_new-24px.svg");
+}
+div#hamburger_button{
+	background-image:url("../images/icons-black/baseline-menu-24px.svg");
+}
+div.chan_smile{
+	background-image:url("../images/icons-black/baseline-sentiment_satisfied_alt-24px.svg");
+}
+a{
+	color:#1a588e;
+}
+
+span.teal{
+	color:#31607b;
+}
+span.orange{
+	color:#885d12;
+}
+span.whois_realname{
+	color:#3972b9;
+}
+span.whois_name,span.whois_away{
+	color:#d46310;
+}
+span.whois_server{
+	color:#971daf;
+}
+
+div.channel_closer{
+	background-image:url("../images/icons-black/baseline-more_vert-24px.svg");
+}
+
+
+
+/* other content */
+input[type='button']{
+	background: #DCDCDC;
+    border: 1px solid #A2A2A2;
+		color:black;
+}
+
+/* scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #A2A2A2;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #303030;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #000000;
+}
+::-webkit-scrollbar-track {
+  background: #C4C1BD;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #C4C1BD;
+}
+::-webkit-scrollbar-track:active {
+  background: #C4C1BD;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*:focus {
+    outline: none;
+}
+
+div.channel div.user_name span.name{
+	color: rgb(0, 95, 193);
+}
+
+div.user:hover{
+	background-color:#47484F;
+	cursor:pointer;
+}
+div.channel_users div.away{
+	background-image: url('../images/squares/away-dark.png');
+	font-style: italic;
+	opacity: 0.5;
+	color: #c7c7c7;
+}
+div.channel_users div.voice{
+	background-image: url('../images/squares/text-voice-dark.png');
+}
+div.channel_users div.owner{
+	background-image: url('../images/squares/text-owner-dark.png');
+}
+div.channel_users div.admin{
+	background-image: url('../images/squares/text-admin-dark.png');
+}
+div.channel_users div.halfop{
+	background-image: url('../images/squares/text-halfop-dark.png');
+}
+div.channel_users div.op{
+	background-image: url('../images/squares/text-op-dark.png');
+}
+div.server_list div.notice{
+	background-image: url('../images/icons-black/baseline-notification_important-24px.svg');
+}
+
+div.action_message div.user_name span.name, div.action_message div.message{
+	color: #570c5d;
+}
+div.info-default{
+	background-image: url('../images/icons-black/baseline-priority_high-24px.svg');
+}
+div.text-in {
+    background-image: url('../images/icons-black/baseline-navigate_next-24px.svg');
+}
+div.text-out {
+    background-image: url('../images/icons-black/baseline-navigate_before-24px.svg');
+}
+
+.nick1{color:#719334;}
+.nick2{color:#950390;}
+.nick3{color:#254971;}
+.nick4{color:#296215;}
+.nick5{color:#948192;}
+.nick6{color:#615570;}
+.nick7{color:#504273;}
+.nick8{color:#235917;}
+.nick9{color:#945998;}
+.nick10{color:#622255;}
+.nick11{color:#872980;}
+.nick12{color:#383313;}
+.nick13{color:#445722;}
+.nick14{color:#754525;}
+.nick15{color:#698912;}
+.nick16{color:#897873;}
+.nick17{color:#421483;}
+.nick18{color:#727614;}
+.nick19{color:#103861;}
+.nick20{color:#799122;}
+.nick21{color:#103427;}
+.nick22{color:#860983;}
+.nick23{color:#715208;}
+.nick24{color:#903955;}
+.nick25{color:#664473;}
+.nick26{color:#957703;}
+.nick27{color:#231131;}
+.nick28{color:#162540;}
+.nick29{color:#674780;}
+.nick30{color:#377855;}
+
+
+
+
+/* below is for settings */
+div.simple_list div.simple_item:hover{
+	background: rgba(0, 0, 0, 0.12);
+	color:black;
+	cursor:default;
+}
+h2 div#back{
+	background-image: url('../images/icons-black/baseline-arrow_back-24px.svg');
+}
+div.slider{
+	color:black;
+	opacity:0.7;
+	background-image:url('../images/icons-black/baseline-toggle_off-24px.svg');
+}
+div.slider_on{
+	color:black;
+	opacity:1;
+	background-image:url('../images/icons-black/baseline-toggle_on-24px.svg');
+}

@@ -14,7 +14,7 @@ var config = {
 	checkForUpdates: true,
 	textPrefixes: true,
 	tabnickchar: ":",
-	uploadApiKey: "0",
+	fontSize: "15px",
 	theme: "default.css",
 	logs: {
 		enabled: true,
