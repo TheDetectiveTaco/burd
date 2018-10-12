@@ -1,6 +1,5 @@
 socket.parseData = function(data, id, whox){
 	/* IRC packets are sent to this function for processing */
-
 	if(data.length < 3) return;
 	
 	data = secure(data);
@@ -17,7 +16,6 @@ socket.parseData = function(data, id, whox){
 	if(data.indexOf(" :") > 0){
 		cData = data.substr(data.indexOf(" :") + 2);
 	}
-	
 	socketObj.dataHook({id: id, data: data});
 	
 	if(data == ":server.address CONNECTED"){
@@ -328,7 +326,7 @@ socket.parseData = function(data, id, whox){
 							switch(bits[3].toUpperCase()){
 								case "LS":
 									var caps = cData.toLowerCase().split(" ");
-									var supported = ["multi-prefix", "away-notify", "extended-join"];
+									var supported = ["multi-prefix", "extended-join-disabled"];
 									if(networkInfo.auth.type == "sasl_plain") supported.push("sasl");
 									var capRequest = "";
 									for(var i in caps){
