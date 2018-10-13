@@ -44,7 +44,7 @@ function applyConfig(){
 
 
 function saveSettings(){
-	if(config.networks.length>0) fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
+	if(config != undefined && config.networks.length>0) fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
 }
 
 
@@ -243,6 +243,8 @@ var network = {
 		sock.networkInfo["ISUPPORT"] = [];
 		sock.networkInfo["server"] = e.server.host;
 		sock.networkInfo["port"] = e.server.port;
+		sock.networkInfo["realName"] = e.realName;
+		sock.networkInfo["user"] = e.user;
 		sock.networkInfo["SSL"] = e.SSL;
 		sock.networkInfo["commands"] = e.commands;
 		sock.networkInfo["cache"] = [];

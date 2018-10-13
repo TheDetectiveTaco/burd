@@ -30,10 +30,12 @@ var tabComplete = {
 		this.index++;
 		if(this.index > this.userCache.length - 1) this.index = 0;
 	},
-	reset: function(){
+	reset: function(ctrl,key){
 		this.index = 0;
 		this.userCache = [];
-		$("input.channel_input:visible").val( $("input.channel_input:visible").val().replace(/\u00A0/g, " ") );
+		if($("input.channel_input:visible").val().indexOf("\u00A0") > -1){
+			$("input.channel_input:visible").val( $("input.channel_input:visible").val().replace(/\u00A0/g, " ") );
+		}
 	}
 }
 

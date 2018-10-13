@@ -3,12 +3,14 @@ $(function(){
 		if(e.key == "Tab"){
 			$("input.channel_input:visible").focus();
 		}else{
+			
 			if($(':focus').length == 0){
 				if(e.ctrlKey == false){
 					if(e.key.length == 1) $("input.channel_input:visible").val($("input.channel_input:visible").val() + e.key);
 					$("input.channel_input:visible").focus();
 				}
 			}
+			
 		}
 	});
 	
@@ -18,7 +20,7 @@ $(function(){
 			tabComplete.process();
 			e.preventDefault();
 		}else{
-			tabComplete.reset();
+			tabComplete.reset(e.ctrlKey, e.key);
 		}
 		switch(e.key){
 			case "Enter":

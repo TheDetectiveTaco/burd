@@ -28,7 +28,7 @@ socket.parseData = function(data, id, whox){
 		socket.sendData("CAP LS",id);
 		capTimer = setTimeout(function(){
 						socket.sendData("NICK " + networkInfo.nick,id);
-						socket.sendData("USER " + networkInfo.nick + " * * :" + networkInfo.realName,id);
+						socket.sendData("USER " + networkInfo.user + " * * :" + networkInfo.realName,id);
 					},2000);
 	}else{
 		if(data.substr(0,1) == ":"){
@@ -326,7 +326,7 @@ socket.parseData = function(data, id, whox){
 							switch(bits[3].toUpperCase()){
 								case "LS":
 									var caps = cData.toLowerCase().split(" ");
-									var supported = ["multi-prefix", "extended-join-disabled"];
+									var supported = ["multi-prefix", "extended-joinnn"];
 									if(networkInfo.auth.type == "sasl_plain") supported.push("sasl");
 									var capRequest = "";
 									for(var i in caps){

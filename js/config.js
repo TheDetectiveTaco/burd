@@ -1,4 +1,4 @@
-var appVersion = "0.6.0";
+var appVersion = "0.6.1";
 var appURL = "http://burdirc.haxed.net/";
 var cryptoKey = "Pizza";
 var config = {
