@@ -11,16 +11,21 @@ Matthew Ryan - Programming - matt@haxed.net
 
 DetectiveTaco - Support/Development - chris@haxed.net
 
-## How to run this source
+## UNIX Installation
 
+**Step One**
 cd ~/Documents
 
+**Step Two**
 git clone https://github.com/BurdIRC/burd/
 
+**Step Three**
 cd burd
 
+**Step Four**
 npm install electron
 
+**Step Five**
 npm start
 
 ## Support
