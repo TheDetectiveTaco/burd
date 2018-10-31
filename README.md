@@ -33,5 +33,3 @@ Need help? Visit our IRC channel #burdirc on chat.freenode.net
 
 Or visit our documentation at https://burd.detectivetaco.net/en/latest/
 
-## Cocktography planned removal
-Cocktography will soon be removed from the client due to being a very niche feature. There will be a scripting option in the near future, where support can be re-added if desired.
