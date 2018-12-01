@@ -344,7 +344,6 @@ function parseInput(input,chan,network,userCommand){
 				
 			case "SYSINFO":
 				var sinfo = sysinfo();
-				co.addInfo("This shitty command brought to you by Taco", "");
 				socket.sendData("PRIVMSG " + chan + " :" + sinfo, network);
 				co.addPrivmsg(nick, "*!*@*", color, false, sinfo);
 				
