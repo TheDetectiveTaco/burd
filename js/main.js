@@ -44,28 +44,28 @@ function applyConfig(){
 
 
 function saveSettings(){
+	/* when this function is called we save config as config.json but only if a network has been defined (for security reasons) */
 	if(config != undefined && config.networks.length>0) fs.writeFileSync(dataPath + "/config.json", JSON.stringify(config));
 }
 
-
+	/* put the contents of the themes folder into the items array */
 fs.readdir(appPath + "/themes", function(err, items) {
     themes = items;
 });
  
 
 $(function(){
-	
 	window.onbeforeunload = function(){
 		saveSettings();
 	}
-	
 	$( window ).resize(function() {
 		iframe.repos();
 		$("div.simple_menu").remove();
 	});
-	
 });
 
+
+/* auto connect to each server that has the options enabled. but do it as a set interval   */
 var startupCache = [];
 var startupInt = 0;
 function startupConnect(){
@@ -163,7 +163,6 @@ function channel(name,network){
 		addPrivmsg: function(user,hostmask,color,highlight,message){
 			var classes = "";
 			if( highlight ) classes = "highlight";
-			message = cocktography.dechode(message);
 			if( message.match(/(^([\uD800-\uDBFF][\uDC00-\uDFFF]\s?\=?\>?){1,9}$)/g) != null ) classes += " emoji";
 			channelObj.find("div.channel_content").append(HTML.linkify(HTML.getTemplate("new_user_message", { nick: user, message: message, color: color, date: getDate(1), classes: classes })));
 			this.scrollBottom();
@@ -254,6 +253,7 @@ var network = {
 		sock.networkInfo["lastWhoPoll"] = Date.now();
 		sock.networkInfo["whoPollChans"] = [];
 		sock.networkInfo["idleUsers"] = [];
+		sock.networkInfo["nickCache"] = [];
 		
 		$("div#main_list_container").append(HTML.getTemplate("new_server_item", { name: e.server.host, network: sock.id }));
 		$("div#channel_container").append(HTML.getTemplate("new_console_window", { attrname: HTML.encodeParm("network console"), channel: "Network Console", lcasechannel: "network console", network: sock.id, netname: e.server.host }));
@@ -721,116 +721,3 @@ $.expr[':'].iAttrContains = function(node, stackIndex, properties){
 		//return -1 !== $(node).attr(args[0]).toLowerCase().indexOf(args[1].toLowerCase());
 	}
 };
-
-var cocktography = {
-	cockCache: "",
-	enchode: function(e, strokes){
-		var n = 0;
-		e = "\x0F" + e;
-		while(n != strokes){
-			e = btoa(e);
-			n++;
-			if(n>20) break;
-		}
-		
-		var bits = e.split("");
-		
-		var result = "";
-		for(var i in bits){
-			for(var x in this.dicktionary){
-				x = parseInt(x);
-				if(bits[i] == this.dicktionary[x]){
-					var txt = this.dicktionary[x-1];
-					result += txt + " ";
-				}
-			}
-		}
-		console.log(result);
-		result = result.slice(0,-1);
-		
-		if(result.length > 320){
-			var mArr = splitter(result,320);
-			for(var i in mArr){
-				if(i == 0){
-					mArr[i] = "8=wm=D " + mArr[i] + " 8=ww=D";
-				}else if(i == mArr.length - 1){
-					mArr[i] = "8wmD " + mArr[i] + " 8=mw=D";
-				}else{
-					mArr[i] = "8wmD " + mArr[i] + " 8=ww=D";
-				}
-			}
-			return mArr;
-		}
-		
-		return ["8=wm=D " + result + " 8=mw=D"];
-		
-		function splitter(str, l){
-			/*
-			var strs = [];
-			var pos = 0;
-			while(pos < str.length){
-				var chunk = str.substr(pos,l);
-				if(chunk.slice(-1)==" ") chunk = chunk.slice(0,-1);
-				if(chunk.substr(0,1)==" ") chunk = chunk.substr(1);
-				if(chunk.length > 0) strs.push(chunk);
-				pos = pos + l;
-			}
-			return strs;
-			*/
-			var strs = str.match(/\s*(.{1,340})(?=\s|$)/gm);
-			console.log(strs);
-			return strs;
-		}
-		
-	},
-	
-	dechode: function(e){
-		var result = "";
-		var bits = e.split(" ");
-		if(this.cockCache.length > 1024) this.cockCache = "";
-		if(bits[0] == "8=wm=D" || bits[0] == "8wmD"){
-			for(var i in bits){
-				for(var x in this.dicktionary){
-					x = parseInt(x);
-					if(bits[i] == this.dicktionary[x]){
-						var txt = this.dicktionary[x+1];
-						if(txt == "start"){
-							this.cockCache = "";
-						}else if(txt == "mark"){
-							
-						}else if(txt == "stop"){
-							this.cockCache += result;
-							result = this.cockCache;
-							var base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
-
-							if(base64regex.test(result) == true){
-								/* assume base64 */
-								var n = 0;
-								while(n<11 && base64regex.test(result)){
-									try{
-										result = atob(result);
-									}catch(e){
-										break;
-									}
-									n++;
-								}
-								return "[cocktography][stroke=" + n + "] " + result;
-							}
-							return "[cocktography] " + result;
-						}else if(txt == "cont"){
-							this.cockCache += result;
-							return "[cocktography][incomplete] " + result;
-						}else{
-							result += txt;
-						}
-					}
-				}
-			}
-			return "[cocktography] " + result;
-		}
-		return e;
-	},	
-	
-	
-	dicktionary: ["8=D", "e", "8==D", "o", "8===D", "d", "8====D", "D", "8=D~", "E", "8==D~", "i", "8===D~", "l", "8====D~", "L", "8=D~~", "w", "8==D~~", "W", "8===D~~", "g", "8====D~~", "G", "8=D~~~", "c", "8==D~~~", "C", "8===D~~~", "f", "8====D~~~", "F", "8=D~~~~", "u", "8==D~~~~", "U", "8===D~~~~", "m", "8====D~~~~", "M", "8wD", "t", "8w=D", "a", "8w==D", "H", "8w===D", "y", "8wD~", "T", "8w=D~", "n", "8w==D~", "Y", "8w===D~", "p", "8wD~~", "P", "8w=D~~", "b", "8w==D~~", "B", "8w===D~~", "�", "8wD~~~", "h", "8w=D~~~", "1", "8w==D~~~", "!", "8w===D~~~", "2", "8wD~~~~", "@", "8w=D~~~~", "3", "8w==D~~~~", "#", "8w===D~~~~", "4", "8=wD", "A", "8=w=D", "$", "8=w==D", "5", "8=wD~", "%", "8=w=D~", "6", "8=w==D~", "^", "8=wD~~", "7", "8=w=D~~", "&", "8=w==D~~", "8", "8=wD~~~", "*", "8=w=D~~~", "9", "8=w==D~~~", "(", "8=wD~~~~", "0", "8=w=D~~~~", ")", "8=w==D~~~~", "-", "8==wD", "R", "8==w=D", "_", "8==wD~", "+", "8==w=D~", "=", "8==wD~~", ",", "8==w=D~~", "<", "8==wD~~~", ".", "8==w=D~~~", ">", "8==wD~~~~", "/", "8==w=D~~~~", "?", "8===wD", ";", "8===wD~", ":", "8===wD~~", "\"", "8===wD~~~", "'", "8===wD~~~~", "[", "8mD", " ", "8m=D", "O", "8m==D", "{", "8m===D", "]", "8mD~", "I", "8m=D~", "N", "8m==D~", "r", "8m===D~", "v", "8mD~~", "V", "8m=D~~", "k", "8m==D~~", "K", "8m===D~~", "j", "8mD~~~", "J", "8m=D~~~", "x", "8m==D~~~", "X", "8m===D~~~", "q", "8mD~~~~", "Q", "8m=D~~~~", "z", "8m==D~~~~", "Z", "8m===D~~~~", "`", "8=mD", "s", "8=m=D", "S", "8=m==D", "}", "8=mD~", "\\", "8=m=D~", "|", "8=m==D~", "~", "8=wm=D", "start", "8=mw=D", "stop", "8=ww=D", "cont", "8wmD", "mark"]
-}

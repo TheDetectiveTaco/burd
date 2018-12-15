@@ -108,12 +108,12 @@ socket.parseData = function(data, id, whox){
 							break;
 						
 						case E.RPL_NAMREPLY:
-							cache = cache.concat( cData.split(" ") );
+							networkInfo.nickCache = networkInfo.nickCache.concat( cData.split(" ") );
 							break;
 							
 						case E.RPL_ENDOFNAMES:
-							addNicksToChannel(bits[3], cache);
-							cache = [];
+							addNicksToChannel(bits[3], networkInfo.nickCache);
+							networkInfo.nickCache = [];
 							whox.applyIdleStates(bits[3], id);
 							break;
 							
@@ -354,7 +354,7 @@ socket.parseData = function(data, id, whox){
 								//we joined the channel! let's create the window!
 								channel(cData, id).create("new_channel_window");
 								if(requestedChannel.toLowerCase() == cData.toLowerCase()) channel(cData, id).show();
-								cache = [];
+								networkInfo.nickCache = [];
 								networkInfo.whoPollChans = [cData].concat(networkInfo.whoPollChans);
 								requestedChannel = "";
 							}else{
@@ -709,13 +709,13 @@ socket.parseData = function(data, id, whox){
 	}
 	
 	function resortNicks(chan, nickToAdd){
-		cache = [];
-		if(nickToAdd != undefined) cache.push(nickToAdd + ":false");
+		networkInfo.nickCache = [];
+		if(nickToAdd != undefined) networkInfo.nickCache.push(nickToAdd + ":false");
 		channel(chan, id).object.find("div.channel_users div.user").each(function(){
 			var isAway = $(this).hasClass("away");
-			cache.push(HTML.decodeParm($(this).attr("onick")) + ":" + isAway);
+			networkInfo.nickCache.push(HTML.decodeParm($(this).attr("onick")) + ":" + isAway);
 		});
-		addNicksToChannel(chan, cache);
+		addNicksToChannel(chan, networkInfo.nickCache);
 	}
 	
 	function addNicksToChannel( chan, cache ){

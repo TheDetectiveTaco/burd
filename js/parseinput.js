@@ -59,7 +59,19 @@ function parseInput(input,chan,network,userCommand){
 				break;
 			
 			case "DEV":
-				remote.getCurrentWindow().toggleDevTools();
+				switch(getAfter(1)){
+					case "console":
+						remote.getCurrentWindow().toggleDevTools();
+						break;
+					case "scripts reload":
+						co.addInfo("Reloading scripting DOM...");
+						scripting_iframe.contentWindow.location.reload()
+						break;
+					default:
+						co.addInfo("Unknown DEV command", "error-info");
+						break;
+				}
+				
 				break;
 			
 			case "ENCHODE":
@@ -102,7 +114,7 @@ function parseInput(input,chan,network,userCommand){
 					}
 				}
 				break;
-					
+				
 			case "KICKBAN":
 				if(pCount(1)){
 					if(type == "channel"){

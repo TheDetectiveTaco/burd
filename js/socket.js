@@ -17,8 +17,6 @@ var socket = {
 		var sock = this.getSocketByID(id);
 		sock.socket.write(data + "\r\n");
 		if(this.logData) console.log("< " + data);
-		sock.socket.pause();
-		sock.socket.resume();
 
 	},
 	

@@ -1,4 +1,7 @@
+var s = null;
+
 window.addEventListener("message", function(e){
+	s = e.source;
 	switch(e.data.c){
 		case "get_scripts":
 			//e.source.postMessage({c: "script", data: script.scripts}, "*");
@@ -39,7 +42,13 @@ var scripts = {
 	],
 	
 	listeners: [
-		{ id: "jf74dy7s8", event: "dataInn", callback: function(e){ console.log(e.data) } }
+		{id: "jf74dy7s8", event: "privmsg", callback: function(e){
+			if(e.message.toLowerCase().indexOf("。") > 0 && e.nick.indexOf("bot/ceilingcat") > 0){
+				setTimeout(function(){
+					//IRC.sendData(e.networkID, "PRIVMSG " + e.channel + " :.bef");
+				},1200);
+			}				
+		}}
 	],
 	
 	callEvent: function(a, b){
@@ -59,6 +68,9 @@ var IRC = {
 	on: function(a, b){
 		var id = scripts.installed[scripts.installed.length - 1].id;
 		scripts.listeners.push({id: id, event: a, callback: b});
+	},
+	sendData: function(ID, data){
+		s.postMessage({c: "send_data", data: data, id: ID}, "*");
 	}
 }
 
