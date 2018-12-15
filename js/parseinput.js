@@ -102,8 +102,7 @@ function parseInput(input,chan,network,userCommand){
 					}
 				}
 				break;
-				
-			case "KB":	
+					
 			case "KICKBAN":
 				if(pCount(1)){
 					if(type == "channel"){
