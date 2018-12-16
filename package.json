@@ -4,6 +4,15 @@
   "version": "0.6.2",
   "main": "index.js",
   "description": "A simple IRC client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/burdirc/burd"
+  },
+   "author": "Matthew Ryan",
+   "license": "GPL-3.0-only",
+   "bugs": {
+     "url": "https://github.com/burdirc/burd/issues"
+   },
   "devDependencies": {
     "electron": "^1.8.8",
     "electron-packager": "^12.1.2"
