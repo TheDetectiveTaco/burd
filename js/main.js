@@ -220,6 +220,7 @@ function channel(name,network){
 
 var sticky = {
 	create: function(network,message){
+		if($("div.sticky").length > 7) return; /* prevent gui flooding */
 		$("div#stickies").append('<div network="' + network + '" class="sticky">' + message + '<div class="closer">&nbsp;</div></div>');
 	}
 }
@@ -254,6 +255,7 @@ var network = {
 		sock.networkInfo["whoPollChans"] = [];
 		sock.networkInfo["idleUsers"] = [];
 		sock.networkInfo["nickCache"] = [];
+		sock.networkInfo["lastJoinedChannel"] = "";
 		
 		$("div#main_list_container").append(HTML.getTemplate("new_server_item", { name: e.server.host, network: sock.id }));
 		$("div#channel_container").append(HTML.getTemplate("new_console_window", { attrname: HTML.encodeParm("network console"), channel: "Network Console", lcasechannel: "network console", network: sock.id, netname: e.server.host }));

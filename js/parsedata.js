@@ -108,6 +108,9 @@ socket.parseData = function(data, id, whox){
 							break;
 						
 						case E.RPL_NAMREPLY:
+							if(bits[4] != networkInfo.lastJoinedChannel){
+								sticky.create(id, "ERROR: lastJoinedchannel does not match RPL_NAMREPLY");
+							}
 							networkInfo.nickCache = networkInfo.nickCache.concat( cData.split(" ") );
 							break;
 							
@@ -355,6 +358,7 @@ socket.parseData = function(data, id, whox){
 								channel(cData, id).create("new_channel_window");
 								if(requestedChannel.toLowerCase() == cData.toLowerCase()) channel(cData, id).show();
 								networkInfo.nickCache = [];
+								networkInfo.lastJoinedChannel = cData;
 								networkInfo.whoPollChans = [cData].concat(networkInfo.whoPollChans);
 								requestedChannel = "";
 							}else{
@@ -720,6 +724,7 @@ socket.parseData = function(data, id, whox){
 	
 	function addNicksToChannel( chan, cache ){
 		cache = sortNames( cache );
+		var nickTrack = []; /* just an array to hold nicks we've processed, so we don't clone them */
 		var nickHTML = "";
 		var prefix = "~&@%+";
 		var nickCount = 0;
@@ -751,8 +756,11 @@ socket.parseData = function(data, id, whox){
 				}
 				fNick = fNick.replace( prefix[j], "" );
 			}
-			nickCount++;
-			nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + ' ' + classes + '" onick="' + HTML.encodeParm(cache[i].split(":")[0]) + '" nick="' + HTML.encodeParm(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
+			if(!nickTrack.includes(fNick)){
+				nickCount++;
+				nickHTML += '<div class="user' + uModes + " nick" + generateColor(fNick) + ' ' + classes + '" onick="' + HTML.encodeParm(cache[i].split(":")[0]) + '" nick="' + HTML.encodeParm(fNick) + '" fullmask="">' + HTML.encodeString(fNick) + '</div>';
+				nickTrack.push(fNick);
+			}
 			
 		}
 		
