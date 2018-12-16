@@ -1,7 +1,7 @@
 {
   "name": "burd",
   "productName": "burd",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "main": "index.js",
   "description": "A simple IRC client",
   "devDependencies": {
