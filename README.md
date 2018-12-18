@@ -17,10 +17,6 @@
                 src="https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true"</a> 
        </p>
 
-<p align="center"> 
-[![Build status](https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true)](https://ci.appveyor.com/project/BurdIRC/burd/branch/master)
-</p>
-
 <h3 align="center">
 Latest Releases
 </h3>
