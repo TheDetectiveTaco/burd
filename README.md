@@ -10,9 +10,9 @@
 
 <p align="center>
           <a href="irc://chat.freenode.net/burdirc"><img
+            alt="Burd IRC on Freenode"                                      
             src="https://img.shields.io/badge/freenode-%23burdirc-%238B89EC.svg?style=flat-square"></a>
           
- 
  </p>
 
 
