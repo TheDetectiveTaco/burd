@@ -1,5 +1,9 @@
 <h1 align="center">
  
+ <img
+ width="300"
+ src="https://raw.githubusercontent.com/BurdIRC/burd/master/icons/icon.ico"
+ 
   Burd IRC Client
   
 </h1>
