@@ -23,7 +23,9 @@
  </b>
 </p>
 
-<h3 align="center">License</h3>
+<h3 align="center">
+  License
+</h3>
  
  <p align="center">
  
