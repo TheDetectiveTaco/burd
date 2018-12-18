@@ -12,17 +12,14 @@
         <a href="irc://chat.freenode.net/burdirc"><img
                 alt="Burd IRC on Freenode"                                      
                 src="https://img.shields.io/badge/freenode-%23burdirc-%238B89EC.svg?style=flat-square"></a>
-                [![Build status](https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true)](https://ci.appveyor.com/project/BurdIRC/burd/branch/master)
 <br>         
+[![Build status](https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true)](https://ci.appveyor.com/project/BurdIRC/burd/branch/master)
 </p>
 
-<p align="center">
-  <b>
-   
+<p>
    <a href="https://burd.detectivetaco.net">Documentation</a>
-   -
+   •
    <a href="https://burdirc.haxed.net">Homepage</a>
-  </b>
 </p>
  
  
