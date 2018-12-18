@@ -17,6 +17,7 @@
 
 <p align="center">
 <b>Latest Stable:</b> 0.6.1
+ 
 <b>Latest Development:</b> 0.6.2 (Release Candidate 2)
 </p>
 
