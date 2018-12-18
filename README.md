@@ -4,6 +4,16 @@
   
 </h1>
 
+<p align="center">
+ <b>
+   <a href="https://burd.detectivetaco.net">Documentation</a>
+   •
+   <a href="https://burdirc.haxed.net">Homepage</a>
+   •
+  <a href="https://ci.appveyor.com/project/BurdIRC/burd/">AppVeyor</a>
+ </b>
+</p>
+
 <h3 align="center">
  BurdIRC is a modern IRC client written in HTML and JavaScript and using electron.
 </h3>
@@ -26,15 +36,6 @@ Latest Releases
 </p>
 <p align="center">
 <b>Latest Development:</b> 0.6.2 (Release Candidate 2)
-</p>
-
-
-<p align="center">
- <b>
-   <a href="https://burd.detectivetaco.net">Documentation</a>
-   •
-   <a href="https://burdirc.haxed.net">Homepage</a>
- </b>
 </p>
 
 <h3 align="center">
