@@ -13,7 +13,14 @@
                 src="https://img.shields.io/badge/freenode-%23burdirc-%238B89EC.svg?style=flat-square"></a>
 </p>        
 
+<p align="center"> 
+ appveyor
 [![Build status](https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true)](https://ci.appveyor.com/project/BurdIRC/burd/branch/master)
+</p>
+
+<h3 align="center">
+Latest Releases
+</h3>
 
 <p align="center">
 <b>Latest Stable:</b> 0.6.1
