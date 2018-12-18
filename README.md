@@ -15,6 +15,16 @@
 <br>         
 </p>
 
+<p align="center">
+  <b>
+   
+   <a href="https://burd.detectivetaco.net">Documentation</a>
+   <a href="https://burdirc.haxed.net">Homepage</a>
+  </b>
+</p>
+ 
+ 
+
 
 
 [![Build status](https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true)](https://ci.appveyor.com/project/BurdIRC/burd/branch/master)
