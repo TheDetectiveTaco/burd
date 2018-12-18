@@ -24,6 +24,11 @@
       <a href="https://ci.appveyor.com/project/BurdIRC/burd/branch/master"><img
                 src="https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true"</a> 
        </p>
+ <p align="center">
+  <a href='https://burd.detectivetaco.net/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/burd-documentation/badge/?version=latest' alt='Documentation Status' />
+</a>
+               </p>
 
 <h3 align="center">
 Latest Releases
