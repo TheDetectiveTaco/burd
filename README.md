@@ -37,6 +37,12 @@ Latest Releases
 <p align="center">
 <b>Latest Development:</b> 0.6.2 (Release Candidate 2)
 </p>
+ 
+ <h3 align="center">
+ About
+ </h3>
+ 
+ <p align="center">Burd IRC is an IRC client that is only compatible currently Windows and Debian based Linux. Burd is still missing certian things as it is fairly new IRC client in early development.</p>
 
 <h3 align="center">
   License
@@ -47,9 +53,3 @@ Latest Releases
  Burd IRC is licensed under the General Public License v3. Burd IRC is free and open source software.
  
  </p>
- 
- <h3 align="center">
- About
- </h3>
- 
- <p align="center">Burd IRC is an IRC client that is only compatible currently Windows and Debian based Linux. Burd is still missing certian things as it is fairly new IRC client in early development.</p>
