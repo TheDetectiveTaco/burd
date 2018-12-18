@@ -1,12 +1,10 @@
 <h1 align="center">
- 
- <img
+<img
  
  alt="Burd IRC"
  width="300"
  src="https://raw.githubusercontent.com/BurdIRC/burd/master/icons/icon.ico"
- 
-</h1>
+ </h1>
 
 <p align="center">
  <b>
