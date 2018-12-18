@@ -51,4 +51,4 @@ Latest Releases
   License
 </h3>
  
-<p align="center"> Burd IRC is licensed under the General Public License v3. Burd IRC is free and open source software.</p>
+<p align="center"> Burd IRC is licensed under the GNU General Public License v3. Burd IRC is free and open source software.</p>
