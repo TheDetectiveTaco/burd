@@ -31,6 +31,12 @@
   <p align="center">
    <a href="https://badge.fury.io/js/burd"><img src="https://badge.fury.io/js/burd.svg" alt="npm version" height="18"></a>
                </p>
+         
+
+<p align="center">
+	<img src="burd-screenshot.png" width="550">
+</p>
+
 
 <h3 align="center">
 Latest Releases
