@@ -28,6 +28,8 @@
   <a href='https://burd.detectivetaco.net/en/latest/?badge=latest'>
     <img src='https://readthedocs.org/projects/burd-documentation/badge/?version=latest' alt='Documentation Status' />
 </a>
+  <p align="center">
+   <a href="https://badge.fury.io/js/burd"><img src="https://badge.fury.io/js/burd.svg" alt="npm version" height="18"></a>
                </p>
 
 <h3 align="center">
