@@ -58,7 +58,7 @@ function fillInInfo(){
 	if(newServer.auth.type == "sasl_plain") $("div#radio_saslplain").click();
 	
 	$("input#sasl_password,input#nickserv_password,input#server_password").val(newServer.auth.password);
-	$("input#sasl_user").val(newServer.auth.user);
+	$("input#sasl_user").val(newServer.auth.username);
 	
 	$("input#commands").val(newServer.commands.join(","));
 	
