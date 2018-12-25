@@ -60,6 +60,10 @@ $(function(){
 		iframe.show({type: "right", url: "./emoji/index.html"});
 	});
 	
+	$('body').on('click', 'div.chan_options', function() {
+		iframe.show({type: "right", url: "./chan_options/index.html"});
+	});
+	
 	$('body').on('click', 'div#stickies div.sticky div.closer', function() {
 		$(this).parent().hide(config.animation, function(){
 			$(this).remove();
@@ -78,6 +82,16 @@ $(function(){
 	
 	$('body').on('click', 'div#new_button', function() {
 		iframe.show({type: "left", url: "./networks/index.html"});
+	});
+	
+	$('body').on('click', 'div#hide_button', function() {
+		if($(this).hasClass("hide_button_on")){
+			$(this).removeClass("hide_button_on");
+			$("#hidenav").remove();
+		}else{
+			$(this).addClass("hide_button_on");
+			$("head").append('<link id="hidenav" href="hidenav.css" rel="stylesheet">');
+		}
 	});
 	
 	$('body').on('click', 'div#overlay', function() {

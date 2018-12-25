@@ -33,11 +33,23 @@ div#bottom_menu{
 	border-right:2px solid #242629;
 	height: 25px;
 }
+div#hide_button{
+	background-image:url(images/icons/baseline_arrow_back_ios_white_18dp.png);
+	background-position: 6px;
+}
 div#new_button{
 	background-image:url(images/icons/baseline_fiber_new_white_18dp.png);
 }
 div#hamburger_button{
 	background-image:url(images/icons/baseline_menu_white_18dp.png);
+}
+
+div#bottom_menu div.hide_button_on{
+	background-image:url(images/icons/baseline_arrow_forward_ios_white_18dp.png);
+}
+
+div#nav_list_container{
+	float:left;height:calc(100% - 1px);
 }
 div#main_container{
 	height:100%;
@@ -52,7 +64,9 @@ div.clear{
 div.i_button{
 	height:20px;
 	width:20px;
-	background:url(images/icons/baseline_settings_white_18dp.png);
+	background-image:url(images/icons/baseline_settings_white_18dp.png);
+	background-repeat:no-repeat;
+	background-position:center center;
 	background-size:20px 20px;
 	opacity:0.7;
 }
@@ -158,11 +172,17 @@ div.channel div.bottom input.channel_input{
 	border:0;
 	background:#67666d;
 	height:16px;
-	width:calc(100% - 35px);
+	width:calc(100% - 5px);
 	color:white;
 	border:1px solid #212025;
 	padding:2px;
 	border-radius:5px;
+}
+div.channel[type='channel'] div.bottom input.channel_input{
+	width:calc(100% - 60px);
+}
+div.channel[type='pm'] div.bottom input.channel_input{
+	width:calc(100% - 35px);
 }
 div.channel div.user_message,div.channel div.channel_info{
 	margin-bottom: 5px;
@@ -234,8 +254,17 @@ div.chan_smile{
 	background: url(images/icons/baseline_sentiment_satisfied_alt_white_18dp.png);
 	background-size: 20px 20px;
 	opacity: 0.7;
+	margin-right: 5px;
 }
-div.chan_smile:hover{
+div.chan_options{
+	height: 20px;
+	width: 20px;
+	float: right;
+	background: url(images/icons/baseline_tune_white_18dp.png);
+	background-size: 20px 20px;
+	opacity: 0.7;
+}
+div.chan_smile:hover,div.chan_options:hover{
 	cursor:pointer;
 	opacity: 1;
 }
