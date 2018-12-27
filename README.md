@@ -53,7 +53,7 @@ Latest Releases
  About
  </h3>
  
- <p align="center">Burd IRC is an IRC client that is only compatible currently Windows and Debian based Linux. Burd is still missing certian things as it is fairly new IRC client in early development.</p>
+ <p align="center">Burd IRC is an IRC client that is only compatible with macOS, Windows, and Debian based Linux. Burd is still missing certian things as it is fairly new IRC client in early development.</p>
 
 <h3 align="center">
   License
