@@ -1,27 +1,33 @@
 {
   "name": "burd",
-  "productName": "burd",
   "version": "0.6.2",
-  "main": "index.js",
   "description": "A simple IRC client",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "com.burdirc.app",
+    "productName": "Burd IRC Client"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/burdirc/burd"
   },
-   "author": "Matthew Ryan",
-   "license": "GPL-3.0-only",
-   "bugs": {
-     "url": "https://github.com/burdirc/burd/issues"
-   },
+  "author": "Matthew Ryan",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/burdirc/burd/issues"
+  },
   "devDependencies": {
     "electron": "^1.8.8",
-    "electron-packager": "^12.1.2"
+    "electron-packager": "^12.2.0"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "electron-winstaller": "^2.7.0",
     "tar-fs": "^1.16.3"
-  },
-  "scripts": {
-    "start": "electron ."
   }
 }
