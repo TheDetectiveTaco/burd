@@ -33,10 +33,10 @@
   ],
   "devDependencies": {
     "electron": "^1.8.8",
-    "electron-packager": "^12.2.0"
+    "electron-packager": "^12.2.0",
+    "electron-builder": "^20.38.4"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0",
     "electron-winstaller": "^2.7.0",
     "tar-fs": "^1.16.3"
   }
