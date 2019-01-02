@@ -16,7 +16,7 @@
  BurdIRC is a modern IRC client written in HTML and JavaScript and using electron.
 </h3>
 
-<p>
+<p align="center">
         <a href="irc://chat.freenode.net/burdirc"><img                                     
                 src="https://img.shields.io/badge/freenode-%23burdirc-%238B89EC.svg?style=flat-square"></a>
 	<a href="https://ci.appveyor.com/project/BurdIRC/burd/branch/master"><img
