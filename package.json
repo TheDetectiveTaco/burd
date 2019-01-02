@@ -1,7 +1,7 @@
 {
   "name": "burd",
   "version": "0.6.2",
-  "description": "A simple IRC client",
+  "description": "A modern IRC client written in HTML and JavaScript and using electron.",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
@@ -11,13 +11,13 @@
   "build": {
     "appId": "com.burdirc.app",
     "productName": "Burd IRC Client",
-    "copyright": "Copyright © 2018-2019 ${author}"
+    "copyright": "Copyright © 2018-2019 Burd IRC Project"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/burdirc/burd"
   },
-  "author": "Matthew Ryan",
+  "author": "Burd IRC Developers",
   "license": "GPL-3.0-only",
   "bugs": {
     "url": "https://github.com/burdirc/burd/issues"
