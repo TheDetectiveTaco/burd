@@ -1,1 +1,4 @@
-language: javascript (with node.js)
+language: node_js
+node_js:
+  - "iojs"
+  - "7"
