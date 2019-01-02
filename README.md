@@ -19,17 +19,11 @@
 <p>
         <a href="irc://chat.freenode.net/burdirc"><img                                     
                 src="https://img.shields.io/badge/freenode-%23burdirc-%238B89EC.svg?style=flat-square"></a>
-	
-
-        <a href="https://ci.appveyor.com/project/BurdIRC/burd/branch/master"><img
-                src="https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true"</a> 
-     
-     
-  <a href='https://burd.detectivetaco.net/en/latest/?badge=latest'>
-    <img src='https://readthedocs.org/projects/burd-documentation/badge/?version=latest' alt='Documentation Status' />
-</a>
-
-   <a href="https://badge.fury.io/js/burd"><img src="https://badge.fury.io/js/burd.svg" alt="npm version" height="18"></a>
+	<a href="https://ci.appveyor.com/project/BurdIRC/burd/branch/master"><img
+                src="https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true"></a> 
+      <a href='https://burd.detectivetaco.net/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/burd-documentation/badge/?version=latest' alt='Documentation Status'/></a>
+ <a href="https://badge.fury.io/js/burd"><img src="https://badge.fury.io/js/burd.svg" alt="npm version" height="18"></a>
                </p>
          
 
