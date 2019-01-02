@@ -16,19 +16,19 @@
  BurdIRC is a modern IRC client written in HTML and JavaScript and using electron.
 </h3>
 
-<p align="center">
+<p>
         <a href="irc://chat.freenode.net/burdirc"><img                                     
                 src="https://img.shields.io/badge/freenode-%23burdirc-%238B89EC.svg?style=flat-square"></a>
-</p>        
-<p align="center">
-      <a href="https://ci.appveyor.com/project/BurdIRC/burd/branch/master"><img
+</p>	
+<p>
+        <a href="https://ci.appveyor.com/project/BurdIRC/burd/branch/master"><img
                 src="https://ci.appveyor.com/api/projects/status/q0h13y72oanfkbjj/branch/master?svg=true"</a> 
        </p>
- <p align="center">
+ <p>
   <a href='https://burd.detectivetaco.net/en/latest/?badge=latest'>
     <img src='https://readthedocs.org/projects/burd-documentation/badge/?version=latest' alt='Documentation Status' />
 </a>
-  <p align="center">
+  <p>
    <a href="https://badge.fury.io/js/burd"><img src="https://badge.fury.io/js/burd.svg" alt="npm version" height="18"></a>
                </p>
          
