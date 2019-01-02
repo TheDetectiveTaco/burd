@@ -21,6 +21,15 @@
   "bugs": {
     "url": "https://github.com/burdirc/burd/issues"
   },
+  "keywords": {
+    "irc",
+    "irc client",
+    "burd irc",
+    "burd",
+    "burd irc client",
+    "internet relay chat",
+    "burdirc"
+  },
   "devDependencies": {
     "electron": "^1.8.8",
     "electron-packager": "^12.2.0"
