@@ -1,3 +1,4 @@
+language: javascript
 
 matrix:
   include:
