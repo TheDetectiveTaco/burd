@@ -10,7 +10,8 @@
   },
   "build": {
     "appId": "com.burdirc.app",
-    "productName": "Burd IRC Client"
+    "productName": "Burd IRC Client",
+    "copyright": "Copyright © 2018-2019 ${author}"
   },
   "repository": {
     "type": "git",
