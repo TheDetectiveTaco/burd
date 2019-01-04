@@ -316,8 +316,8 @@ socket.parseData = function(data, id, whox){
 					switch(bits[1].toUpperCase()){
 						case "AUTHENTICATE":
 							if(bits[2] == "+"){
-								var login = networkInfo.auth.user;
-								login += String.fromCharCode(0) + networkInfo.auth.user;
+								var login = networkInfo.auth.username;
+								login += String.fromCharCode(0) + networkInfo.auth.username;
 								login += String.fromCharCode(0) + crypt.decrypt(networkInfo.auth.password);
 								socket.sendData("AUTHENTICATE " + btoa(login),id);
 							}else{
