@@ -25,10 +25,12 @@
     <img src='https://readthedocs.org/projects/burd-documentation/badge/?version=latest' alt='Documentation Status'/></a>
  <a href="https://badge.fury.io/js/burd"><img src="https://badge.fury.io/js/burd.svg" alt="npm version" height="18"></a>
                </p>
-	       
-<center><a href="https://snapcraft.io/burdirc">
+
+<p align="center">
+<a href="https://snapcraft.io/burdirc">
   <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" />
-</a></center>
+</a>
+</p>
          
 
 <p align="center">
