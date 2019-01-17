@@ -43,10 +43,10 @@ Latest Releases
 </h3>
 
 <p align="center">
-<b>Latest Stable:</b> 0.6.1
+<b>Latest Stable:</b> 0.6.3
 </p>
 <p align="center">
-<b>Latest Development:</b> 0.6.2 (Release Candidate 2)
+<b>Latest Development:</b> 0.6.3
 </p>
  
  <h3 align="center">
