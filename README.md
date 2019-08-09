@@ -13,7 +13,7 @@
 </p>
 
 <h3 align="center">
- BurdIRC is a modern IRC client written in HTML and JavaScript and using electron.
+ BurdIRC is no longer being actively developed. Learn more at https://burdirc.github.io
 </h3>
 
 <p align="center">
